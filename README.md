@@ -4,7 +4,7 @@ Thsi repostory has been made for **SWE 574** group project instructed by [Profes
 
 ***
 
-This repository will be updated on a regular pace till the end of the semester(June 2022), when we provide a beautiful, running and error free website as our final delivary.
+This repository will be updated on a regular pace till the end of the semester(June 2022), when we provide a beautiful, running and error free website as our final delivary. 
 
 ***
 
@@ -16,3 +16,12 @@ This repository will be updated on a regular pace till the end of the semester(J
 - [Sabri Korkmaz](https://github.com/SabriKorkmaz/project-x),
 - [Gökhan Üstüner](https://github.com/gokhanustuner/swe-573-fall-2021),
 - [Zahra Atrvash](https://github.com/sahar-avsh/ZahraAtrvash-SWE573)
+
+### Tools:
+- **Backend**:
+
+  Python + Django
+- **Frontend**: 
+
+  Html + Css
+
