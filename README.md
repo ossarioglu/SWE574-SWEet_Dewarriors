@@ -1,1 +1,1 @@
-# SWE574-Group2
+# SWE574-Group2: SWEet DEWarriors
