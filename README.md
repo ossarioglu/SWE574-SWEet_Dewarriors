@@ -8,9 +8,9 @@ This repository will be updated on a regular pace till the end of the semester(J
 
 ***
 
-Project Name : #####
+### Project Name : 
 
-Team members: 
+### Team members: 
 - [Betul Güreş](https://github.com/betty-gures/SWE-573),
 - [Osman Selcuk SARIOGLU](https://github.com/ossarioglu/SWE573-repo), 
 - [Sabri Korkmaz](https://github.com/SabriKorkmaz/project-x),
