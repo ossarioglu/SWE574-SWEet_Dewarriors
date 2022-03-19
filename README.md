@@ -1,6 +1,6 @@
 # SWE574-Group2: SWEet DEWarriors
 
-Thsi repostory has been made for **SWE 574** group project instructed by [Professor Suzan Uskudarlı](https://www.cmpe.boun.edu.tr/tr/people/suzan.uskudarli). We are a team of 5 master students of [Software engineering](https://www.cmpe.boun.edu.tr/tr/graduate/swe) program from [Boğaziçi university](http://www.boun.edu.tr). SWE 574 is an extended course for SWE 573, where all students had to individually make a platform for exchanging free services among a community(website members). On our last semester(Spring 2022) we are supposed to add some extra features to the website as a team.
+This repostory has been made for **SWE 574** group project instructed by [Professor Suzan Uskudarlı](https://www.cmpe.boun.edu.tr/tr/people/suzan.uskudarli). We are a team of 5 master students of [Software engineering](https://www.cmpe.boun.edu.tr/tr/graduate/swe) program from [Boğaziçi university](http://www.boun.edu.tr). SWE 574 is an extended course for SWE 573, where all students had to individually make a platform for exchanging free services among a community(website members). On our last semester(Spring 2022) we are supposed to add some extra features to the website as a team.
 
 ***
 
