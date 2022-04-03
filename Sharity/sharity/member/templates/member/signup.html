@@ -189,7 +189,7 @@
 		left: 0px;
 		top: 0px;
 	}
-	#email {
+	#emaildiv {
 		left: 10.5px;
 		top: 5.5px;
 		position: absolute;
@@ -262,7 +262,7 @@
 		left: 0px;
 		top: 0px;
 	}
-	#password1 {
+	#password1div {
 		left: 10.5px;
 		top: 5.5px;
 		position: absolute;
@@ -299,7 +299,7 @@
 		width: 451px;
 		height: 39px;
 		left: 287px;
-		top: 844px;
+		top: 944px;
 		overflow: visible;
 		padding: 9px 207px 11px 170px;
 	}
@@ -370,7 +370,7 @@
 		left: 0px;
 		top: 0px;
 	}
-	#namesurname {
+	#namesurnamediv {
 		left: 10.5px;
 		top: 5.5px;
 		position: absolute;
@@ -443,7 +443,7 @@
 		left: 0px;
 		top: 0px;
 	}
-	#username {
+	#usernamediv {
 		left: 10.5px;
 		top: 5.5px;
 		position: absolute;
@@ -482,7 +482,17 @@
 		left: 297px;
 		top: 713.148px;
 		overflow: visible;
+    }
+
+    #FormForm_Location {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 297px;
+    top: 813.148px;
+    overflow: visible;
 	}
+
 	#FormInputTextDefault_bn {
 		position: absolute;
 		width: 436px;
@@ -516,7 +526,7 @@
 		left: 0px;
 		top: 0px;
 	}
-	#password2 {
+	#password2div {
 		left: 10.5px;
 		top: 5.5px;
 		position: absolute;
@@ -532,6 +542,24 @@
 		font-size: 20px;
 		color: rgba(134,141,150,1);
 	}
+
+    #locationdiv {
+		left: 10.5px;
+		top: 5.5px;
+		position: absolute;
+		overflow: visible;
+		width: 116px;
+		white-space: nowrap;
+		line-height: 24px;
+		margin-top: -2px;
+		text-align: left;
+		font-family: HelveticaNeue;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 20px;
+		color: rgba(134,141,150,1);
+	}
+
 	#Group_Label_br {
 		left: 0px;
 		top: 0px;
@@ -3486,110 +3514,170 @@ window.application = new Application();
 	</div>
 	<div id="Register">
 		<span>Register</span>
-        <span>
-            <form method="POST" accept="">
-                {% csrf_token %}
-    
-                <!-- Text Input for username /-->
-                {{ form.non_field_errors }}
-                <div class="form-floating mb-3">
-                    {{ form.username.errors }}
-                    <label for="{{ form.username.id_for_label }}">Username</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id='{{form.username.id_for_label}}' 
-                           name='{{form.username.html_name}}' 
-                           {% if form.username.field.required %}required{% endif %}
-                           value='{% if form.username.value %}{{ form.username.value }}{% endif %}' 
-                           placeholder='Enter Username'>
 
-                </div>
-    
-                <!-- Password Input for password /-->
-                <div class="form-floating mb-3">
-                    {{ form.password1.errors }}
-                    <label for="{{ form.password1.id_for_label }}">Password</label>
-                    <input type="password" 
-                           class="form-control" 
-                           id='{{form.password1.id_for_label}}' 
-                           name='{{form.password1.html_name}}' 
-                           {% if form.password.field.required %}required{% endif %}
-                           value='{% if form.password1.value %}{{ form.password1.value }}{% endif %}' 
-                           placeholder='Type Password'>
-                   
-                </div>
-    
-                <!-- Password Input for verifying password /-->
-                <div class="form-floating mb-3">
-                    {{ form.password2.errors }}
-                    <label for="{{ form.password2.id_for_label }}">Re-Type Password</label>
-                    <input type="password" 
-                           class="form-control" 
-                           id='{{form.password2.id_for_label}}' 
-                           name='{{form.password2.html_name}}' 
-                           {% if form.password2.field.required %}required{% endif %}
-                           value='{% if form.password2.value %}{{ form.password2.value }}{% endif %}' 
-                           placeholder='Re-type Password'>
-                    
-                </div>
-    
-                <!-- Text Input for first name of new user /-->
-                <div class="form-floating mb-3">
-                    {{ form.first_name.errors }}
-                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
-                    <input type="text" 
-                           class="form-control" 
-                           id='{{form.first_name.id_for_label}}' 
-                           name='{{form.first_name.html_name}}' 
-                           {% if form.first_name.field.required %}required{% endif %}
-                           value='{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}' 
-                           placeholder='Your First Name'>
-                    
-                </div>
-    
-                <!-- Text Input for surname name of new user /-->
-                <div class="form-floating mb-3">
-                    {{ form.last_name.errors }}
-                    <label for="{{ form.last_name.id_for_label }}">Surname</label>
-                    <input type="text" 
-                        class="form-control" 
-                        id='{{form.last_name.id_for_label}}' 
-                        name='{{form.last_name.html_name}}' 
-                        {% if form.last_name.field.required %}required{% endif %}
-                        value='{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}' 
-                        placeholder='Your Surname Name'>
-                    
-                </div>
-    
-                <!-- Text Input for email of new user /-->
-                <div class="form-floating mb-3">
-                    {{ form.email.errors }}
-                    <label for="{{ form.email.id_for_label }}">Email</label>
-                    <input type="text" 
-                        class="form-control" 
-                        id='{{form.email.id_for_label}}' 
-                        name='{{form.email.html_name}}' 
-                        {% if form.email.field.required %}required{% endif %}
-                        value='{% if form.email.value %}{{ form.email.value }}{% endif %}' 
-                        placeholder='Email Address'>
-                    
-                </div>
-    
-                <!-- Text Input for location of new user /-->
-                <div class="form-floating mb-3">
-                    <label for="floatingInput">Location</label>
-                    <input type="text" class="form-control" id="floatingInput" name="location" placeholder="Your Location">
-                    
-                <h5>     </h5>
-                <div class="col-12">
-                    <button class="btn btn-outline-success" type="submit">Sign Up</button>
-                </div>
-    
-            </form>
-
-        </span>
 	</div>
    
+    <form method="post" accept="" id="registerform">
+        {% csrf_token %}
+        
+        {{ form.non_field_errors }}
+
+        <div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
+            <div id="Helper_Text">
+                <span>We’ll never share your email with anyone else</span>
+            </div>
+            <div id="FormInputTextDefault" class="Form_Input_Text_Default">
+                <div id="InputBase" class="Input_Base">
+                    <svg class="InputBase_y">
+                        <rect id="InputBase_y" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="emaildiv" >
+                    {{ form.email.errors }}
+                    <input type="text" 
+                    class="form-control" 
+                    id='{{form.email.id_for_label}}' 
+                    name='{{form.email.html_name}}' 
+                    {% if form.email.field.required %}required{% endif %}
+                    value='{% if form.email.value %}{{ form.email.value }}{% endif %}' 
+                    placeholder='Email Address'>
+                </div>
+            </div>
+            <div id="Group_Label">
+                <span>Email*</span>
+            </div>
+        </div>
+        <div id="FormForm_GroupHelperDefault_" class="Form_Form_Group_Helper_Default">
+            <div id="FormInputTextDefault_" class="Form_Input_Text_Default">
+                <div id="InputBase_" class="Input_Base">
+                    <svg class="InputBase_ba">
+                        <rect id="InputBase_ba" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="password1div">
+                    {{ form.password1.errors }}
+                    <input type="password" 
+                       class="form-control" 
+                       id='{{form.password1.id_for_label}}' 
+                       name='{{form.password1.html_name}}' 
+                       {% if form.password.field.required %}required{% endif %}
+                       value='{% if form.password1.value %}{{ form.password1.value }}{% endif %}' 
+                       placeholder='Type Password'>
+                </div>
+            </div>
+            <div id="Group_Label_">
+                <span>Password*</span>
+            </div>
+        </div>
+        <div id="FormForm_GroupHelperDefault_ba" class="Form_Form_Group_Helper_Default">
+            <div id="FormInputTextDefault_bb" class="Form_Input_Text_Default">
+                <div id="InputBase_bc" class="Input_Base">
+                    <svg class="InputBase_bd">
+                        <rect id="InputBase_bd" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="namesurnamediv">
+                    {{ form.first_name.errors }}
+                    <input type="text" 
+                       class="form-control" 
+                       id='{{form.first_name.id_for_label}}' 
+                       name='{{form.first_name.html_name}}' 
+                       {% if form.first_name.field.required %}required{% endif %}
+                       value='{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}' 
+                       placeholder='Your Name'>
+                    
+                    <input type="text" 
+                       class="form-control" 
+                       id='{{form.last_name.id_for_label}}' 
+                       name='{{form.last_name.html_name}}' 
+                       {% if form.last_name.field.required %}required{% endif %}
+                       value='{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}' 
+                       placeholder='Your Surname'>
+                    
+                </div>
+            </div>
+            <div id="Group_Label_bf">
+                <span>Name and Surname</span>
+            </div>
+        </div>
+        <div id="FormForm_GroupHelperDefault_bg" class="Form_Form_Group_Helper_Default">
+            <div id="FormInputTextDefault_bh" class="Form_Input_Text_Default">
+                <div id="InputBase_bi" class="Input_Base">
+                    <svg class="InputBase_bj">
+                        <rect id="InputBase_bj" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="usernamediv">
+                    {{ form.username.errors }}
+                    <input type="text" 
+                              class="form-control" 
+                              id='{{form.username.id_for_label}}' 
+                              name='{{form.username.html_name}}' 
+                              {% if form.username.field.required %}required{% endif %}
+                              value='{% if form.username.value %}{{ form.username.value }}{% endif %}' 
+                              placeholder='Enter Username'>
+                </div>
+            </div>
+            <div id="Group_Label_bl">
+                <span>Username*</span>
+            </div>
+        </div>
+        <div id="FormForm_GroupHelperDefault_bm" class="Form_Form_Group_Helper_Default">
+            <div id="FormInputTextDefault_bn" class="Form_Input_Text_Default">
+                <div id="InputBase_bo" class="Input_Base">
+                    <svg class="InputBase_bp">
+                        <rect id="InputBase_bp" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="password2div">
+                    {{ form.password2.errors }}
+                    <input type="password" 
+                       class="form-control" 
+                       id='{{form.password2.id_for_label}}' 
+                       name='{{form.password2.html_name}}' 
+                       {% if form.password2.field.required %}required{% endif %}
+                       value='{% if form.password2.value %}{{ form.password2.value }}{% endif %}' 
+                       placeholder='Re-type Password'>
+                </div>
+            </div>
+            <div id="Group_Label_br">
+                <span>Confirm Password*</span>
+            </div>
+        </div>
+        <div id="FormForm_Location" class="Form_Form_Group_Helper_Default">
+            <div id="FormInputTextDefault_bn" class="Form_Input_Text_Default">
+                <div id="InputBase_bo" class="Input_Base">
+                    <svg class="InputBase_bp">
+                        <rect id="InputBase_bp" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                        </rect>
+                    </svg>
+                </div>
+                <div id="locationdiv">
+                    <input type="text" class="form-control" id="floatingInput" name="location" placeholder="Your Location">
+                </div>
+            </div>
+            <div id="Group_Label_br">
+                <span>Location</span>
+            </div>
+        </div>
+        <div id="ButtonDefaultPrimary" class="Button_Default_Primary" type="submit">
+            <svg class="Primary__007BFF" viewBox="0 0 451 39">
+                <path id="Primary__007BFF" d="M 19.17002105712891 0 L 431.8299560546875 0 C 442.4172668457031 0 450.9999694824219 8.506588935852051 450.9999694824219 19 L 450.9999694824219 20 C 450.9999694824219 30.49341201782227 442.4172668457031 39 431.8299560546875 39 L 19.17002105712891 39 C 8.582709312438965 39 0 30.49341201782227 0 20 L 0 19 C 0 8.506588935852051 8.582709312438965 0 19.17002105712891 0 Z">
+                </path>
+            </svg>
+
+
+            <div id="buttonSignup">
+                <button type="submit" form="registerform" value="Submit">Sign Up</button>
+            </div>
+        </div>
+    </form>
+
 </div>
 </body>
 </html>
