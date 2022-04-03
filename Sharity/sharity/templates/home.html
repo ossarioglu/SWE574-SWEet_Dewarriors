@@ -4865,7 +4865,7 @@ window.application = new Application();
 		</rect>
 	</svg>
 	<div id="Home">
-		<span>Home</span>
+		<span><a href="{% url 'logout' %}">Home</a></span>
 	</div>
 	<div id="About">
 		<span>About</span>
@@ -4899,10 +4899,10 @@ window.application = new Application();
 		</svg>
 	</div>
 	<div id="Login">
-		<span>Login</span>
+		<span><a href="{% url 'login' %}">Login</a></span>
 	</div>
 	<div id="Sign_Up">
-		<span>Sign Up</span>
+		<span><a href="{% url 'signup' %}">Sign Up</a></span>
 	</div>
 	<div id="Explore_Offers">
 		<span>Explore Offers</span>
