@@ -38,6 +38,7 @@ class Offer(models.Model):
         verbose_name=_('Type'),
         choices=Type.choices,
     )
+    photo = models.ImageField(upload_to='static/images/Offers', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
