@@ -19,11 +19,10 @@ def signinPage(request):
 
     # When info is entered at the sign-in page, username and password is validated
     # If they match, then user is autenticated, otherwise error message is rendered
+    errorMessage = ""
     if request.method == 'POST':
         username = request.POST.get('username').lower()
         password = request.POST.get('password')
-
-        errorMessage = ""
 
         try:
             user = User.objects.get(username=username)
@@ -78,15 +77,15 @@ def signUp(request):
             return redirect('home')
         else:
             messages.error(request, 'An error occured during registration')
-
-    return render(request, 'landing/signup.html', {'form': form})
+    
+    return render(request, 'member/signup.html', {'form': form})
 
 
 # This is getting user information
 def userProfile(request, userKey):
     user = User.objects.get(username=userKey)
     context = {'user': user, }
-    return render(request, 'landing/profile.html', context)
+    return render(request, 'member/profile.html', context)
 
 
 # This is for updating user profile
@@ -126,9 +125,9 @@ def updateProfile(request, userKey):
         return redirect('home')
 
     context = {'form': form, 'myProfile': myProfile, 'user': user}
-    return render(request, 'landing/updateprofile.html', context)
+    return render(request, 'member/updateprofile.html', context)
 
 
 def home(request):
     context = {'info': ''}
-    return render(request, 'landing/home.html', context)
+    return render(request, 'base/home.html', context)

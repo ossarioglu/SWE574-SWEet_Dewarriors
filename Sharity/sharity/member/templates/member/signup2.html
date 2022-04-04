@@ -1,0 +1,144 @@
+<!-- This page is main template for all other html files /-->
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset= 'utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <!-- Bootstrap Setup /-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title> socializeUS </title>
+</head> 
+<body>
+
+
+<style>
+    .login-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; 
+    }
+</style>
+
+<div class="login-container">
+
+    <div>
+
+    </div>
+
+    
+    <div>   
+        <form method="POST" accept="">
+            {% csrf_token %}
+
+            <!-- Text Input for username /-->
+            {{ form.non_field_errors }}
+            <div class="form-floating mb-3">
+                {{ form.username.errors }}
+                <input type="text" 
+                       class="form-control" 
+                       id='{{form.username.id_for_label}}' 
+                       name='{{form.username.html_name}}' 
+                       {% if form.username.field.required %}required{% endif %}
+                       value='{% if form.username.value %}{{ form.username.value }}{% endif %}' 
+                       placeholder='Enter Username'>
+                <label for="{{ form.username.id_for_label }}">Username</label>
+            </div>
+
+            <!-- Password Input for password /-->
+            <div class="form-floating mb-3">
+                {{ form.password1.errors }}
+                <input type="password" 
+                       class="form-control" 
+                       id='{{form.password1.id_for_label}}' 
+                       name='{{form.password1.html_name}}' 
+                       {% if form.password.field.required %}required{% endif %}
+                       value='{% if form.password1.value %}{{ form.password1.value }}{% endif %}' 
+                       placeholder='Type Password'>
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+            </div>
+
+            <!-- Password Input for verifying password /-->
+            <div class="form-floating mb-3">
+                {{ form.password2.errors }}
+                <input type="password" 
+                       class="form-control" 
+                       id='{{form.password2.id_for_label}}' 
+                       name='{{form.password2.html_name}}' 
+                       {% if form.password2.field.required %}required{% endif %}
+                       value='{% if form.password2.value %}{{ form.password2.value }}{% endif %}' 
+                       placeholder='Re-type Password'>
+                <label for="{{ form.password2.id_for_label }}">Re-Type Password</label>
+            </div>
+
+            <!-- Text Input for first name of new user /-->
+            <div class="form-floating mb-3">
+                {{ form.first_name.errors }}
+                <input type="text" 
+                       class="form-control" 
+                       id='{{form.first_name.id_for_label}}' 
+                       name='{{form.first_name.html_name}}' 
+                       {% if form.first_name.field.required %}required{% endif %}
+                       value='{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}' 
+                       placeholder='Your First Name'>
+                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+            </div>
+
+            <!-- Text Input for surname name of new user /-->
+            <div class="form-floating mb-3">
+                {{ form.last_name.errors }}
+                <input type="text" 
+                    class="form-control" 
+                    id='{{form.last_name.id_for_label}}' 
+                    name='{{form.last_name.html_name}}' 
+                    {% if form.last_name.field.required %}required{% endif %}
+                    value='{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}' 
+                    placeholder='Your Surname Name'>
+                <label for="{{ form.last_name.id_for_label }}">Surname</label>
+            </div>
+
+            <!-- Text Input for email of new user /-->
+            <div class="form-floating mb-3">
+                {{ form.email.errors }}
+                <input type="text" 
+                    class="form-control" 
+                    id='{{form.email.id_for_label}}' 
+                    name='{{form.email.html_name}}' 
+                    {% if form.email.field.required %}required{% endif %}
+                    value='{% if form.email.value %}{{ form.email.value }}{% endif %}' 
+                    placeholder='Email Address'>
+                <label for="{{ form.email.id_for_label }}">Email</label>
+            </div>
+
+            <!-- Text Input for location of new user /-->
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" name="location" placeholder="Your Location">
+                <label for="floatingInput">Location</label>
+            <h5>     </h5>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Sign Up</button>
+            </div>
+
+        </form>
+
+        <!-- If user is already signed-up, it's asked to be directed to login url /-->
+        <p> Already signed up yet?</p>
+        <a class="btn btn-outline-primary" href="{% url 'login' %}" role="button"> Sign In</a>
+
+    </div>
+
+    <div>
+        
+    </div>
+    
+</div>
+
+     <!-- Bootstrap Setup /-->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+ 
+ </body>
+ </html>
