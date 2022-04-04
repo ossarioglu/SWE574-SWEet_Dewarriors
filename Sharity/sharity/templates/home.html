@@ -4868,7 +4868,13 @@ window.application = new Application();
 		<span><a href="{% url 'logout' %}">Home</a></span>
 	</div>
 	<div id="About">
-		<span>About</span>
+		
+		{% if request.user.is_anonymous == True %}
+			<span>About</span>
+		{% else %}
+			<span><a href="{% url 'profile' request.user %}">{{request.user}}</a></span>
+		{% endif %}
+
 	</div>
 	<div id="Offers">
 		<span>Offers</span>

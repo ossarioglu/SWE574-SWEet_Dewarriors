@@ -29,7 +29,7 @@ class Profile(models.Model):
     userLocation = models.CharField(max_length=100)
     userBadge = models.TextField(max_length=100, null=True, default="None")
 
-    userPicture = models.ImageField(upload_to='Profiles', null=True, default="male.png")
+    userPicture = models.ImageField(upload_to='static/images/Profiles', null=True, default="male.png")
     # credits are blocked at this field for applied services that are not concluded
     creditInprocess = models.IntegerField(default=0)
 

@@ -7,5 +7,5 @@ urlpatterns = [
     path('login/', memberview.signinPage, name="login"),
     path('logout/', memberview.signOut, name="logout"),
     path('signup/', memberview.signUp, name="signup"),
-    path('member/', memberview.userProfile, name ="profile"),
+    path('member/<str:userKey>/', memberview.userProfile, name ="profile"),
 ]
