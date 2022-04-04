@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
     'member.apps.MemberConfig',
-    'tags'
+    'tags',
+    'locations',
 ]
 
 MIDDLEWARE = [
