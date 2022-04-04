@@ -130,5 +130,6 @@ dmypy.json
 
 # MacOS File System Log
 .DS_Store
+/Documents/.DS_Store
 
 .idea
