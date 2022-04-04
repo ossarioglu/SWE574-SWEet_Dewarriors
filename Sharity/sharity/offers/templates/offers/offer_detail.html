@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>{{ object.title }}</title>
+    </head>
+    <body>
+        <a href="{% url 'home' %}">Go to Homepage</a>
+        <br><br>
+        <article class="media">
+            <h2>{{ object.title }}</h2>
+            <div class="breadcrumb">
+                <a class="mr-2">Created by: {{ object.owner }}</a>
+                <br>
+                <a class="text-muted">Created at: {{ object.created_at|date:"F d, Y" }}</a>
+            </div>
+            <div class="media-body">
+                <p>Location: {{ object.get_formatted_address }}</p>
+                <p>Tags: {{ object.get_tag_label }}</p>
+                <p>Participant limit: {{ object.participant_limit }}</p>
+                <p>Start date: {{ object.start_date }}</p>
+                <p>Duration: {{ object.duration }}</p>
+                <p>Amendment deadline: {{ object.amendment_deadline }}</p>
+                <p>Type: {{ object.get_type }}</p>
+            </div>
+        </article>
+    </body>
+</html>

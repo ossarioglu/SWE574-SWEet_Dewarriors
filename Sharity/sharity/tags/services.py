@@ -5,11 +5,11 @@ from django.http import JsonResponse
 class TagService:
     BASE_URL = 'https://www.wikidata.org/w/api.php'
 
-    SEARCH_QS = 'action=wbsearchentities&format=json&language=en&type=item&continue=0&search=%s'
+    SEARCH_QS = '?action=wbsearchentities&format=json&language=en&type=item&continue=0&search={0}'
 
-    FIND_BY_IDS_QS = 'action=wbgetentities&ids=%s&languages=en&format=json'
+    FIND_BY_IDS_QS = '?action=wbgetentities&ids={0}&languages=en&format=json'
 
-    FIND_BY_ID_QS = 'action=wbgetentities&ids=%s&languages=en&format=json'
+    FIND_BY_ID_QS = '?action=wbgetentities&ids={0}&languages=en&format=json'
 
     @staticmethod
     def search(query: str) -> JsonResponse:

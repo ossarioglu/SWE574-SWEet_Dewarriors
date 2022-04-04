@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'member.apps.MemberConfig',
     'tags',
     'locations',
+    'offers',
 ]
 
 MIDDLEWARE = [

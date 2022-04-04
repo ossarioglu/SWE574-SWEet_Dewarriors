@@ -66,9 +66,12 @@ def signUp(request):
             user.save()
             login(request, user)
 
-            # Django's default user model is used for User management. Therefore for further information about user is stored at Profile model
-            # At quick signup, Location is a mandatory field from Profile model
-            # New profile for this user is created and saved after adding Location information
+            """
+            Django's default user model is used for User management. 
+            Therefore for further information about user is stored at Profile model
+            At quick signup, Location is a mandatory field from Profile model
+            New profile for this user is created and saved after adding Location information
+            """
             newProfile = Profile.objects.create(user=user, userLocation=request.POST.get('location'))
             newProfile.save()
 
@@ -76,8 +79,8 @@ def signUp(request):
             # Error is rendered in case there is problem in sign-up process
             return redirect('home')
         else:
-            messages.error(request, 'An error occured during registration')
-    
+            messages.error(request, 'An error occurred during registration')
+
     return render(request, 'member/signup.html', {'form': form})
 
 

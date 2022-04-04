@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 import uuid
 
 
@@ -7,6 +8,35 @@ import uuid
 
 # Profile is the object keeping information of users
 # This object is an addition to Django's User object. It has additionla information that User object does't have
+
+class Owner(User):
+    class Meta:
+        proxy = True
+
+    def services(self):
+        pass
+
+    def events(self):
+        pass
+
+    def offers(self):
+        pass
+
+    def approve_offer_application(self, offer_application):
+        pass
+
+    def reject_offer_application(self, offer_application):
+        pass
+
+    def confirm_attendance(self, user: User):
+        pass
+
+    def create_offer(self, offer):
+        pass
+
+    def cancel_offer(self, offer):
+        pass
+
 
 class Profile(models.Model):
     # There are 3 types of user
