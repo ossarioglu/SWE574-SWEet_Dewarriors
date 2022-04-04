@@ -7,8 +7,11 @@ from django.urls import reverse
 
 
 class Offer(models.Model):
-    class Meta:
-        abstract = True
+
+    class Type(models.IntegerChoices):
+        """Type of an Offer"""
+        SERVICE = 1, _('Service')
+        EVENT = 2, _('Event')
 
     def __str__(self):
         return self.title
@@ -28,12 +31,17 @@ class Offer(models.Model):
         on_delete=models.CASCADE,
     )
     start_date = models.DateTimeField(verbose_name=_('Start date'))
-    credit = models.PositiveIntegerField(verbose_name=_('Credit'))
+    duration = models.PositiveIntegerField(verbose_name=_('Duration'))
     participant_limit = models.PositiveIntegerField(verbose_name=_('Participant limit'), default=0)
+    amendment_deadline = models.DateTimeField(verbose_name=_('Amendment deadline'))
+    type = models.PositiveSmallIntegerField(
+        verbose_name=_('Type'),
+        choices=Type.choices,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
-        return reverse('services.detail', kwargs={'pk': self.pk})
+        return reverse('offers.detail', kwargs={'pk': self.pk})
 
     def get_latitude(self):
         payload = json.loads(str(self.location).replace("\\'", '"'))
@@ -50,11 +58,3 @@ class Offer(models.Model):
     def get_location_type_icon(self):
         payload = json.loads(str(self.location).replace("\\'", '"'))
         return payload['icon']
-
-
-class Service(Offer):
-    pass
-
-
-class Event(Offer):
-    pass
