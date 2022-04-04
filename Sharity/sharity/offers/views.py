@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from .models import Offer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
@@ -24,3 +24,9 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+
+
+@method_decorator(never_cache, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
+class OfferDetailView(LoginRequiredMixin, DetailView):
+    model = Offer
