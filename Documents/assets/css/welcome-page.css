@@ -1,0 +1,3628 @@
+.mediaViewInfo {
+    --web-view-name: Welcoming/Landing Page;
+    --web-view-id: WelcomingLanding_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+:root {
+    --web-view-ids: WelcomingLanding_Page;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+}
+#WelcomingLanding_Page {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+    --web-view-name: Welcoming/Landing Page;
+    --web-view-id: WelcomingLanding_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+#start_sharing_knowledge {
+    position: absolute;
+    width: 661px;
+    height: 254px;
+    left: 368px;
+    top: 286px;
+    overflow: visible;
+}
+#image_study_fk {
+    position: absolute;
+    width: 588px;
+    height: 591px;
+    left: 1046px;
+    top: 169px;
+    overflow: visible;
+}
+#logo {
+    position: absolute;
+    width: 64px;
+    height: 69px;
+    left: 111px;
+    top: 9px;
+    overflow: visible;
+}
+#Rectangle_59 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_59 {
+    position: absolute;
+    overflow: visible;
+    width: 1140px;
+    height: 247px;
+    left: 390px;
+    top: 892px;
+}
+#Home {
+    left: 731px;
+    top: 27px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(40,167,69,1);
+
+}
+#About {
+    left: 817px;
+    top: 27px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#Offers {
+    left: 903px;
+    top: 27px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#Rectangle_60 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_60 {
+    position: absolute;
+    overflow: visible;
+    width: 193px;
+    height: 55px;
+    left: 427px;
+    top: 610px;
+}
+#Rectangle_61 {
+    fill: rgba(250,162,75,1);
+}
+.Rectangle_61 {
+    position: absolute;
+    overflow: visible;
+    width: 164px;
+    height: 55px;
+    left: 1633px;
+    top: 9px;
+}
+#Sharity {
+    left: 194px;
+    top: 20px;
+    position: absolute;
+    overflow: visible;
+    width: 145px;
+    height: 48px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgba(34,40,51,1);
+}
+#Rectangle_62 {
+    fill: transparent;
+    stroke: rgba(112,112,112,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_62 {
+    position: absolute;
+    overflow: visible;
+    width: 137px;
+    height: 22px;
+    left: 1061px;
+    top: 27px;
+}
+#iconactionsearch_24px {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 1034px;
+    top: 25px;
+    overflow: visible;
+}
+#Boundary {
+    fill: transparent;
+}
+.Boundary {
+    position: absolute;
+    overflow: visible;
+    width: 24px;
+    height: 24px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color {
+    fill: rgba(0,0,0,1);
+}
+.n_Color {
+    overflow: visible;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 13px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Login {
+    left: 1530px;
+    top: 25px;
+    position: absolute;
+    overflow: visible;
+    width: 54px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#Sign_Up {
+    left: 1679px;
+    top: 25px;
+    position: absolute;
+    overflow: visible;
+    width: 86px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#Explore_Offers {
+    left: 460px;
+    top: 627px;
+    position: absolute;
+    overflow: visible;
+    width: 129px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#clock_fm {
+    position: absolute;
+    width: 212px;
+    height: 218px;
+    left: 1561px;
+    top: 865px;
+    overflow: visible;
+}
+#Sharity_is_an_online_platform_ {
+    left: 440px;
+    top: 524px;
+    position: absolute;
+    overflow: visible;
+    width: 538px;
+    height: 60px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(0,0,0,1);
+}
+#Rectangle_63 {
+    fill: rgba(239,166,10,1);
+    stroke: rgba(236,165,8,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_63 {
+    position: absolute;
+    overflow: visible;
+    width: 3px;
+    height: 43px;
+    left: 427px;
+    top: 524px;
+}
+#Component_2__1 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 492px;
+    top: 775px;
+    overflow: visible;
+}
+#Rectangle_64 {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64 {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_bv {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__bw {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_bx {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_by {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gi {
+    fill: transparent;
+}
+.Boundary_gi {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cb {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cb {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cd {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gx {
+    fill: transparent;
+}
+.Boundary_gx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cg {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_g {
+    fill: transparent;
+}
+.Boundary_g {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_g {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_g {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Rectangle_65 {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65 {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_bv {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__bw {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_bx {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_by {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gi {
+    fill: transparent;
+}
+.Boundary_gi {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cb {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cb {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cd {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gx {
+    fill: transparent;
+}
+.Boundary_gx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_cg {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_g {
+    fill: transparent;
+}
+.Boundary_g {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_g {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_g {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_4__1 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 818px;
+    top: 772px;
+    overflow: visible;
+}
+#Component_3__1 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_2__2_g {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_64_g {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64_g {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_g {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__g {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_g {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_hx {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hy {
+    fill: transparent;
+}
+.Boundary_hy {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_hz {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_hz {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_id {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_id {
+    fill: transparent;
+}
+.Boundary_id {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ie {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ie {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_hr {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hs {
+    fill: transparent;
+}
+.Boundary_hs {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ht {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ht {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Rectangle_65_hu {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65_hu {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Play_Soccer_by_Vanessa_Grand_hv {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_5_Handshakes_hw {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_hx {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hy {
+    fill: transparent;
+}
+.Boundary_hy {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_hz {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_hz {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_id {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_id {
+    fill: transparent;
+}
+.Boundary_id {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ie {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ie {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Image_4_if {
+    position: absolute;
+    width: 285px;
+    height: 160px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#icontogglestar_half_24px {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ih {
+    fill: transparent;
+}
+.Boundary_ih {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ii {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ii {
+    overflow: visible;
+    position: absolute;
+    width: 11px;
+    height: 10px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_8__1 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 1144px;
+    top: 772px;
+    overflow: visible;
+}
+#Component_7__1 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_4__2_il {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_3__1_im {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_2__2_in {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_64_io {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64_io {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_ip {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__iq {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_ir {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_jh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ji {
+    fill: transparent;
+}
+.Boundary_ji {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jx {
+    fill: transparent;
+}
+.Boundary_jx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jc {
+    fill: transparent;
+}
+.Boundary_jc {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jd {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jd {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_5__1_jd {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_65_je {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65_je {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Compose_music_by_Ash_Juarez__jf {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_5_Handshakes_jg {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_jh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ji {
+    fill: transparent;
+}
+.Boundary_ji {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jx {
+    fill: transparent;
+}
+.Boundary_jx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_border_24px_jz {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_j {
+    fill: transparent;
+}
+.Boundary_j {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_j {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_j {
+    overflow: visible;
+    position: absolute;
+    width: 11px;
+    height: 10px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Image_3 {
+    position: absolute;
+    width: 285px;
+    height: 157px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#image_study_fk {
+    position: absolute;
+    width: 588px;
+    height: 591px;
+    left: 1046px;
+    top: 169px;
+    overflow: visible;
+}
+#Rectangle_104 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_104 {
+    position: absolute;
+    overflow: visible;
+    width: 1140px;
+    height: 247px;
+    left: 390px;
+    top: 892px;
+}
+#clock_fm {
+    position: absolute;
+    width: 212px;
+    height: 218px;
+    left: 1561px;
+    top: 865px;
+    overflow: visible;
+}
+#Component_2__3 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 492px;
+    top: 775px;
+    overflow: visible;
+}
+#Rectangle_64_fo {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64_fo {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_ge {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__gf {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_gg {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_gh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gi {
+    fill: transparent;
+}
+.Boundary_gi {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gx {
+    fill: transparent;
+}
+.Boundary_gx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gz {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_g {
+    fill: transparent;
+}
+.Boundary_g {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_g {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_g {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Rectangle_65_gd {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65_gd {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_ge {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__gf {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_gg {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_gh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gi {
+    fill: transparent;
+}
+.Boundary_gi {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gr {
+    fill: transparent;
+}
+.Boundary_gr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gs {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gs {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gu {
+    fill: transparent;
+}
+.Boundary_gu {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_gx {
+    fill: transparent;
+}
+.Boundary_gx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_gy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_gy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_gz {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_g {
+    fill: transparent;
+}
+.Boundary_g {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_g {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_g {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_4__3 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 818px;
+    top: 772px;
+    overflow: visible;
+}
+#Component_3__1_g {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_2__2_g {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_64_g {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64_g {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_g {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__g {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_g {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_hx {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hy {
+    fill: transparent;
+}
+.Boundary_hy {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_hz {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_hz {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_id {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_id {
+    fill: transparent;
+}
+.Boundary_id {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ie {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ie {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_hr {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hs {
+    fill: transparent;
+}
+.Boundary_hs {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ht {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ht {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Rectangle_65_hu {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65_hu {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Play_Soccer_by_Vanessa_Grand_hv {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_5_Handshakes_hw {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_hx {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_hy {
+    fill: transparent;
+}
+.Boundary_hy {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_hz {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_hz {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ib {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ib {
+    fill: transparent;
+}
+.Boundary_ib {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ib {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ib {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_ic {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ic {
+    fill: transparent;
+}
+.Boundary_ic {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ic {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ic {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_id {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_id {
+    fill: transparent;
+}
+.Boundary_id {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ie {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ie {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Image_4_if {
+    position: absolute;
+    width: 285px;
+    height: 160px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#icontogglestar_half_24px_ig {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ih {
+    fill: transparent;
+}
+.Boundary_ih {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_ii {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ii {
+    overflow: visible;
+    position: absolute;
+    width: 11px;
+    height: 10px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_8__2 {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 1144px;
+    top: 772px;
+    overflow: visible;
+}
+#Component_7__1_ik {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_4__2_il {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_3__1_im {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Component_2__2_in {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_64_io {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_64_io {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Image_2_ip {
+    position: absolute;
+    width: 285px;
+    height: 158px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Barista_vegan_milk_by_Ryan_Su__iq {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_4_Handshakes_ir {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_jh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ji {
+    fill: transparent;
+}
+.Boundary_ji {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jx {
+    fill: transparent;
+}
+.Boundary_jx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jc {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jc {
+    fill: transparent;
+}
+.Boundary_jc {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jd {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jd {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Component_5__1_jd {
+    position: absolute;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#Rectangle_65_je {
+    fill: rgba(255,255,255,1);
+}
+.Rectangle_65_je {
+    position: absolute;
+    overflow: visible;
+    width: 285px;
+    height: 241px;
+    left: 0px;
+    top: 0px;
+}
+#Compose_music_by_Ash_Juarez__jf {
+    left: 20px;
+    top: 168px;
+    position: absolute;
+    overflow: visible;
+    width: 246px;
+    height: 20px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(140,204,255,1);
+}
+#n_5_Handshakes_jg {
+    left: 20px;
+    top: 205px;
+    position: absolute;
+    overflow: visible;
+    width: 92px;
+    height: 14px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: rgba(190,190,190,1);
+}
+#icontogglestar_24px_jh {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 192px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ji {
+    fill: transparent;
+}
+.Boundary_ji {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jj {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jj {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jq {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 204px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jr {
+    fill: transparent;
+}
+.Boundary_jr {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_js {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_js {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jt {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 216px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_ju {
+    fill: transparent;
+}
+.Boundary_ju {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jv {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jv {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_24px_jw {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 228px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_jx {
+    fill: transparent;
+}
+.Boundary_jx {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_jy {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_jy {
+    overflow: visible;
+    position: absolute;
+    width: 11.158px;
+    height: 10.158px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#icontogglestar_border_24px_jz {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 240px;
+    top: 205px;
+    overflow: visible;
+}
+#Boundary_j {
+    fill: transparent;
+}
+.Boundary_j {
+    position: absolute;
+    overflow: visible;
+    width: 15px;
+    height: 15px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color_j {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_j {
+    overflow: visible;
+    position: absolute;
+    width: 11px;
+    height: 10px;
+    left: 2px;
+    top: 2px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Image_3_j {
+    position: absolute;
+    width: 285px;
+    height: 157px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+.location>a {
+    text-decoration: none;;
+    color: #000;
+    }
