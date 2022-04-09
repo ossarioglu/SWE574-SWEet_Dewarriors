@@ -1,0 +1,546 @@
+.mediaViewInfo {
+    --web-view-name: Register Page;
+    --web-view-id: Register_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+:root {
+    --web-view-ids: Register_Page;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+}
+#Register_Page {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+    --web-view-name: Register Page;
+    --web-view-id: Register_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+#start_sharing_knowledge {
+    position: absolute;
+    width: 515px;
+    height: 198px;
+    left: 1071px;
+    top: 117px;
+    overflow: visible;
+}
+#image_study {
+    position: absolute;
+    width: 588px;
+    height: 591px;
+    left: 1124px;
+    top: 413px;
+    overflow: visible;
+}
+#clock {
+    position: absolute;
+    width: 194px;
+    height: 199px;
+    left: 1692px;
+    top: 881px;
+    overflow: visible;
+}
+#Sharity_is_an_online_platform_ {
+    left: 1124px;
+    top: 310px;
+    position: absolute;
+    overflow: visible;
+    width: 538px;
+    height: 60px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(0,0,0,1);
+}
+#Rectangle_63 {
+    fill: rgba(239,166,10,1);
+    stroke: rgba(236,165,8,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_63 {
+    position: absolute;
+    overflow: visible;
+    width: 3px;
+    height: 43px;
+    left: 1111px;
+    top: 310px;
+}
+#Rectangle_119 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_119 {
+    position: absolute;
+    overflow: visible;
+    width: 820px;
+    height: 927px;
+    left: 121px;
+    top: 77px;
+}
+#logo {
+    position: absolute;
+    width: 64px;
+    height: 69px;
+    left: 1676px;
+    top: 8px;
+    overflow: visible;
+}
+#Sharity {
+    left: 1759px;
+    top: 19px;
+    position: absolute;
+    overflow: visible;
+    width: 145px;
+    height: 48px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgba(34,40,51,1);
+}
+#Register {
+    left: 293px;
+    top: 139px;
+    position: absolute;
+    overflow: visible;
+    width: 440px;
+    height: 72px;
+    text-align: center;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 60px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault {
+    position: absolute;
+    width: 472.5px;
+    height: 92px;
+    left: 293.75px;
+    top: 494px;
+    overflow: visible;
+}
+#Helper_Text {
+    left: 0px;
+    top: 76px;
+    position: absolute;
+    overflow: hidden;
+    width: 473.5px;
+    height: 16px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(255,255,255,1);
+}
+#FormInputTextDefault {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 1px;
+    top: 33.148px;
+    overflow: visible;
+}
+.location>a {
+    text-decoration: none;;
+    color: #000;
+    }
+#InputBase {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_y {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_y {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label {
+    left: 0.5px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault_ {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 294.25px;
+    top: 614px;
+    overflow: visible;
+}
+#FormInputTextDefault_ {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_ {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_ba {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_ba {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_ {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_ {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#ButtonDefaultPrimary {
+    position: absolute;
+    width: 451px;
+    height: 39px;
+    left: 287px;
+    top: 844px;
+    overflow: visible;
+    padding: 9px 207px 11px 170px;
+}
+#Primary__007BFF {
+    fill: rgba(250,162,75,1);
+}
+.Primary__007BFF {
+    overflow: visible;
+    position: absolute;
+    width: 451px;
+    height: 39px;
+    left: 0px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n____Sign_up {
+    left: 170px;
+    top: 9px;
+    position: absolute;
+    overflow: visible;
+    width: 75px;
+    white-space: nowrap;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault_ba {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 287px;
+    top: 295.703px;
+    overflow: visible;
+}
+#FormInputTextDefault_bb {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_bc {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_bd {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_bd {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_be {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_bf {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault_bg {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 287px;
+    top: 394.852px;
+    overflow: visible;
+}
+#FormInputTextDefault_bh {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_bi {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_bj {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_bj {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_bk {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_bl {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault_bm {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 297px;
+    top: 713.148px;
+    overflow: visible;
+}
+#FormInputTextDefault_bn {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_bo {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_bp {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_bp {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_bq {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_br {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
