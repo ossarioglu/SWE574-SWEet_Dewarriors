@@ -1,0 +1,403 @@
+.mediaViewInfo {
+    --web-view-name: Login Page ;
+    --web-view-id: Login_Page_;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+:root {
+    --web-view-ids: Login_Page_;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+}
+#Login_Page_ {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+    --web-view-name: Login Page ;
+    --web-view-id: Login_Page_;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+#start_sharing_knowledge {
+    position: absolute;
+    width: 515px;
+    height: 198px;
+    left: 1071px;
+    top: 117px;
+    overflow: visible;
+}
+.location>a {
+    text-decoration: none;;
+    color: #000;
+    }
+#image_study {
+    position: absolute;
+    width: 588px;
+    height: 591px;
+    left: 1124px;
+    top: 413px;
+    overflow: visible;
+}
+#clock {
+    position: absolute;
+    width: 194px;
+    height: 199px;
+    left: 1692px;
+    top: 881px;
+    overflow: visible;
+}
+#Sharity_is_an_online_platform_ {
+    left: 1124px;
+    top: 310px;
+    position: absolute;
+    overflow: visible;
+    width: 538px;
+    height: 60px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(0,0,0,1);
+}
+#Rectangle_63 {
+    fill: rgba(239,166,10,1);
+    stroke: rgba(236,165,8,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_63 {
+    position: absolute;
+    overflow: visible;
+    width: 3px;
+    height: 43px;
+    left: 1111px;
+    top: 310px;
+}
+#Rectangle_119 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_119 {
+    position: absolute;
+    overflow: visible;
+    width: 820px;
+    height: 927px;
+    left: 121px;
+    top: 77px;
+}
+#logo {
+    position: absolute;
+    width: 64px;
+    height: 69px;
+    left: 1676px;
+    top: 8px;
+    overflow: visible;
+}
+#Sharity {
+    left: 1759px;
+    top: 19px;
+    position: absolute;
+    overflow: visible;
+    width: 145px;
+    height: 48px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgba(34,40,51,1);
+}
+#Login {
+    left: 442px;
+    top: 139px;
+    position: absolute;
+    overflow: visible;
+    width: 179px;
+    height: 72px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 60px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault {
+    position: absolute;
+    width: 472.5px;
+    height: 92px;
+    left: 292.25px;
+    top: 399px;
+    overflow: visible;
+}
+#Helper_Text {
+    left: 0px;
+    top: 76px;
+    position: absolute;
+    overflow: hidden;
+    width: 473.5px;
+    height: 16px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(255,255,255,1);
+}
+#FormInputTextDefault {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 1px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_y {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_y {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label {
+    left: 0.5px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#FormForm_GroupHelperDefault_ {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 292.75px;
+    top: 519px;
+    overflow: visible;
+}
+#FormInputTextDefault_ {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_ {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_ba {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(224,224,224,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_ba {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_ {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 116px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_ {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: hidden;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#FormInputCheckbox_GroupDefault {
+    position: absolute;
+    width: 122px;
+    height: 21px;
+    left: 291px;
+    top: 622px;
+    overflow: visible;
+    padding: 0px;
+}
+#Label {
+    left: 19px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 104px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -4px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: rgba(255,255,255,1);
+}
+#Checkbox {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    left: 0px;
+    top: 4.5px;
+    overflow: visible;
+    padding: 0px;
+}
+#Rectangle {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(183,183,183,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 10;
+    shape-rendering: auto;
+}
+.Rectangle {
+    position: absolute;
+    overflow: visible;
+    width: 14px;
+    height: 14px;
+    left: 0px;
+    top: 0px;
+}
+#ButtonDefaultPrimary {
+    position: absolute;
+    width: 447px;
+    height: 39px;
+    left: 285px;
+    top: 661px;
+    overflow: visible;
+    padding: 9px 207px 11px 170px;
+}
+#Primary__007BFF {
+    fill: rgba(250,162,75,1);
+}
+.Primary__007BFF {
+    overflow: visible;
+    position: absolute;
+    width: 447px;
+    height: 39px;
+    left: 0px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n____Submit {
+    left: 170px;
+    top: 9px;
+    position: absolute;
+    overflow: visible;
+    width: 71px;
+    white-space: nowrap;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: rgba(255,255,255,1);
+}
+#FormInputCheckbox_GroupDefault_be {
+    position: absolute;
+    width: 277px;
+    height: 21px;
+    left: 285px;
+    top: 732px;
+    overflow: visible;
+    padding: 0px;
+}
+#Label_bf {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 278px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -4px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color: rgba(255,255,255,1);
+}
