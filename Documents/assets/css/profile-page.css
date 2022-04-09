@@ -1,0 +1,744 @@
+.mediaViewInfo {
+    --web-view-name: Profile Page;
+    --web-view-id: Profile_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+:root {
+    --web-view-ids: Profile_Page;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+}
+#Profile_Page {
+    position: absolute;
+    width: 1920px;
+    height: 1080px;
+    background-color: rgba(255,255,255,1);
+    overflow: hidden;
+    --web-view-name: Profile Page;
+    --web-view-id: Profile_Page;
+    --web-scale-on-resize: true;
+    --web-enable-deep-linking: true;
+}
+#Rectangle_125 {
+    fill: rgba(76,171,148,1);
+}
+.Rectangle_125 {
+    position: absolute;
+    overflow: visible;
+    width: 820px;
+    height: 938px;
+    left: 104px;
+    top: 143px;
+}
+#logo {
+    position: absolute;
+    width: 64px;
+    height: 69px;
+    left: 117px;
+    top: 12px;
+    overflow: visible;
+}
+#Home {
+    left: 737px;
+    top: 30px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#About {
+    left: 823px;
+    top: 30px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#Offers {
+    left: 909px;
+    top: 30px;
+    position: absolute;
+    overflow: visible;
+    width: 58px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(0,0,0,1);
+}
+#Rectangle_106 {
+    fill: rgba(250,162,75,1);
+}
+.Rectangle_106 {
+    position: absolute;
+    overflow: visible;
+    width: 164px;
+    height: 55px;
+    left: 1639px;
+    top: 12px;
+}
+#Sharity {
+    left: 200px;
+    top: 23px;
+    position: absolute;
+    overflow: visible;
+    width: 145px;
+    height: 48px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    color: rgba(34,40,51,1);
+}
+#Rectangle_107 {
+    fill: transparent;
+    stroke: rgba(112,112,112,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_107 {
+    position: absolute;
+    overflow: visible;
+    width: 137px;
+    height: 22px;
+    left: 1067px;
+    top: 30px;
+}
+#iconactionsearch_24px {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 1040px;
+    top: 28px;
+    overflow: visible;
+}
+#Boundary {
+    fill: transparent;
+}
+.Boundary {
+    position: absolute;
+    overflow: visible;
+    width: 24px;
+    height: 24px;
+    left: 0px;
+    top: 0px;
+}
+#n_Color {
+    fill: rgba(0,0,0,1);
+}
+.n_Color {
+    overflow: visible;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 13px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#Logout {
+    left: 1685px;
+    top: 28px;
+    position: absolute;
+    overflow: visible;
+    width: 86px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#Profile {
+    left: 1527px;
+    top: 28px;
+    position: absolute;
+    overflow: visible;
+    width: 63px;
+    height: 23px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+}
+#Image_10 {
+    position: absolute;
+    width: 628px;
+    height: 470px;
+    left: 209px;
+    top: 338px;
+    overflow: visible;
+}
+#Vanessa_Grand {
+    left: 233px;
+    top: 213px;
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 60px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 50px;
+    color: rgba(255,255,255,1);
+}
+#Hello_its_Vanessa_from_Califor {
+    left: 997px;
+    top: 189px;
+    position: absolute;
+    overflow: visible;
+    width: 807px;
+    height: 125px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 50px;
+    color: rgba(112,112,112,1);
+}
+#vanessa_grandgmailcom {
+    left: 237px;
+    top: 280px;
+    position: absolute;
+    overflow: visible;
+    width: 259px;
+    height: 34px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(255,255,255,1);
+}
+#Rectangle_126 {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(112,112,112,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_126 {
+    position: absolute;
+    overflow: visible;
+    width: 628px;
+    height: 137px;
+    left: 209px;
+    top: 807px;
+}
+#Boundary_ {
+    fill: transparent;
+}
+.Boundary_ {
+    position: absolute;
+    overflow: visible;
+    width: 64px;
+    height: 64px;
+    left: 566px;
+    top: 840px;
+}
+#Component_29__1 {
+    position: absolute;
+    width: 245.944px;
+    height: 43.014px;
+    left: 547.5px;
+    top: 850px;
+    overflow: visible;
+}
+#n_Color_ {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ {
+    overflow: visible;
+    position: absolute;
+    width: 47.249px;
+    height: 43.014px;
+    left: 0px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n_Color_ba {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_ba {
+    overflow: visible;
+    position: absolute;
+    width: 47.249px;
+    height: 43.014px;
+    left: 49.893px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n_Color_bb {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_bb {
+    overflow: visible;
+    position: absolute;
+    width: 47.249px;
+    height: 43.014px;
+    left: 99.786px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n_Color_bc {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_bc {
+    overflow: visible;
+    position: absolute;
+    width: 46px;
+    height: 42px;
+    left: 199.944px;
+    top: 0.051px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n_Color_bd {
+    fill: rgba(244,165,87,1);
+}
+.n_Color_bd {
+    overflow: visible;
+    position: absolute;
+    width: 47.249px;
+    height: 43.014px;
+    left: 149.679px;
+    top: 0px;
+    transform: matrix(1,0,0,1,0,0);
+}
+#n_3_Handshakes {
+    left: 260px;
+    top: 861px;
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 43px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 30px;
+    color: rgba(112,112,112,1);
+}
+#Vanesa53 {
+    left: 233px;
+    top: 172px;
+    position: absolute;
+    overflow: hidden;
+    width: 163px;
+    height: 34px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 30px;
+    color: rgba(255,255,255,1);
+}
+#Following_12 {
+    left: 260px;
+    top: 971px;
+    position: absolute;
+    overflow: hidden;
+    width: 330px;
+    height: 43px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    color: rgba(255,255,255,1);
+}
+#Follower_43 {
+    left: 508px;
+    top: 971px;
+    position: absolute;
+    overflow: hidden;
+    width: 272px;
+    height: 43px;
+    text-align: right;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    color: rgba(255,255,255,1);
+}
+#Rectangle_63 {
+    fill: rgba(239,166,10,1);
+    stroke: rgba(236,165,8,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_63 {
+    position: absolute;
+    overflow: visible;
+    width: 8px;
+    height: 119px;
+    left: 975px;
+    top: 189px;
+}
+#FormForm_GroupHelperDefault {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 983px;
+    top: 478px;
+    overflow: visible;
+}
+#FormInputTextDefault {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_bh {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(0,0,0,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_bh {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 203px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(112,112,112,1);
+}
+#Edit {
+    left: 1685px;
+    top: 308px;
+    position: absolute;
+    overflow: visible;
+    width: 89px;
+    height: 46px;
+    text-align: right;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(250,162,75,1);
+}
+#FormForm_GroupHelperDefault_bl {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 983px;
+    top: 564px;
+    overflow: visible;
+}
+#FormInputTextDefault_bm {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_bn {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_bo {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(0,0,0,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_bo {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_bp {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 346px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_bq {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(112,112,112,1);
+}
+#FormForm_GroupHelperDefault_br {
+    position: absolute;
+    width: 406.5px;
+    height: 24px;
+    left: 983px;
+    top: 650px;
+    overflow: visible;
+}
+#Group_Label_bs {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(112,112,112,1);
+}
+#Credit_5_hours {
+    filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161));
+    left: 679px;
+    top: 172px;
+    position: absolute;
+    overflow: visible;
+    width: 151px;
+    height: 117px;
+    text-align: center;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 40px;
+    color: rgba(250,162,75,1);
+}
+#Rectangle_116 {
+    fill: rgba(253,215,177,1);
+    stroke: rgba(112,112,112,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_116 {
+    position: absolute;
+    overflow: visible;
+    width: 93px;
+    height: 22px;
+    left: 1132.5px;
+    top: 689px;
+}
+#Patient {
+    left: 1132.5px;
+    top: 690px;
+    position: absolute;
+    overflow: visible;
+    width: 94px;
+    height: 20px;
+    text-align: center;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(112,112,112,1);
+}
+#Rectangle_117 {
+    fill: rgba(253,215,177,1);
+    stroke: rgba(112,112,112,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.Rectangle_117 {
+    position: absolute;
+    overflow: visible;
+    width: 133px;
+    height: 22px;
+    left: 983.5px;
+    top: 690px;
+}
+#Good_Listener {
+    left: 992.5px;
+    top: 691px;
+    position: absolute;
+    overflow: visible;
+    width: 120px;
+    height: 20px;
+    text-align: center;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    color: rgba(112,112,112,1);
+}
+#FormForm_GroupHelperDefault_by {
+    position: absolute;
+    width: 436.5px;
+    height: 71.149px;
+    left: 983px;
+    top: 391.852px;
+    overflow: visible;
+}
+#FormInputTextDefault_bz {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0.5px;
+    top: 33.148px;
+    overflow: visible;
+}
+#InputBase_b {
+    position: absolute;
+    width: 436px;
+    height: 38px;
+    left: 0px;
+    top: 0px;
+    overflow: visible;
+}
+#InputBase_ca {
+    fill: rgba(255,255,255,1);
+    stroke: rgba(0,0,0,1);
+    stroke-width: 1px;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+    stroke-miterlimit: 4;
+    shape-rendering: auto;
+}
+.InputBase_ca {
+    position: absolute;
+    overflow: visible;
+    width: 438px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+}
+#Text_State_b {
+    left: 10.5px;
+    top: 5.5px;
+    position: absolute;
+    overflow: visible;
+    width: 200px;
+    white-space: nowrap;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: HelveticaNeue;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(134,141,150,1);
+}
+#Group_Label_b {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+    overflow: visible;
+    width: 407.5px;
+    height: 24px;
+    line-height: 24px;
+    margin-top: -2px;
+    text-align: left;
+    font-family: Helvetica Neue LT Std;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    color: rgba(112,112,112,1);
+}
+.location>a {
+    text-decoration: none;;
+    color: #000;
+    }
