@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from Sharity.sharity.apply.models import Application
-from Sharity.sharity.assign.models import Assignment
+from apply.models import Application
+from assign.models import Assignment
 
-from Sharity.sharity.offers.models import Offer
+from offers.models import Offer
 
 # This is for listing assingments for the services
 # Login is required to see details of services 
