@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'tags',
     'locations',
     'offers',
-    'apply.apps.ApplyConfig'
+    'apply.apps.ApplyConfig',
+    'assign.apps.AssignConfig',
 ]
 
 MIDDLEWARE = [
