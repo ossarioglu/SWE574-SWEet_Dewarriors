@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from prompt_toolkit import Application
 
-from Sharity.sharity.offers.models import Offer
+from offers.models import Offer
 
 # This is for user's applications to service. When user apply for a service, this is triggered. 
 # Request for service is done with posting service's unique id
