@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.contrib.auth.models import User
 from Sharity.sharity.offers.models import Offer
-from offers import models
 
 # unique identifiers for objects are created with this 
 import uuid
