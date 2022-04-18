@@ -1,0 +1,98 @@
+{% extends "offers/base.html" %}
+
+{% block title %}
+    Timeline
+{% endblock title %}
+
+{% block content %}
+
+    <div class="search-container">
+
+        <div class="search-sidebar">
+            <h2>Filter</h2>
+            <form action='.' id='search-form' method='GET'>
+                {{form.as_p}}
+                <input type='button' id="id_filter_button" class='btn btn-success' method="GET" value='Filter'/>
+                <button class='btn btn-success'> <a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a> </button>
+            </form>
+
+        </div>
+
+        <div id="id_results" class="results">
+            <h2>All Offers</h2>
+            <p> {{object_list|length}} result(s) found </p>
+            {% for result in object_list %}
+            ************************************
+                <p> <b> {{result.title}} </b> </p>
+                <p> Starts at {{result.start_date}} </p>
+                <p> Duration: {{result.duration}} hours </p>
+                <p> Type: {{result.type}} </p>
+            {% empty %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock content %}
+
+{% block js %}
+    <script>
+        $(document).ready(function() {
+            $("#id_filter_button").click(function() {
+                $.ajax({
+                    url: '{% url 'ajax_load_results' %}',
+                    type: 'GET',
+                    data: {
+                        title_query: $("#search-title").val(),
+                        location_query: $("#search-location").val(),
+                        duration_query: $("#search-duration").val(),
+                        start_date_query: $("#search-start_date").val(),
+                        tags_query: $("#search-tags").val(),
+                        type_query: $("#search-type").val(),
+                    },
+                    success: function(response) {
+                        $("#id_results").html("");
+                        $("#id_results").append(response);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock js %}
+
+{% block styles %}
+    <style>
+        .search-container {
+            display: flex;
+            margin-left: 15px;
+            margin-top: 15px;
+        }
+
+        .results {
+            width: 30%;
+        }
+
+        .search-sidebar {
+            margin-right: 50px;
+        }
+
+        .clear-button {
+            color: white;
+        }
+
+        .clear-button:hover {
+            text-decoration: none;
+            color: white;
+        }
+
+        .applied-filters {
+            margin-top: 20px;
+            border: 1px black solid;
+            padding: 5px;
+        }
+
+        .applied-filters-header {
+            font-size: 16px;
+        }
+    </style>
+{% endblock styles %}
