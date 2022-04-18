@@ -1,3 +1,4 @@
+import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from prompt_toolkit import Application
@@ -10,12 +11,12 @@ from offers.models import Offer
 
 #@login_required(login_url='login')
 def requestOffer(request, sID):
-    offer = Offer.objects.get(serviceID=sID)
+    offer = Offer.objects.get(uuid=sID)
     
     # This variable is used for blocking or deducting credits of users
     # As default it's set as 0 for Events, and if service is an Offering then, it's updates as the duration of activity
     creditNeeded = 0
-    if offer.serviceType == "Offering":
+    if offer.Type == "Service":
         creditNeeded = offer.duration
 
     # User can apply a service only if there is enough credit
@@ -28,7 +29,7 @@ def requestOffer(request, sID):
         if not Application.objects.filter(serviceID=offer).filter(requesterID=request.user).exists():
             
             # Status of new requests are Inprocess
-            newrequest = Application.objects.create(serviceID=offer, requesterID=request.user, serviceType=offer.serviceType, status='Inprocess')
+            newrequest = Application.objects.create(serviceID=offer, requesterID=request.user, serviceType=offer.Type, status='Inprocess')
             if newrequest:
                 
                 # When a request is created, credits of users are blocked by calling blockCredit method of Profile object
@@ -55,14 +56,14 @@ def requestOffer(request, sID):
                 return HttpResponse("A problem occured. Please try again later")
         else:
             application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-            context = {'offers':Offer.objects.get(serviceID=sID), "applications":application}
+            context = {'offers':Offer.objects.get(uuid=sID), "applications":application}
             return render(request, 'landing/offerings.html', context)
     
     # If user doesn't have enough credit, this state is sent to front-end as a message variable during render
     else:
         textMessage = "Not Enough Credit"
         application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-        context = {'offers':Offer.objects.get(serviceID=sID), "applications":application, "textMessage":textMessage}
+        context = {'offers':Offer.objects.get(uuid=sID), "applications":application, "textMessage":textMessage}
         return render(request, 'landing/offerings.html', context)
 
 # This is for cancelling user's applications.
@@ -76,11 +77,11 @@ def deleteRequest(request, rID):
     #Information for the queried reques is retrieved.
     reqSrvs = Application.objects.get(requestID=rID)
     offer = reqSrvs.serviceID
-    providerUser = offer.providerID
+    providerUser = offer.owner
     
     #Credit calculation is done, Events: 0, Offerings:Duration
     creditNeeded = 0
-    if offer.serviceType == "Offering":
+    if offer.Type == "Service":
         creditNeeded = offer.duration
     blkQnt= creditNeeded
 

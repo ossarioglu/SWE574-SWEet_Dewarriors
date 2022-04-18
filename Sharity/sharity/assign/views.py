@@ -1,3 +1,4 @@
+import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from apply.models import Application
@@ -10,12 +11,12 @@ from offers.models import Offer
 
 #@login_required(login_url='login')
 def assigning(request, ofnum):
-    offer = Offer.objects.get(serviceID=ofnum)
+    offer = Offer.objects.get(uuid=ofnum)
     application = Application.objects.filter(serviceID=ofnum)
     allAccepted = Application.objects.filter(status='Accepted').filter(serviceID=offer).count()
     
     # Remaning capacity is sent to frontend to avoid more assignments than capacity
-    remainingCapacity = offer.capacity - allAccepted
+    remainingCapacity = offer.participant_limit - allAccepted
 
     context = {'offers':offer, 'applications':application, "remainingCapacity":remainingCapacity}
     
@@ -54,7 +55,7 @@ def assignService(request,sID, rID, uID, sType):
             # Remaining capacity is calculated by deducting all accepted request.
 
             allAccepted = Application.objects.filter(status='Accepted').filter(serviceID=myRequest.serviceID).count()
-            remainingCapacity = newassignment.requestID.serviceID.capacity - allAccepted
+            remainingCapacity = newassignment.requestID.serviceID.participant_limit - allAccepted
 
             # New notification is created for requesters to inform that the application is accepted, and request is approved
  #           newnote = Notification.objects.create(
