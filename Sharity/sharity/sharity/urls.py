@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from offers.views import AjaxHandlerView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
     path('tags/', include('tags.urls')),
     path('locations/', include('locations.urls')),
     path('offers/', include('offers.urls')),
+    path('ajax/load-results/', AjaxHandlerView.as_view(), name='ajax_load_results'),
 ]
