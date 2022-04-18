@@ -16,7 +16,7 @@ def requestOffer(request, sID):
     # This variable is used for blocking or deducting credits of users
     # As default it's set as 0 for Events, and if service is an Offering then, it's updates as the duration of activity
     creditNeeded = 0
-    if offer.Type == "Service":
+    if offer.Type == 1:
         creditNeeded = offer.duration
 
     # User can apply a service only if there is enough credit
@@ -81,7 +81,7 @@ def deleteRequest(request, rID):
     
     #Credit calculation is done, Events: 0, Offerings:Duration
     creditNeeded = 0
-    if offer.Type == "Service":
+    if offer.Type == 1:
         creditNeeded = offer.duration
     blkQnt= creditNeeded
 
