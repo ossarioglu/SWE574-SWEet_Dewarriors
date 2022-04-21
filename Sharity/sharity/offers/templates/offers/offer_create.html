@@ -78,7 +78,7 @@
         })
 
         form.addEventListener('keyup', function(event) {
-            let tagsQuery = document.getElementById('tags').value;
+            let tagsQuery = document.getElementById('tags').value.split(',').at(-1).trim();
         if (tagsQuery.length >= 2 && tagsQuery.length < 15 && previousQueryLength !== tagsQuery.length) {
             let request = axios.get('/tags/search/?query=' + tagsQuery)
                 .then(function (response) {
@@ -105,8 +105,15 @@
 
                     $('.tags').click(function() {
                         let resultIndex = $(this).attr('id').split('-')[1]
-                        $('#tags-json').val(JSON.stringify(response.data.response.search[resultIndex]));
-                        $('#tags').val(response.data.response.search[resultIndex].label);
+                        let existingValue = JSON.parse($('#tags-json').val());
+                        existingValue.push(response.data.response.search[resultIndex]);
+                        console.log(existingValue);
+                        $('#tags-json').val(JSON.stringify(existingValue));
+                        var stringValue = '';
+                        existingValue.forEach(function (tag) {
+                            stringValue += tag.label + ', ';
+                        });
+                        $('#tags').val(stringValue);
                         $('#tags-wrapper').css('display', 'none');
                     });
                     request = null;
@@ -7761,7 +7768,7 @@ window.application = new Application();
                                 {{ form.tags.errors.0|escape }}
                             </div>
                         {% endif %}
-                        <input type="hidden" value="" name="tags-json" id="tags-json">
+                        <input type="hidden" value="[]" name="tags-json" id="tags-json">
                     </div>
                 </div>
 

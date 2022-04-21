@@ -60,9 +60,9 @@ class Offer(models.Model):
         payload = json.loads(str(self.location).replace("\\'", '"'))
         return payload['icon']
 
-    def get_tag_label(self):
+    def get_tag_labels(self):
         payload = json.loads(str(self.tags).replace("\\'", '"'))
-        return payload['label']
+        return [tag['label'] for tag in payload]
 
     def get_type(self):
         return list(filter(lambda x: x[0] == self.type, self.Type.choices))[0][1]

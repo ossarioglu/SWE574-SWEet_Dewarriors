@@ -14,7 +14,11 @@
             </div>
             <div class="media-body">
                 <p>Location: {{ object.get_formatted_address }}</p>
-                <p>Tags: {{ object.get_tag_label }}</p>
+                <p>Tags:
+                    {% for label in object.get_tag_labels %}
+                        {{ label }}{{ ', ' }}
+                    {% endfor %}
+                </p>
                 <p>Participant limit: {{ object.participant_limit }}</p>
                 <p>Start date: {{ object.start_date }}</p>
                 <p>Duration: {{ object.duration }}</p>
