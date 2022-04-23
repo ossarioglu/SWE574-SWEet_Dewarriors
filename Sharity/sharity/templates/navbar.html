@@ -1,0 +1,90 @@
+{% load static %}
+
+<!-- This page is navigation bar of main template. Below are items displayed at this bar:
+    - Logo of the website
+    - Search bar
+    - User profile picture
+    - User action menu 
+/-->
+
+<hr>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+
+        <!-- This is for displaying Logo. Logo is linked to homepage /-->
+        <div class="col-1"> 
+            <span class="navbar-brand mb-0 b">   </span>
+        </div>
+
+        <div class="col-2">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'images/main/logo.png' %}" />
+                <!--h1> socializeUS Logo</h1-->
+            </a>   
+            <span class="navbar-brand mb-0 fs-2 align-middle">   Sharity</span>
+        </div>
+        
+        
+
+        <!-- This is for Search bar. When user inputs data and press Enter, it triggers search query at homepage /-->
+        <div class="col-6">
+            <form class="d-flex" method="GET" action="{% url 'home' %}">
+                <a href="{% url 'home' %}" class="text-decoration-none align-middle">
+                    <span class="navbar-brand mb-0 b "> Home  </span>
+                </a> 
+                <a href="{% url 'home' %}" class="text-decoration-none align-middle">
+                    <span class="navbar-brand mb-0 b"> About  </span>                </a> 
+                <a href="{% url 'home' %}" class="text-decoration-none align-middle">
+                    <span class="navbar-brand mb-0 b"> Offers  </span>
+                </a> 
+                
+                <img src="{% static 'images/main/search.png' %}" type="submit"/>
+                <input class="form-control me-2" type="text" name="q" placeholder="Search offering" />
+            </form>
+        </div>  
+
+        <div class="col-1"> 
+            <span class="navbar-brand mb-0 h1">  </span>
+        </div>
+
+        {% if request.user.is_authenticated %} 
+        
+        <!-- If user is authenticated, then user profile picture is displayed with a badge on it showing number of unread notifications/-->
+        <a class="btn btn-white btn-sm position-relative" href="{% url 'notifications' %}" role="button">
+            <img src="{{user.profile.userPicture.url}}" class="rounded-circle position-relative"  alt={{ request.user }} width="50" height="50"> 
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ notes }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+        </a>
+
+            <!-- This is dropdown menu for user having options:
+                - Available Credit : Credit + Inprocess Credits
+                - Profile Link for viewing profile details
+                - Action Link for listing awating assignments for handshaking
+                - Logout Link /-->
+            <div class="dropdown">
+                <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ request.user }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <p class="dropdown-item text-primary"> Credits: {{ user.profile.creditAmount|add:user.profile.creditInprocess }} Ch </p>
+                    <hr>
+                    <a class="dropdown-item" href="{% url 'profile' request.user %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'handshake' %}">Actions</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+
+        <!-- If user is not authenticated, then Sing-In and Sign-Up buttons are displayed/-->
+        {% else %}
+            <div class="col-2">
+                <a class="btn btn-success rounded-pill" href="{% url 'login' %}" role="button">Login</a>
+                <a class="btn btn-warning rounded-pill" href="{% url 'signup' %}" role="button">Sign Up</a>
+            </div> 
+        {% endif %}
+
+</nav>
+
+<hr>
