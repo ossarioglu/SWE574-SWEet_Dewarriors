@@ -4879,7 +4879,14 @@
 	</svg>
 
 	<div id="Explore_Offers">
-		<span>Explore Offers</span>
+		<a href="{% url 'offer.list' %}" class="text-decoration-none">
+			<span>Explore Offers</span>
+		</a> 
+
+
+
+		
+
 	</div>
 	<img id="clock" src="{% static 'images/main/clock.png' %}" srcset="{% static 'images/main/clock.png' %} 1x, {% static 'images/main/clock@2x.png' %} 2x">
 		
