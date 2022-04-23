@@ -23,7 +23,7 @@ class Application(models.Model):
     # requesterID has a One-to-Many relation with User object: a service is requested by one user from many Users
     requesterID = models.ForeignKey(User, on_delete=models.CASCADE)
     serviceType = models.CharField(max_length=100)
-    status = models.CharField(max_length=100,choices=REQUEST_STATUS,default='Open')
+    status = models.CharField(max_length=100,choices=REQUEST_STATUS,default='Inprocess')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
