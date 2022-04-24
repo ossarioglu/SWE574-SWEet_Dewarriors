@@ -27,8 +27,8 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         return super().post(request, *args, **kwargs)
 
 
-#@method_decorator(never_cache, name='dispatch')
-#@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(never_cache, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class OfferDetailView(LoginRequiredMixin, DetailView):
     model = Offer
 
@@ -38,12 +38,15 @@ class AjaxHandlerView(LoginRequiredMixin, View):
         context = {}
         result = Offer.objects.all().exclude(owner=request.user)
 
+
         title_query = request.GET.get('title_query')
         location_query = request.GET.get('location_query')
         start_date_query = request.GET.get('start_date_query')
         duration_query = request.GET.get('duration_query')
         tags_query = request.GET.get('tags_query')
         offer_type_query = request.GET.get('type_query')
+
+
 
         # filter by title
         if title_query:
@@ -66,11 +69,13 @@ class AjaxHandlerView(LoginRequiredMixin, View):
 
         context['filter_flag'] = False
         for key, value in self.request.GET.items():
-            if key in ['title_query', 'location_query', 'start_date_query', 'duration_query', 'tags_query', 'type_query'] and value:
+            if key in ['title_query', 'location_query', 'start_date_query', 'duration_query', 'tags_query',
+                       'type_query'] and value:
                 context[key] = value
                 context['filter_flag'] = True
 
         context['result_list'] = result
+
         return render(request, 'offers/ajax_offer_results.html', context)
 
 
