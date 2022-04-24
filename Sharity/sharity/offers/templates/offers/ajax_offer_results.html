@@ -41,14 +41,31 @@
     <div>
         <h2>Found Offers</h2>
         <p> {{result_list|length}} result(s) found </p>
-        {% for result in result_list %}
-        ************************************
-            <p> <b> {{result.title}} </b> </p>
-            <p> Starts at {{result.start_date}} </p>
-            <p> Duration: {{result.duration}} hours </p>
-            <p> Type: {{result.type}} </p>
-        {% empty %}
-        {% endfor %}
+        <div class="row">c
+            {% for result in result_list %}
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"> {{result.title}} </h5>
+                        <p class="card-text"> Starts at {{result.start_date}} </p>
+                        <p class="card-text"> Duration: {{result.duration}} </p>
+                        <p class="card-text"> Type: {{result.type}} </p>
+                        <p class="card-text"> Tags: {{result.tags}} </p>
+                        <p class="card-text"> Location: {{result.location}} </p>
+                        <a href="#" class="btn btn-primary">Go to Offer</a>
+                    </div>
+                </div>
+            </div>
+            {% comment %} ************************************
+                <p> <b> {{result.title}} </b> </p>
+                <p> Starts at {{result.start_date}} </p>
+                <p> Duration: {{result.duration}} hours </p>
+                <p> Type: {{result.type}} </p>
+                <p> Tag: {{result.tags}} </p>
+                <p> Location: {{result.location}} </p> {% endcomment %}
+            {% empty %}
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock content %}
