@@ -3,10 +3,9 @@ version: "3.9"
 services:
     pgdb:
         image: postgres
-
         container_name: pgdb
         environment:
-            - POSTGRES_DB=postgres
+            - POSTGRES_DB=sharity
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         volumes:
