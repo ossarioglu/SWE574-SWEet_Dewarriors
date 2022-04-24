@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'sharity',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': 'pgdb',
         'PORT': '5432',
     }
 }

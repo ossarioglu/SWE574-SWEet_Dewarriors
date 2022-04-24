@@ -1,18 +1,9 @@
 version: "3.9"
    
 services:
-    sharity:
-        build: .
-        container_name: sharity
-        command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:80"
-        volumes:
-            - .:/usr/src/app
-        ports:
-            - "80:80"
-        depends_on:
-            - pgdb
     pgdb:
         image: postgres
+
         container_name: pgdb
         environment:
             - POSTGRES_DB=postgres
@@ -20,8 +11,19 @@ services:
             - POSTGRES_PASSWORD=postgres
         volumes:
             - pgdata:/var/lib/postgresql/data/
+    sharity:
+        image: sbrkrkmz/sharity:latest
+        container_name: sharity
+        command:  /bin/sh  -c "python manage.py migrate && python manage.py runserver 0.0.0.0:80"
+        volumes:
+            - .:/usr/src/app
         ports:
-            - "5432:5432"
+            - "80:80"
+        links:
+            - pgdb
+        depends_on:
+            - pgdb
+
 volumes:
     pgdata:
 
