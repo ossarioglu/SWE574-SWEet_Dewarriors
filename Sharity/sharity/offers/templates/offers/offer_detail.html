@@ -81,7 +81,8 @@
     
                             {% else %}  
 
-                                
+                                <a class="btn btn-primary btn-sm" href="{% url 'offers.apply' object.uuid %}" role="button">Apply</a>
+
                                 <!-- If user is someone looking for applying the service, then first it's checked that
                                     user has already applied or not/-->
                                 {% if applications.count ==  0 %}

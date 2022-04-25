@@ -49,9 +49,9 @@ def requestOffer(request, sID):
 
                 # After notification is created, user is sent back to services information page
      #           if newnote:
-     #               application = Requestservice.objects.filter(serviceID=sID).filter(requesterID=request.user)
-     #               context = {'offers':Offering.objects.get(serviceID=sID), "applications":application}
-     #               return render(request, 'landing/offerings.html', context)
+                application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
+                context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+                return render(request, 'offers/offer_detail.html', context)
             else:
                 return HttpResponse("A problem occured. Please try again later")
         else:
@@ -86,7 +86,7 @@ def deleteRequest(request, rID):
     blkQnt= creditNeeded
 
     requestingUser = request.user
-    context = {'object':reqSrvs, 'obj':reqSrvs, 'providerUser':providerUser,'requestingUser':requestingUser, 'blockedQnt':blkQnt}
+    context = {'object':offer, 'obj':reqSrvs, 'providerUser':providerUser,'requestingUser':requestingUser, 'blockedQnt':blkQnt}
 
     if request.user != reqSrvs.requesterID:
         return HttpResponse('You are not allowed to delete this offer')
@@ -94,7 +94,8 @@ def deleteRequest(request, rID):
     #If user posts cancellation for request, request is deleted from database
     # Credits blocked for the event is given back to user by updating inprocessCredits 
    # if request.method == 'POST':
-   #     reqSrvs.delete()
+    
+    reqSrvs.delete()
 
     blkQnt = creditNeeded
     request.user.profile.blockCredit(+blkQnt)

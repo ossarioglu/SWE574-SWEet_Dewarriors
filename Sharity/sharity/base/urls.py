@@ -13,7 +13,7 @@ urlpatterns = [
     path('login/', memberview.signinPage, name="notifications"),
     path('login/', memberview.signinPage, name="handshake"),
     path('apply/<str:sID>/', applyview.requestOffer, name="offers.apply"),
-    path('apply/<str:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
+    path('cancelapply/<uuid:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
     path('assign/<str:rID>/', assignview.assignService, name="offers.assign"),
 
 ]
