@@ -31,7 +31,7 @@
                                 <p class="card-text"> Starts at {{result.start_date}} </p>
                                 <p class="card-text"> Duration: {{result.duration}} </p>
                                 <p class="card-text"> Type: {{result.get_type}} </p>
-                                <p class="card-text"> Tags: {{result.get_tag_label}} </p>
+                                <p class="card-text"> Tags: {{result.get_tag_labels}} </p>
                                 <p class="card-text"> Location: {{result.get_formatted_address}} </p>
                                 <p class="card-text"> Owner: {{result.owner}} </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
