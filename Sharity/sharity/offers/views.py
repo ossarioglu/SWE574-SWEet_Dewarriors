@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View
 from django.views.generic.edit import FormMixin
@@ -7,6 +9,7 @@ from django.utils.decorators import method_decorator
 from .forms import OfferCreateForm, OfferSearchForm
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from tags.services import TagService
 
 
 @method_decorator(never_cache, name='dispatch')
@@ -20,6 +23,19 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
 
         if form.instance.owner != self.request.user:
             return super(OfferCreateView, self).form_invalid(form)
+
+        wb_get_entities_response = TagService.find_by_ids(form.tag_ids)
+        claims = []
+
+        if 'entities' in wb_get_entities_response:
+            for entity in wb_get_entities_response['entities'].values():
+                for claim_id in entity['claims']:
+                    if claim_id in ['P31', 'P279']:
+                        for claim in entity['claims'][claim_id]:
+                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
+
+        form.instance.claims = json.dumps(claims, separators=(',', ':'))
+
         return super().form_valid(form)
 
     @method_decorator(csrf_protect)

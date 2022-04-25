@@ -1,3 +1,4 @@
+import json
 from django import forms
 from .models import Offer
 
@@ -34,6 +35,9 @@ class OfferCreateForm(forms.ModelForm):
         'id': 'tags',
         'style': 'padding: 0.375rem 1.75rem 0.375rem 0.75rem;',
     }))
+    claims = forms.CharField(widget=forms.HiddenInput(attrs={
+        'value': '[]',
+    }))
     type = forms.ChoiceField(choices=Offer.Type.choices, widget=forms.Select(attrs={
         'class': 'form-control',
     }))
@@ -50,7 +54,13 @@ class OfferCreateForm(forms.ModelForm):
             'photo',
             'tags',
             'type',
+            'claims',
         )
+
+    @property
+    def tag_ids(self):
+        tags_json = json.loads(self.cleaned_data['tags'].replace("\\'", '"'))
+        return tuple([tag['id'] for tag in tags_json])
 
 
 class OfferSearchForm(forms.ModelForm):

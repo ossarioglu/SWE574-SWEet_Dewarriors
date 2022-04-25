@@ -26,6 +26,7 @@ class Offer(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=500)
     location = models.TextField()
     tags = models.TextField()
+    claims = models.TextField(null=True, default='[]')
     owner = models.ForeignKey(
         'member.Owner',
         on_delete=models.CASCADE,
