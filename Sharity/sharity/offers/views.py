@@ -54,15 +54,13 @@ class AjaxHandlerView(LoginRequiredMixin, View):
         context = {}
         result = Offer.objects.all().exclude(owner=request.user)
 
-
         title_query = request.GET.get('title_query')
         location_query = request.GET.get('location_query')
         start_date_query = request.GET.get('start_date_query')
         duration_query = request.GET.get('duration_query')
         tags_query = request.GET.get('tags_query')
         offer_type_query = request.GET.get('type_query')
-
-
+        owner_query = request.GET.get('owner_query')
 
         # filter by title
         if title_query:
@@ -82,12 +80,18 @@ class AjaxHandlerView(LoginRequiredMixin, View):
         # filter by type
         if offer_type_query:
             result = result.filter(type=offer_type_query)
+        # filter by owner
+        if owner_query:
+            result = result.filter(owner__username__icontains=owner_query)
 
         context['filter_flag'] = False
         for key, value in self.request.GET.items():
             if key in ['title_query', 'location_query', 'start_date_query', 'duration_query', 'tags_query',
-                       'type_query'] and value:
-                context[key] = value
+                       'type_query', 'owner_query'] and value:
+                if key == 'type_query':
+                    context[key] = list(filter(lambda x: x[0] == int(value), Offer.Type.choices))[0][1]
+                else:
+                    context[key] = value
                 context['filter_flag'] = True
 
         context['result_list'] = result
@@ -101,12 +105,12 @@ class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
 
+    def get_queryset(self):
+        result = Offer.objects.all().exclude(owner=self.request.user)
+        return result
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
         return context
-
-    def get_queryset(self):
-        result = Offer.objects.all().exclude(owner=self.request.user)
-        return result

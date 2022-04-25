@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from apply.models import Application
 from assign.models import Assignment
-
 from offers.models import Offer
 
 # This is for listing assingments for the services
@@ -21,13 +20,13 @@ def assigning(request, ofnum):
     context = {'offers':offer, 'applications':application, "remainingCapacity":remainingCapacity}
     
     #This needs to be updated based on assignment Front-end
-    return render(request, 'landing/assignment.html', context)
+    return render(request, 'assign/assignment.html', context)
 
 # This is for accepting requests and assinging users for the services
 # Login is required to see details of services
 
 #@login_required(login_url='login')
-def assignService(request,sID, rID, uID, sType):
+def assignService(request, rID):
 
     # Information application to be assigned is retrieved
     myRequest = Application.objects.get(requestID=rID)
@@ -39,7 +38,7 @@ def assignService(request,sID, rID, uID, sType):
                 requestID=myRequest, 
                 approverID=request.user, 
                 requesterID=myRequest.requesterID, 
-                serviceType=myRequest.serviceID.serviceType, 
+                serviceType=myRequest.serviceType, 
                 status="Open"
             )    
        
@@ -101,7 +100,7 @@ def assignService(request,sID, rID, uID, sType):
                 # User is sent back to assignment page to see updates.
             application = Application.objects.filter(serviceID=myRequest.serviceID)
             context = {'offers':myRequest.serviceID, "applications":application, "remainingCapacity":remainingCapacity}
-            return render(request, 'landing/assignment.html', context)
+            return render(request, 'assign/assignment.html', context)
         else:
             return HttpResponse("A problem occured. Please try again later")
     else:

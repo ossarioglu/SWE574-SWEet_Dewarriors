@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+
+from offers.models import Offer
 from .forms import MyRegisterForm
 
 # Models and Formed used in this app
@@ -134,3 +136,14 @@ def updateProfile(request, userKey):
 def home(request):
     context = {'info': ''}
     return render(request, 'base/home.html', context)
+
+
+def listofferings(request):
+
+    myuser = request.user
+    # Queried service is retreived from all services
+    offer = Offer.objects.filter(owner=myuser)
+
+    # Serve information, and application info is sent to front-end
+    context = {'offerings':offer}
+    return render(request, 'assign/myofferings.html', context)

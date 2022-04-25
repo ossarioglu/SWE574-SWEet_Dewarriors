@@ -1,7 +1,7 @@
 import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from prompt_toolkit import Application
+from apply.models import Application
 
 from offers.models import Offer
 
@@ -29,7 +29,11 @@ def requestOffer(request, sID):
         if not Application.objects.filter(serviceID=offer).filter(requesterID=request.user).exists():
             
             # Status of new requests are Inprocess
-            newrequest = Application.objects.create(serviceID=offer, requesterID=request.user, serviceType=offer.Type, status='Inprocess')
+            newrequest = Application.objects.create(
+                                                    serviceID=offer, 
+                                                    requesterID=request.user, 
+                                                    serviceType=offer.type, 
+                                                    status='Inprocess')
             if newrequest:
                 
                 # When a request is created, credits of users are blocked by calling blockCredit method of Profile object
@@ -49,22 +53,22 @@ def requestOffer(request, sID):
 
                 # After notification is created, user is sent back to services information page
      #           if newnote:
-     #               application = Requestservice.objects.filter(serviceID=sID).filter(requesterID=request.user)
-     #               context = {'offers':Offering.objects.get(serviceID=sID), "applications":application}
-     #               return render(request, 'landing/offerings.html', context)
+                application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
+                context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+                return render(request, 'offers/offer_detail.html', context)
             else:
                 return HttpResponse("A problem occured. Please try again later")
         else:
             application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-            context = {'offers':Offer.objects.get(uuid=sID), "applications":application}
-            return render(request, 'landing/offerings.html', context)
+            context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+            return render(request, 'offers/offer_detail.html', context)
     
     # If user doesn't have enough credit, this state is sent to front-end as a message variable during render
     else:
         textMessage = "Not Enough Credit"
         application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-        context = {'offers':Offer.objects.get(uuid=sID), "applications":application, "textMessage":textMessage}
-        return render(request, 'landing/offerings.html', context)
+        context = {'object':Offer.objects.get(uuid=sID), "applications":application, "textMessage":textMessage}
+        return render(request, 'offers/offer_detail.html', context)
 
 # This is for cancelling user's applications.
 # Cancellation for request is done with request's unique id
@@ -86,19 +90,24 @@ def deleteRequest(request, rID):
     blkQnt= creditNeeded
 
     requestingUser = request.user
-    context = {'obj':reqSrvs, 'providerUser':providerUser,'requestingUser':requestingUser, 'blockedQnt':blkQnt}
-
+    
+    
     if request.user != reqSrvs.requesterID:
         return HttpResponse('You are not allowed to delete this offer')
 
     #If user posts cancellation for request, request is deleted from database
     # Credits blocked for the event is given back to user by updating inprocessCredits 
-    if request.method == 'POST':
-        reqSrvs.delete()
+   # if request.method == 'POST':
+    
+    reqSrvs.delete()
 
-        blkQnt = creditNeeded
-        request.user.profile.blockCredit(+blkQnt)
-        request.user.profile.save()
+    blkQnt = creditNeeded
+    request.user.profile.blockCredit(+blkQnt)
+    request.user.profile.save()
 
-        return redirect('home')
-    return render(request, 'landing/cancelRequest.html', context)
+    application = Application.objects.filter(serviceID=offer).filter(requesterID=request.user)
+
+    context = {'object':offer, "applications":application, "textMessage":''}
+
+    #    return redirect('home')
+    return render(request, 'offers/offer_detail.html', context)

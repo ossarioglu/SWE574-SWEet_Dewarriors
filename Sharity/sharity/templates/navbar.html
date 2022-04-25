@@ -60,7 +60,7 @@
             <img src="{{user.profile.userPicture.url}}" class="rounded-circle position-relative"  alt={{ request.user }} width="50" height="50"> 
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{ notes }}
-              <span class="visually-hidden">unread messages</span>
+              <span class="visually-hidden"></span>
             </span>
         </a>
 
@@ -77,6 +77,7 @@
                     <p class="dropdown-item text-primary"> Credits: {{ user.profile.creditAmount|add:user.profile.creditInprocess }} Ch </p>
                     <hr>
                     <a class="dropdown-item" href="{% url 'profile' request.user %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'listmyofferings' %}">My Offers</a>
                     <a class="dropdown-item" href="{% url 'handshake' %}">Actions</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>

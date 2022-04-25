@@ -72,7 +72,8 @@ class OfferSearchForm(forms.ModelForm):
             'start_date',
             'duration',
             'tags',
-            'type'
+            'type',
+            'owner'
         ]
     
     def __init__(self, *args, **kwargs):
@@ -107,6 +108,11 @@ class OfferSearchForm(forms.ModelForm):
             'class': 'search-form-type',
         })
         self.fields['type'].initial = 1
+        self.fields['owner'].widget = forms.TextInput(attrs={
+            'id': 'search-owner',
+            'class': 'search-form-owner',
+            'placeholder': 'Search by owner name'
+        })
 
         for key in self.fields.keys():
             self.fields[key].required = False
