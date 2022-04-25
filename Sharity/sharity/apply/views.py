@@ -29,7 +29,11 @@ def requestOffer(request, sID):
         if not Application.objects.filter(serviceID=offer).filter(requesterID=request.user).exists():
             
             # Status of new requests are Inprocess
-            newrequest = Application.objects.create(serviceID=offer, requesterID=request.user, serviceType=offer.Type, status='Inprocess')
+            newrequest = Application.objects.create(
+                                                    serviceID=offer, 
+                                                    requesterID=request.user, 
+                                                    serviceType=offer.type, 
+                                                    status='Inprocess')
             if newrequest:
                 
                 # When a request is created, credits of users are blocked by calling blockCredit method of Profile object
@@ -86,8 +90,8 @@ def deleteRequest(request, rID):
     blkQnt= creditNeeded
 
     requestingUser = request.user
-    context = {'object':offer, 'obj':reqSrvs, 'providerUser':providerUser,'requestingUser':requestingUser, 'blockedQnt':blkQnt}
-
+    
+    
     if request.user != reqSrvs.requesterID:
         return HttpResponse('You are not allowed to delete this offer')
 
@@ -100,6 +104,10 @@ def deleteRequest(request, rID):
     blkQnt = creditNeeded
     request.user.profile.blockCredit(+blkQnt)
     request.user.profile.save()
+
+    application = Application.objects.filter(serviceID=offer).filter(requesterID=request.user)
+
+    context = {'object':offer, "applications":application, "textMessage":''}
 
     #    return redirect('home')
     return render(request, 'offers/offer_detail.html', context)

@@ -10,10 +10,13 @@ urlpatterns = [
     path('logout/', memberview.signOut, name="logout"),
     path('signup/', memberview.signUp, name="signup"),
     path('member/<str:userKey>/', memberview.userProfile, name ="profile"),
-    path('login/', memberview.signinPage, name="notifications"),
+    path('myofferings/', memberview.listofferings, name="listmyofferings"),
     path('login/', memberview.signinPage, name="handshake"),
-    path('apply/<str:sID>/', applyview.requestOffer, name="offers.apply"),
+    path('login/', memberview.signinPage, name="notifications"),
+    path('apply/<uuid:sID>/', applyview.requestOffer, name="offers.apply"),
     path('cancelapply/<uuid:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
-    path('assign/<str:rID>/', assignview.assignService, name="offers.assign"),
+    path('assign/<uuid:rID>/', assignview.assignService, name="offers.assign"),
+    path('assignoffer/<uuid:ofnum>/', assignview.assigning, name="offers.listassign"),
+
 
 ]
