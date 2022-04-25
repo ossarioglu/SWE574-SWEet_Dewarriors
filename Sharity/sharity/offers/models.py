@@ -26,6 +26,7 @@ class Offer(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=500)
     location = models.TextField()
     tags = models.TextField()
+    claims = models.TextField(null=True, default='[]')
     owner = models.ForeignKey(
         'member.Owner',
         on_delete=models.CASCADE,
@@ -60,9 +61,9 @@ class Offer(models.Model):
         payload = json.loads(str(self.location).replace("\\'", '"'))
         return payload['icon']
 
-    def get_tag_label(self):
+    def get_tag_labels(self):
         payload = json.loads(str(self.tags).replace("\\'", '"'))
-        return payload['label']
+        return [tag['label'] for tag in payload]
 
     def get_type(self):
         return list(filter(lambda x: x[0] == self.type, self.Type.choices))[0][1]

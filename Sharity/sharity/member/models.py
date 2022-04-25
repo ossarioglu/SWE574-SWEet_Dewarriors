@@ -1,7 +1,8 @@
+import uuid
+import json
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-import uuid
 
 
 # Create your models here.
@@ -56,7 +57,7 @@ class Profile(models.Model):
     userDetails = models.TextField(max_length=1000, null=True)
     userSkills = models.TextField(max_length=1000, null=True)
     userInterests = models.TextField(max_length=1000, null=True)
-    userLocation = models.CharField(max_length=100)
+    userLocation = models.TextField()
     userBadge = models.TextField(max_length=100, null=True, default="None")
 
     userPicture = models.ImageField(upload_to='static/images/Profiles', null=True, default="male.png")
@@ -79,3 +80,22 @@ class Profile(models.Model):
 
     def checkCredit(self, amount):
         return ((self.creditAmount + self.creditInprocess) >= amount)
+
+    def get_formatted_address(self):
+        payload = json.loads(str(self.userLocation).replace("\\'", '"'))
+        return payload['formatted_address']
+
+    def get_skills_labels(self):
+        if len(str(self.userSkills).strip()) > 0:
+            payload = json.loads(str(self.userSkills).replace("\\'", '"'))
+            print("Payload is", payload)
+            return [tag['label'] for tag in payload]
+
+        return '[]'
+
+    def get_interests_labels(self):
+        if len(str(self.userInterests)) > 0:
+            payload = json.loads(str(self.userInterests).replace("\\'", '"'))
+            return [tag['label'] for tag in payload]
+
+        return '[]'

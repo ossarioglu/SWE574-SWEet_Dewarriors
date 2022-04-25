@@ -74,7 +74,7 @@ def signUp(request):
             At quick signup, Location is a mandatory field from Profile model
             New profile for this user is created and saved after adding Location information
             """
-            newProfile = Profile.objects.create(user=user, userLocation=request.POST.get('location'))
+            newProfile = Profile.objects.create(user=user, userLocation=request.POST.get('location-json'))
             newProfile.save()
 
             # After user is created, page is redirected to home page
@@ -112,16 +112,16 @@ def updateProfile(request, userKey):
     # Returns back to home page after update is done.
     if request.method == 'POST':
 
-        user.first_name = request.POST.get('firstName')
-        user.last_name = request.POST.get('lastName')
-        user.email = request.POST.get('email')
-        user.save()
+        # user.first_name = request.POST.get('firstName')
+        # user.last_name = request.POST.get('lastName')
+        # user.email = request.POST.get('email')
+        # user.save()
 
         myProfile.userLocation = request.POST.get('location')
-        myProfile.userDetails = request.POST.get('userDetails')
-        myProfile.userInterests = request.POST.get('userInterests')
-        myProfile.userSkills = request.POST.get('userSkills')
-        myProfile.userBadge = request.POST.get('userBadge')
+        # myProfile.userDetails = request.POST.get('userDetails')
+        myProfile.userInterests = request.POST.get('interests')
+        myProfile.userSkills = request.POST.get('skills')
+        # myProfile.userBadge = request.POST.get('userBadge')
 
         if request.FILES.get('picture') is not None:
             myProfile.userPicture = request.FILES.get('picture')

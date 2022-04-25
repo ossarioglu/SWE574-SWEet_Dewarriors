@@ -1,13 +1,197 @@
 <!DOCTYPE html>
-{% load static %}
 <html>
 <head>
 	<meta charset="utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Profile Page</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            let form = document.getElementById('registerform');
+            let previousQueryLength;
+            form.addEventListener('keyup', function(event) {
+                event.preventDefault()
+                let locationQuery = document.getElementById('location').value;
+                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
+                    let request = axios.get('/locations/search/?query=' + locationQuery)
+                        .then(function (response) {
+                            $('#location-wrapper .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.results.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
+
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start location');
+                                $(newLi).attr('id', 'location-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('background-image', 'url("' + response.data.response.results[x].icon + '")');
+                                $(newLi).css('background-repeat', 'no-repeat');
+                                $(newLi).css('background-position', '98% center');
+                                $(newLi).css('background-size', '5%');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.results[x].name);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.results[x].formatted_address);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#location-wrapper').css('display', 'flex');
+                                $('#location-wrapper').append(newLi);
+                            }
+
+                            $('.location').click(function() {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
+                                $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
+                                $('#location').css('background-repeat', 'no-repeat');
+                                $('#location').css('background-position', '98% center');
+                                $('#location').css('background-size', '5%');
+                                $('#location').val(response.data.response.results[resultIndex].formatted_address);
+                                $('#location-wrapper').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = locationQuery.length
+                        })
+                }
+            });
+
+			form.addEventListener('keyup', function(event) {
+				event.preventDefault();
+				let skillsTagsQuery = document.getElementById('skills').value.split(',').at(-1).trim();
+				if (skillsTagsQuery.length >= 2 && skillsTagsQuery.length < 15 && previousQueryLength !== skillsTagsQuery.length) {
+					let request = axios.get('/tags/search/?query=' + skillsTagsQuery)
+						.then(function (response) {
+							$('#tags-wrapper-skills .list-group-item').remove();
+							for (let x = 0; x < response.data.response.search.length; x++) {
+								let newLi = document.createElement('li');
+								let newDiv1 = document.createElement('div');
+								let newDiv2 = document.createElement('div');
+								let newSpan = document.createElement('span');
+
+								$(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
+								$(newLi).attr('id', 'tags-' + x);
+								$(newDiv1).addClass('ms-2 me-auto');
+								$(newLi).css('cursor', 'pointer');
+								$(newDiv2).addClass('fw-bold');
+								$(newDiv2).html(response.data.response.search[x].label);
+								$(newSpan).addClass('badge bg-primary rounded-pill');
+								$(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
+								$(newLi).append(newDiv1);
+								$(newLi).append(newSpan);
+								$('#tags-wrapper-skills').css('display', 'flex');
+								$('#tags-wrapper-skills').append(newLi);
+							}
+
+							$('.tags').click(function() {
+								let resultIndex = $(this).attr('id').split('-')[1]
+								let existingValue = JSON.parse($('#skills-tags-json').val());
+								existingValue.push(response.data.response.search[resultIndex]);
+								$('#skills-tags-json').val(JSON.stringify(existingValue));
+								var stringValue = '';
+								existingValue.forEach(function (tag) {
+									stringValue += tag.label + ', ';
+								});
+								$('#skills').val(stringValue);
+								$('#skills-tags-json').css('display', 'none');
+							});
+							request = null;
+						})
+						.catch(function (error) {
+							// handle error
+							console.log(error);
+						}).then(function () {
+							previousQueryLength = skillsTagsQuery.length
+						})
+				}
+			});
+
+			form.addEventListener('keyup', function(event) {
+				event.preventDefault();
+				let interestsTagsQuery = document.getElementById('interests').value.split(',').at(-1).trim();
+				if (interestsTagsQuery.length >= 2 && interestsTagsQuery.length < 15 && previousQueryLength !== interestsTagsQuery.length) {
+					let request = axios.get('/tags/search/?query=' + interestsTagsQuery)
+						.then(function (response) {
+							$('#tags-wrapper-interests .list-group-item').remove();
+							for (let x = 0; x < response.data.response.search.length; x++) {
+								let newLi = document.createElement('li');
+								let newDiv1 = document.createElement('div');
+								let newDiv2 = document.createElement('div');
+								let newSpan = document.createElement('span');
+
+								$(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
+								$(newLi).attr('id', 'tags-' + x);
+								$(newDiv1).addClass('ms-2 me-auto');
+								$(newLi).css('cursor', 'pointer');
+								$(newDiv2).addClass('fw-bold');
+								$(newDiv2).html(response.data.response.search[x].label);
+								$(newSpan).addClass('badge bg-primary rounded-pill');
+								$(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
+								$(newLi).append(newDiv1);
+								$(newLi).append(newSpan);
+								$('#tags-wrapper-interests').css('display', 'flex');
+								$('#tags-wrapper-interests').append(newLi);
+							}
+
+							$('.tags').click(function() {
+								let resultIndex = $(this).attr('id').split('-')[1]
+								let existingValue = JSON.parse($('#interests-tags-json').val());
+								existingValue.push(response.data.response.search[resultIndex]);
+								$('#interests-tags-json').val(JSON.stringify(existingValue));
+								var stringValue = '';
+								existingValue.forEach(function (tag) {
+									stringValue += tag.label + ', ';
+								});
+								$('#interests').val(stringValue);
+								$('#interests-tags-json').css('display', 'none');
+							});
+							request = null;
+						})
+						.catch(function (error) {
+							// handle error
+							console.log(error);
+						}).then(function () {
+							previousQueryLength = interestsTagsQuery.length
+						})
+				}
+			});
+
+            $('#submit-button').click(function (event) {
+                event.preventDefault();
+                $('#location').val($('#location-json').val());
+                $('#skills').val($('#skills-tags-json').val());
+                $('#interests').val($('#interests-tags-json').val());
+                $('#registerform').submit();
+            });
+
+            $(document).mouseup(function(e) {
+                let locationContainer = $('#location-wrapper');
+				let skillsContainer = $('#tags-wrapper-skills');
+				let interestsContainer = $('#tags-wrapper-interests');
+
+                if (!locationContainer.is(e.target) && locationContainer.has(e.target).length === 0) {
+                    locationContainer.hide();
+                }
+
+				if (!skillsContainer.is(e.target) && skillsContainer.has(e.target).length === 0) {
+                    skillsContainer.hide();
+                }
+
+				if (!interestsContainer.is(e.target) && interestsContainer.has(e.target).length === 0) {
+                    interestsContainer.hide();
+                }
+            });
+        });
+    </script>
 
 	<style id="applicationStylesheet" type="text/css">
 		.mediaViewInfo {
@@ -461,19 +645,19 @@
 		}
 		#skillsdiv {
 			left: 10.5px;
-			top: 5.5px;
-			position: absolute;
-			overflow: visible;
-			width: 203px;
-			white-space: nowrap;
-			line-height: 24px;
-			margin-top: -2px;
-			text-align: left;
-			font-family: HelveticaNeue;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 20px;
-			color: rgba(134,141,150,1);
+            top: 5.5px;
+            position: absolute;
+            overflow: visible;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 24px;
+            margin-top: -2px;
+            text-align: left;
+            font-family: HelveticaNeue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: rgba(134, 141, 150, 1);
 		}
 		#Group_Label {
 			left: 0px;
@@ -548,19 +732,19 @@
 		}
 		#interestsdiv {
 			left: 10.5px;
-			top: 5.5px;
-			position: absolute;
-			overflow: visible;
-			width: 346px;
-			white-space: nowrap;
-			line-height: 24px;
-			margin-top: -2px;
-			text-align: left;
-			font-family: HelveticaNeue;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 20px;
-			color: rgba(134,141,150,1);
+            top: 5.5px;
+            position: absolute;
+            overflow: visible;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 24px;
+            margin-top: -2px;
+            text-align: left;
+            font-family: HelveticaNeue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: rgba(134, 141, 150, 1);
 		}
 		#Group_Label_bq {
 			left: 0px;
@@ -687,6 +871,14 @@
 			top: 391.852px;
 			overflow: visible;
 		}
+		#FormForm_GroupHelperDefault_bz {
+			position: absolute;
+			width: 436.5px;
+			height: 71.149px;
+			left: 983px;
+			top: 732px;
+			overflow: visible;
+		}
 		#FormInputTextDefault_bz {
 			position: absolute;
 			width: 436px;
@@ -720,22 +912,44 @@
 			left: 0px;
 			top: 0px;
 		}
+
+		.form-control {
+            display: inline-block !important;
+            width: 95% !important;
+            padding: 0.170rem .75rem !important;
+        }
+
+		#buttonSignup {
+            left: 170px;
+            top: 9px;
+            position: absolute;
+            overflow: visible;
+            width: 75px;
+            white-space: nowrap;
+            text-align: left;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 1);
+        }
+
 		#locationdiv {
-			left: 10.5px;
-			top: 5.5px;
-			position: absolute;
-			overflow: visible;
-			width: 200px;
-			white-space: nowrap;
-			line-height: 24px;
-			margin-top: -2px;
-			text-align: left;
-			font-family: HelveticaNeue;
-			font-style: normal;
-			font-weight: normal;
-			font-size: 20px;
-			color: rgba(134,141,150,1);
-		}
+            left: 10.5px;
+            top: 5.5px;
+            position: absolute;
+            overflow: visible;
+            width: 100%;
+            white-space: nowrap;
+            line-height: 24px;
+            margin-top: -2px;
+            text-align: left;
+            font-family: HelveticaNeue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: rgba(134, 141, 150, 1);
+        }
 		#Group_Label_b {
 			left: 0px;
 			top: 0px;
@@ -3670,144 +3884,189 @@
 
 
 	<div id="Profile_Page">
-		<svg class="Rectangle_125">
-			<rect id="Rectangle_125" rx="74" ry="74" x="0" y="0" width="820" height="938">
-			</rect>
-		</svg>
-		
-		<img id="profilepicdiv" src="{{user.profile.userPicture.url}}">
-			
-		<div id="namesurnamediv">
-			<span>{{user.first_name}} {{user.last_name}}</span>
-		</div>
-		<div id="memberinfodiv">
-			<span>{{user.profile.userDetails}}</span>
-		</div>
-		<div id="emaildiv">
-			<span>{{user.email}}</span>
-		</div>
-		<svg class="Rectangle_126">
-			<rect id="Rectangle_126" rx="0" ry="0" x="0" y="0" width="628" height="137">
-			</rect>
-		</svg>
-		<svg class="Boundary_">
-			<rect id="Boundary_" rx="0" ry="0" x="0" y="0" width="64" height="64">
-			</rect>
-		</svg>
-		<div id="Component_29__1" class="Component_29___1">
-			<svg class="n_Color_" viewBox="0 0 47.249 43.014">
-				<path id="n_Color_" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-				</path>
+		<form method="post" action="{% url 'updateProfile' userKey=user.username %}" id="registerform">
+			{% csrf_token %}
+			<svg class="Rectangle_125">
+				<rect id="Rectangle_125" rx="74" ry="74" x="0" y="0" width="820" height="938">
+				</rect>
 			</svg>
-			<svg class="n_Color_ba" viewBox="0 0 47.249 43.014">
-				<path id="n_Color_ba" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-				</path>
+
+			<img id="profilepicdiv" src="{{user.profile.userPicture.url}}">
+
+			<div id="namesurnamediv">
+				<span>{{user.first_name}} {{user.last_name}}</span>
+			</div>
+			<div id="memberinfodiv">
+				<span>{{user.profile.userDetails}}</span>
+			</div>
+			<div id="emaildiv">
+				<span>{{user.email}}</span>
+			</div>
+			<svg class="Rectangle_126">
+				<rect id="Rectangle_126" rx="0" ry="0" x="0" y="0" width="628" height="137">
+				</rect>
 			</svg>
-			<svg class="n_Color_bb" viewBox="0 0 47.249 43.014">
-				<path id="n_Color_bb" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-				</path>
+			<svg class="Boundary_">
+				<rect id="Boundary_" rx="0" ry="0" x="0" y="0" width="64" height="64">
+				</rect>
 			</svg>
-			<svg class="n_Color_bc" viewBox="0 0 46 42">
-				<path id="n_Color_bc" d="M 8.780498504638672 42 L 8.781740188598633 41.99489212036133 L 12.55881690979004 26.45842742919922 L 0 16.00237464904785 L 16.53739547729492 14.65558052062988 L 23 0 L 29.46260643005371 14.63369750976562 L 46 16.00237464904785 L 33.46602630615234 26.45842742919922 L 37.21359252929688 41.9921760559082 L 23 33.75341033935547 L 8.785167694091797 41.9973030090332 L 8.780498504638672 42 Z M 23.00073432922363 9.065167427062988 L 22.99816131591797 9.065669059753418 L 23 29.61953163146973 L 31.67131805419922 34.65855026245117 L 29.37152671813965 25.19916343688965 L 37.00783157348633 18.83322906494141 L 26.93304061889648 17.99172973632812 L 23.00073432922363 9.065167427062988 Z">
-				</path>
+			<div id="Component_29__1" class="Component_29___1">
+				<svg class="n_Color_" viewBox="0 0 47.249 43.014">
+					<path id="n_Color_" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
+					</path>
+				</svg>
+				<svg class="n_Color_ba" viewBox="0 0 47.249 43.014">
+					<path id="n_Color_ba" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
+					</path>
+				</svg>
+				<svg class="n_Color_bb" viewBox="0 0 47.249 43.014">
+					<path id="n_Color_bb" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
+					</path>
+				</svg>
+				<svg class="n_Color_bc" viewBox="0 0 46 42">
+					<path id="n_Color_bc" d="M 8.780498504638672 42 L 8.781740188598633 41.99489212036133 L 12.55881690979004 26.45842742919922 L 0 16.00237464904785 L 16.53739547729492 14.65558052062988 L 23 0 L 29.46260643005371 14.63369750976562 L 46 16.00237464904785 L 33.46602630615234 26.45842742919922 L 37.21359252929688 41.9921760559082 L 23 33.75341033935547 L 8.785167694091797 41.9973030090332 L 8.780498504638672 42 Z M 23.00073432922363 9.065167427062988 L 22.99816131591797 9.065669059753418 L 23 29.61953163146973 L 31.67131805419922 34.65855026245117 L 29.37152671813965 25.19916343688965 L 37.00783157348633 18.83322906494141 L 26.93304061889648 17.99172973632812 L 23.00073432922363 9.065167427062988 Z">
+					</path>
+				</svg>
+				<svg class="n_Color_bd" viewBox="0 0 47.249 43.014">
+					<path id="n_Color_bd" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
+					</path>
+				</svg>
+			</div>
+			<div id="n_3_Handshakes">
+				<span>53 Handshakes</span>
+			</div>
+			<div id="usernamediv">
+				<span>{{user.username}}</span>
+			</div>
+			<div id="Following_12">
+				<span>Following: 12</span>
+			</div>
+			<div id="Follower_43">
+				<span>Follower: 43</span>
+			</div>
+			<svg class="Rectangle_63">
+				<rect id="Rectangle_63" rx="1" ry="1" x="0" y="0" width="8" height="119">
+				</rect>
 			</svg>
-			<svg class="n_Color_bd" viewBox="0 0 47.249 43.014">
-				<path id="n_Color_bd" d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-				</path>
+			<div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
+				<div id="FormInputTextDefault" class="Form_Input_Text_Default">
+					<div id="InputBase" class="Input_Base">
+						<svg class="InputBase_bh">
+							<rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
+							</rect>
+						</svg>
+					</div>
+					<div id="skillsdiv">
+						<input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
+						{% if user.profile.get_skills_labels|length > 0 %}{{user.profile.get_skills_labels|join:', '}}{% endif %}">
+						<input type="hidden" value="{{ user.profile.userSkills }}" name="skills-tags-json" id="skills-tags-json">
+						<ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
+							display: none;
+							position: relative;
+							background-color: rgb(255, 255, 255);
+							margin-top: 0;
+							padding-left: calc(var(--bs-gutter-x) / 2);
+							margin-bottom: 1rem;
+							width: 567px;
+							z-index: 1;
+							height: 180px;
+							overflow: scroll;"></ol>
+					</div>
+				</div>
+				<div id="Group_Label">
+					<span>Skills</span>
+				</div>
+			</div>
+			<div id="Edit">
+				<span>Edit</span>
+			</div>
+			<div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
+				<div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
+					<div id="InputBase_bn" class="Input_Base">
+						<svg class="InputBase_bo">
+							<rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
+							</rect>
+						</svg>
+					</div>
+					<div id="interestsdiv">
+						<input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests" value="
+						{% if user.profile.get_interests_labels|length > 0 %}{{user.profile.get_interests_labels|join:', '}}{% endif %}">
+						<input type="hidden" value="{{ user.profile.userInterests }}" name="interests-tags-json" id="interests-tags-json">
+						<ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
+							display: none;
+							position: relative;
+							background-color: rgb(255, 255, 255);
+							margin-top: 0;
+							padding-left: calc(var(--bs-gutter-x) / 2);
+							margin-bottom: 1rem;
+							width: 567px;
+							z-index: 1;
+							height: 180px;
+							overflow: scroll;"></ol>
+					</div>
+				</div>
+				<div id="Group_Label_bq">
+					<span>Interests</span>
+				</div>
+			</div>
+			<div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
+				<div id="Group_Label_bs">
+					<span>Badges</span>
+				</div>
+			</div>
+			<div id="creditdiv">
+				<span>Credit: {{user.profile.creditAmount}} hours</span>
+			</div>
+			<svg class="Rectangle_116">
+				<rect id="Rectangle_116" rx="11" ry="11" x="0" y="0" width="93" height="22">
+				</rect>
 			</svg>
-		</div>
-		<div id="n_3_Handshakes">
-			<span>53 Handshakes</span>
-		</div>
-		<div id="usernamediv">
-			<span>{{user.username}}</span>
-		</div>
-		<div id="Following_12">
-			<span>Following: 12</span>
-		</div>
-		<div id="Follower_43">
-			<span>Follower: 43</span>
-		</div>
-		<svg class="Rectangle_63">
-			<rect id="Rectangle_63" rx="1" ry="1" x="0" y="0" width="8" height="119">
-			</rect>
-		</svg>
-		<div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
-			<div id="FormInputTextDefault" class="Form_Input_Text_Default">
-				<div id="InputBase" class="Input_Base">
-					<svg class="InputBase_bh">
-						<rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
-						</rect>
-					</svg>
-				</div>
-				<div id="skillsdiv">
-					<span>{{user.profile.userSkills}}</span>
-				</div>
+			<div id="Patient">
+				<span>Patient</span>
 			</div>
-			<div id="Group_Label">
-				<span>Skills</span>
+			<svg class="Rectangle_117">
+				<rect id="Rectangle_117" rx="11" ry="11" x="0" y="0" width="133" height="22">
+				</rect>
+			</svg>
+			<div id="Good_Listener">
+				<span>Good Listener</span>
 			</div>
-		</div>
-		<div id="Edit">
-			<span>Edit</span>
-		</div>
-		<div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
-			<div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
-				<div id="InputBase_bn" class="Input_Base">
-					<svg class="InputBase_bo">
-						<rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
-						</rect>
-					</svg>
+			<div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
+				<div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
+					<div id="InputBase_b" class="Input_Base">
+						<svg class="InputBase_ca">
+							<rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
+							</rect>
+						</svg>
+					</div>
+					<div id="locationdiv">
+						<input type="text" class="form-control" name="location" id="location" placeholder="Your Location" value="{{user.profile.get_formatted_address}}">
+						<input type="hidden" value="" name="location-json" id="location-json">
+						<ol class="list-group list-group-numbered" id="location-wrapper" style="
+							display: none;
+							position: relative;
+							background-color: rgb(255, 255, 255);
+							margin-top: 0;
+							padding-left: calc(var(--bs-gutter-x) / 2);
+							margin-bottom: 1rem;
+							width: 567px;
+							z-index: 1;
+							height: 180px;
+							overflow: scroll;
+						"></ol>
+					</div>
 				</div>
-				<div id="interestsdiv">
-					<span>{{user.profile.userInterests}} </span>
+				<div id="Group_Label_b">
+					<span>Location</span>
 				</div>
 			</div>
-			<div id="Group_Label_bq">
-				<span>Interests</span>
-			</div>
-		</div>
-		<div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
-			<div id="Group_Label_bs">
-				<span>Badges</span>
-			</div>
-		</div>
-		<div id="creditdiv">
-			<span>Credit: {{user.profile.creditAmount}} hours</span>
-		</div>
-		<svg class="Rectangle_116">
-			<rect id="Rectangle_116" rx="11" ry="11" x="0" y="0" width="93" height="22">
-			</rect>
-		</svg>
-		<div id="Patient">
-			<span>Patient</span>
-		</div>
-		<svg class="Rectangle_117">
-			<rect id="Rectangle_117" rx="11" ry="11" x="0" y="0" width="133" height="22">
-			</rect>
-		</svg>
-		<div id="Good_Listener">
-			<span>Good Listener</span>
-		</div>
-		<div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
-			<div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
-				<div id="InputBase_b" class="Input_Base">
-					<svg class="InputBase_ca">
-						<rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
-						</rect>
-					</svg>
-				</div>
-				<div id="locationdiv">
-					<span>{{user.profile.userLocation}}</span>
+			<div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
+				<div id="buttonSignup">
+					<button class="btn btn-primary" form="registerform" type="submit" id="submit-button" value="Submit">Save</button>
 				</div>
 			</div>
-			<div id="Group_Label_b">
-				<span>Location</span>
-			</div>
-		</div>
+		</form>
 	</div>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
 </body>
 </html>
