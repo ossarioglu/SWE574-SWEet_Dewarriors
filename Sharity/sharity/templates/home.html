@@ -4988,10 +4988,10 @@
 			<rect id="Rectangle_65" rx="19" ry="19" x="0" y="0" width="285" height="241">
 			</rect>
 		</svg>
-		<img id="Image_2_bu" src="{% static 'images/main/Image_2_bu.png' %}" srcset="{% static 'images/main/Image_2_bu.png' %} 1x, {% static 'images/main/Image_2_bu@2x.png' %} 2x">
+		<img id="Image_2_bu" src="{{ offers.0.photo.url }}">
 			
 		<div id="Barista_vegan_milk_by_Ryan_Su__bv">
-			<span>Barista vegan milk</span><span style="color:rgba(0,0,0,1);"> by </span><span>Ryan Su </span>
+			<span>{{ offers.0.title }}</span><span style="color:rgba(0,0,0,1);"> by </span><span>{{ offers.0.owner.first_name }} {{ offers.0.owner.last_name }}</span>
 		</div>
 		<div id="n_4_Handshakes_bw">
 			<span>34 Handshakes</span>
@@ -5159,7 +5159,7 @@
 					</rect>
 				</svg>
 				<div id="Play_Soccer_by_Vanessa_Grand">
-					<span>Play Soccer </span><span style="color:rgba(0,0,0,1);">by</span><span> Vanessa Grand</span>
+					<span>{{ offers.1.title }} </span><span style="color:rgba(0,0,0,1);">by</span><span> {{ offers.1.owner.first_name }} {{ offers.1.owner.last_name }}</span>
 				</div>
 				<div id="n_5_Handshakes">
 					<span>65 Handshakes</span>
@@ -5225,7 +5225,7 @@
 					</svg>
 				</div>
 			</div>
-			<img id="Image_4" src="{% static 'images/main/Image_4.png' %}" srcset="{% static 'images/main/Image_4.png' %} 1x, {% static 'images/main/Image_4@2x.png' %} 2x">
+			<img id="Image_4" src="{{ offers.1.photo.url }}">
 				
 		</div>
 		<div id="icontogglestar_half_24px" class="icon_toggle_star_half_24px">
@@ -5333,7 +5333,7 @@
 							</svg>
 						</div>
 						<div id="Compose_music_by_Ash_Juarez_">
-							<span>Compose music </span><span style="color:rgba(0,0,0,1);">by</span><span> Ash Juarez </span>
+							<span>{{ offers.2.title }} </span><span style="color:rgba(0,0,0,1);">by</span><span> {{ offers.2.owner.first_name }} {{ offers.2.owner.last_name }} </span>
 						</div>
 						<div id="n_5_Handshakes_ew">
 							<span>65 Handshakes</span>
@@ -5412,7 +5412,7 @@
 				</svg>
 			</div>
 		</div>
-		<img id="Image_3" src="{% static 'images/main/Image_3.png' %}" srcset="{% static 'images/main/Image_3.png' %} 1x, {% static 'images/main/Image_3@2x.png' %} 2x">
+		<img id="Image_3" src="{{ offers.2.photo.url }}">
 			
 	</div>
 
