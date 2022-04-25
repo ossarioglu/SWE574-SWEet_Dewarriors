@@ -30,10 +30,12 @@
                                 <h5 class="card-title"> {{result.title}} </h5>
                                 <p class="card-text"> Starts at {{result.start_date}} </p>
                                 <p class="card-text"> Duration: {{result.duration}} </p>
-                                <p class="card-text"> Type: {{result.type}} </p>
-                                <p class="card-text"> Tags: {{result.tags}} </p>
-                                <p class="card-text"> Location: {{result.location}} </p>
-                                <a href="#" class="btn btn-primary">Go to Offer</a>
+                                <p class="card-text"> Type: {{result.get_type}} </p>
+                                <p class="card-text"> Tags: {{result.get_tag_label}} </p>
+                                <p class="card-text"> Location: {{result.get_formatted_address}} </p>
+                                <p class="card-text"> Owner: {{result.owner}} </p>
+                                <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
+                                <a href="" class="btn btn-primary">Apply to Offer</a>
                             </div>
                         </div>
                     </div>
@@ -67,6 +69,7 @@
                         start_date_query: $("#search-start_date").val(),
                         tags_query: $("#search-tags").val(),
                         type_query: $("#search-type").val(),
+                        owner_query: $("#search-owner").val(),
                     },
                     success: function(response) {
                         $("#id_results").html("");
@@ -98,7 +101,7 @@
         }
 
         .results {
-            width: 70%;
+            width: 80%;
         }
 
         .search-sidebar {
