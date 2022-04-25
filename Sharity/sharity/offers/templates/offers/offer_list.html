@@ -10,7 +10,7 @@
 
         <div class="search-sidebar">
             <h2>Filter</h2>
-            <form action='.' id='search-form' method='GET'>
+            <form action='.' id='search-form' autocomplete="off" method='GET'>
                 {{form.as_p}}
                 <input type='button' id="id_filter_button" class='btn btn-success' method="GET" value='Filter'/>
                 <button class='btn btn-success'> <a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a> </button>
@@ -21,16 +21,34 @@
         <div id="id_results" class="results">
             <h2>All Offers</h2>
             <p> {{object_list|length}} result(s) found </p>
-            {% for result in object_list %}
-            ************************************
+            <div class="row">
+                {% for result in object_list %}
+
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"> {{result.title}} </h5>
+                                <p class="card-text"> Starts at {{result.start_date}} </p>
+                                <p class="card-text"> Duration: {{result.duration}} </p>
+                                <p class="card-text"> Type: {{result.type}} </p>
+                                <p class="card-text"> Tags: {{result.tags}} </p>
+                                <p class="card-text"> Location: {{result.location}} </p>
+                                <a href="#" class="btn btn-primary">Go to Offer</a>
+                            </div>
+                        </div>
+                    </div>
+              
+            {% comment %} ************************************
                 <p> <b> {{result.title}} </b> </p>
                 <p> Starts at {{result.start_date}} </p>
                 <p> Duration: {{result.duration}} hours </p>
                 <p> Type: {{result.type}} </p>
-            {% empty %}
-            {% endfor %}
+                <p> Tag: {{result.tags}} </p>
+                <p> Location: {{result.location}} </p> {% endcomment %}
+                {% empty %}
+                {% endfor %}
+            </div>
         </div>
-
     </div>
 
 {% endblock content %}
@@ -56,6 +74,13 @@
                     }
                 });
             });
+
+            $('body').keypress(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    $("#id_filter_button").click();
+                }
+            });
         });
     </script>
 {% endblock js %}
@@ -68,8 +93,12 @@
             margin-top: 15px;
         }
 
+        #search-form label {
+            width: 76.2px;
+        }
+
         .results {
-            width: 30%;
+            width: 70%;
         }
 
         .search-sidebar {
