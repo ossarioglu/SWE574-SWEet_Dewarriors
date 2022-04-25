@@ -27,7 +27,7 @@ def assigning(request, ofnum):
 # Login is required to see details of services
 
 #@login_required(login_url='login')
-def assignService(request,sID, rID, uID, sType):
+def assignService(request, rID):
 
     # Information application to be assigned is retrieved
     myRequest = Application.objects.get(requestID=rID)
