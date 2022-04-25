@@ -35,7 +35,7 @@
                                 <p class="card-text"> Location: {{result.get_formatted_address}} </p>
                                 <p class="card-text"> Owner: {{result.owner}} </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
-                                <a href="{% url 'offers.apply' result.uuid %}" class="btn btn-primary">Apply to Offer</a>
+                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
                             </div>
                         </div>
                     </div>
