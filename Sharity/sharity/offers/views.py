@@ -18,6 +18,9 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
 
+    def form_invalid(self, form):
+        print(form.errors)
+
     def form_valid(self, form):
         form.instance.owner = self.request.user
 
