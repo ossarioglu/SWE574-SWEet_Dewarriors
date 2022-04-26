@@ -37,9 +37,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
                         for claim in entity['claims'][claim_id]:
                             claims.append(claim['mainsnak']['datavalue']['value']['id'])
 
-        print("Type of claims", type(json.dumps(claims, separators=(',', ':'))))
         form.instance.claims = json.dumps(claims, separators=(',', ':'))
-        print("Type of claims", type(form.instance.claims))
 
         return super().form_valid(form)
 
