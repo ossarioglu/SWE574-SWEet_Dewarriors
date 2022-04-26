@@ -18,6 +18,9 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
 
+    def form_invalid(self, form):
+        print(form.errors)
+
     def form_valid(self, form):
         form.instance.owner = self.request.user
 
@@ -34,7 +37,9 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
                         for claim in entity['claims'][claim_id]:
                             claims.append(claim['mainsnak']['datavalue']['value']['id'])
 
+        print("Type of claims", type(json.dumps(claims, separators=(',', ':'))))
         form.instance.claims = json.dumps(claims, separators=(',', ':'))
+        print("Type of claims", type(form.instance.claims))
 
         return super().form_valid(form)
 
