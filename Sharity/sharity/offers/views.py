@@ -68,7 +68,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
             print(form.cleaned_data)
             context = {}
             filters = {}
-            args = Q()
+            tag_args = Q()
+            title_args = Q()
             filter_flag = False
             filter_words = {
                 'title': '__icontains',
@@ -84,14 +85,20 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
                     filter_flag = True
                     if key == 'tags':
                         context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
-                        for tag in [i.strip() for i in value.split(',')]:
-                            if tag != '':
-                                args |= Q(**{key + filter_words[key]: tag})
+                        for tag in [i.strip() for i in value.split(',') if i.strip() != '']:
+                            tag_args |= Q(**{key + filter_words[key]: tag})
+                    elif key == 'title':
+                        context[key + '_query'] = value
+                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            title_args |= Q(**{key + filter_words[key]: tag})
                     else:
-                        context[key + '_query'] = value   
+                        if key == 'type':
+                            context[key + '_query'] = 'Service' if value == 1 else 'Event'
+                        else:
+                            context[key + '_query'] = value  
                         filters[key + filter_words[key]] = value
 
-            context['result_list'] = Offer.objects.filter(*(args,), **filters).exclude(owner=self.request.user)
+            context['result_list'] = Offer.objects.filter(*(tag_args, title_args), **filters).exclude(owner=self.request.user)
             context['filter_flag'] = filter_flag
 
             return render(self.request, 'offers/ajax_offer_results.html', context)
@@ -101,11 +108,19 @@ class OfferListView(LoginRequiredMixin, ListView):
     template_name = 'offers/offer_list.html'
 
     def get_queryset(self):
-        result = Offer.objects.all().exclude(owner=self.request.user)
+        if self.request.GET.get('title'):
+            args = Q()
+            for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
+                args |= Q(**{'title__icontains': keyword})
+            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user)
+        else:
+            result = Offer.objects.all().exclude(owner=self.request.user)
         return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
+        if self.request.GET.get('title'):
+            context['title_query'] = self.request.GET.get('title')
         return context

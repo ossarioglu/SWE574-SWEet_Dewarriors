@@ -64,6 +64,11 @@ class OfferCreateForm(forms.ModelForm):
 
 
 class OfferSearchForm(forms.ModelForm):
+    owner = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
+        'id': 'search-owner',
+        'class': 'search-form-owner',
+        'placeholder': 'Search by owner name'
+    }))
     class Meta:
         model = Offer
         fields = [
@@ -73,7 +78,6 @@ class OfferSearchForm(forms.ModelForm):
             'duration',
             'tags',
             'type',
-            'owner'
         ]
     
     def __init__(self, *args, **kwargs):
@@ -113,12 +117,6 @@ class OfferSearchForm(forms.ModelForm):
         new_choices.insert(0, ('', 'All'))
         self.fields['type'].choices = new_choices
         self.fields['type'].initial = ''
-        
-        self.fields['owner'].widget = forms.TextInput(attrs={
-            'id': 'search-owner',
-            'class': 'search-form-owner',
-            'placeholder': 'Search by owner name'
-        })
 
         for key in self.fields.keys():
             self.fields[key].required = False
