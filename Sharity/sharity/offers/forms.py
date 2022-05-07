@@ -107,7 +107,13 @@ class OfferSearchForm(forms.ModelForm):
             'id': 'search-type',
             'class': 'search-form-type',
         })
-        self.fields['type'].initial = 1
+        
+        new_choices = list(self.fields['type'].choices)
+        new_choices.remove(('', '---------'))
+        new_choices.insert(0, ('', 'All'))
+        self.fields['type'].choices = new_choices
+        self.fields['type'].initial = ''
+        
         self.fields['owner'].widget = forms.TextInput(attrs={
             'id': 'search-owner',
             'class': 'search-form-owner',

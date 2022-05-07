@@ -1,7 +1,9 @@
 import json
+from tkinter import E
+from tracemalloc import start
 
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View, FormView
 from django.views.generic.edit import FormMixin
 from .models import Offer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -10,6 +12,8 @@ from .forms import OfferCreateForm, OfferSearchForm
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
+from django.http import JsonResponse
+from django.db.models import Q
 
 
 @method_decorator(never_cache, name='dispatch')
@@ -52,58 +56,46 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
     model = Offer
 
 
-class AjaxHandlerView(LoginRequiredMixin, View):
-    def get(self, request):
-        context = {}
-        result = Offer.objects.all().exclude(owner=request.user)
+class AjaxHandlerView(LoginRequiredMixin, FormView):
+    form_class = OfferSearchForm
 
-        title_query = request.GET.get('title_query')
-        location_query = request.GET.get('location_query')
-        start_date_query = request.GET.get('start_date_query')
-        duration_query = request.GET.get('duration_query')
-        tags_query = request.GET.get('tags_query')
-        offer_type_query = request.GET.get('type_query')
-        owner_query = request.GET.get('owner_query')
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+    
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            print(form.cleaned_data)
+            context = {}
+            filters = {}
+            args = Q()
+            filter_flag = False
+            filter_words = {
+                'title': '__icontains',
+                'location': '__icontains',
+                'start_date': '__gte',
+                'duration': '__lte',
+                'tags': '__icontains',
+                'type': '',
+                'owner': '__username__icontains'
+            }
+            for key, value in form.cleaned_data.items():
+                if value != '' and value is not None:
+                    filter_flag = True
+                    if key == 'tags':
+                        context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
+                        for tag in [i.strip() for i in value.split(',')]:
+                            if tag != '':
+                                args |= Q(**{key + filter_words[key]: tag})
+                    else:
+                        context[key + '_query'] = value   
+                        filters[key + filter_words[key]] = value
 
-        # filter by title
-        if title_query:
-            result = result.filter(title__icontains=title_query)
-        # filter by location
-        if location_query:
-            result = result.filter(location__icontains=location_query)
-        # filter by start date
-        if start_date_query:
-            result = result.filter(start_date__gt=start_date_query)
-        # filter by duration
-        if duration_query:
-            result = result.filter(duration__lte=duration_query)
-        # filter by tags
-        if tags_query:
-            result = result.filter(tags__icontains=tags_query)
-        # filter by type
-        if offer_type_query:
-            result = result.filter(type=offer_type_query)
-        # filter by owner
-        if owner_query:
-            result = result.filter(owner__username__icontains=owner_query)
+            context['result_list'] = Offer.objects.filter(*(args,), **filters).exclude(owner=self.request.user)
+            context['filter_flag'] = filter_flag
 
-        context['filter_flag'] = False
-        for key, value in self.request.GET.items():
-            if key in ['title_query', 'location_query', 'start_date_query', 'duration_query', 'tags_query',
-                       'type_query', 'owner_query'] and value:
-                if key == 'type_query':
-                    context[key] = list(filter(lambda x: x[0] == int(value), Offer.Type.choices))[0][1]
-                else:
-                    context[key] = value
-                context['filter_flag'] = True
+            return render(self.request, 'offers/ajax_offer_results.html', context)
 
-        context['result_list'] = result
-
-        return render(request, 'offers/ajax_offer_results.html', context)
-
-
-# @method_decorator(never_cache, name='dispatch')
-# @method_decorator(csrf_exempt, name='dispatch')
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
