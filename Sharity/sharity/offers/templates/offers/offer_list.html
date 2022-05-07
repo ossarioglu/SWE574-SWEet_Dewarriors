@@ -37,6 +37,13 @@
         </div>
 
         <div id="id_results" class="results">
+
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style="display: none;">
+                  <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
             <div>
                 {% if title_query %}
                     <div class="applied-filters">
@@ -84,6 +91,7 @@
     <script>
         $(document).ready(function() {
             $("#search-form").submit(function(e) {
+                $(".spinner-border").show();
                 e.preventDefault();
 
                 $.ajax({
@@ -91,12 +99,14 @@
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
+                        $(".spinner-border").hide();
                         $("#id_results").html(response);
                     }
                 });
             });
 
             $(".remove-filter").click(function(e) {
+                $(".spinner-border").show();
                 var attribute = $(this).attr("id").split("-")[3];
                 $("#search-" + attribute).val("");
                 $.ajax({
@@ -104,6 +114,7 @@
                     url: $("#search-form").attr("get-offers-url"),
                     data: $("#search-form").serialize(),
                     success: function(response) {
+                        $(".spinner-border").hide();
                         $("#id_results").html(response);
                     }
                 });

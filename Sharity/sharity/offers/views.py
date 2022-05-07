@@ -65,7 +65,6 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
     
     def form_valid(self, form):
         if self.request.is_ajax():
-            print(form.cleaned_data)
             context = {}
             filters = {}
             tag_args = Q()
