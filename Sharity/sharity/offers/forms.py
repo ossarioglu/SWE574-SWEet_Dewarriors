@@ -15,10 +15,12 @@ class OfferCreateForm(forms.ModelForm):
     start_date = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'datepicker',
+        "type" : "datetime-local"
     }))
     amendment_deadline = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'datepicker',
+        "type": "datetime-local"
     }))
     duration = forms.IntegerField(widget=forms.TextInput(attrs={
         'class': 'form-control',

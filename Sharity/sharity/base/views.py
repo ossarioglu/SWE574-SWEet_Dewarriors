@@ -17,3 +17,5 @@ def home(request):
     return render(request, 'home.html', {'offers': result, 'notes':unreadNote})
 
 
+
+
