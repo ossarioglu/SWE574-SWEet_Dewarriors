@@ -23,4 +23,5 @@ urlpatterns = [
     path('tags/', include('tags.urls')),
     path('locations/', include('locations.urls')),
     path('offers/', include('offers.urls')),
+    path('mail/', include('usermessages.urls')),
 ]

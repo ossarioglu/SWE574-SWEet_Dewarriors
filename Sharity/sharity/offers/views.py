@@ -1,6 +1,4 @@
 import json
-from tkinter import E
-from tracemalloc import start
 
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View, FormView

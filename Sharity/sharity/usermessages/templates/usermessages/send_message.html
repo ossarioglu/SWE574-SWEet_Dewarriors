@@ -1,0 +1,72 @@
+<h1>Compose A Message</h1>
+{% if child %}
+    <p id="id-child" data-id="{{child.id}}"> Replying {{child.subject}} from {{child.message_from}} </p>
+{% endif %}
+<form id="id-message-form" action="{% url 'usermessages.create' %}"> {% csrf_token %}
+    <div class="form-group" id="id-to-field">
+        <label for="exampleInputEmail1">Recipients</label>
+        {{form.to}}
+    </div>
+
+    <div class="form-group" id="id-subject-field">
+        <label for="exampleInputEmail1">Subject</label>
+        {{form.subject}}
+    </div>
+
+    <div class="form-group" id="id-body-field">
+        <label for="exampleInputEmail1">Body</label>
+        {{form.body}}
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Send"/>
+</form>
+
+<script>
+    function format_recipients(recipients) {
+        // remove whitespaces at the start and end
+        recipients = recipients.trim();
+        // remove all characters that cannot be in usernames
+        recipients = recipients.replace(/[^a-zA-Z\s]/g, '');
+        // remove all excessive whitespaces in the middle
+        recipients = recipients.replace(/\s{2,}/g, ' ');
+        // get all usernames by splitting
+        var usernames = recipients.split(' ');
+        // put them in right format
+        var formatted = '';
+        for (i = 0; i < usernames.length; i++) {
+            formatted += usernames[i] + '; '
+        }
+        return formatted;
+    }
+
+    $(document).ready(function() {
+        $("#id-form-to").blur(function() {
+            formatted = format_recipients($(this).val());
+            $(this).val(formatted);
+        });
+
+        $("#id-message-form").submit(function(e) {
+            e.preventDefault();
+            if ($("#id-child").length) {
+                var child_id = $("#id-child").attr("data-id");
+                var data = $(this).serialize() + '&child_id=' + child_id;
+            } else {
+                var data = $(this).serialize();
+            }
+            
+            $.ajax({
+                type: 'POST',
+                data: data,
+                url: $(this).attr("action"),
+                success: function(response) {
+                    window.location.href = "{% url 'usermessages.main' %}";
+                },
+                error: function(response) {
+                    $.each(response.responseJSON, function(key, value) {
+                        $("#id-" + key + "-field").append("<div class='alert alert-danger'>" + value + "</div>");
+                    });
+                }
+            });
+        });
+    });
+</script>
