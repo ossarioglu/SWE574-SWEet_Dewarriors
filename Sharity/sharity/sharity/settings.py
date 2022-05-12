@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'offers',
     'apply.apps.ApplyConfig',
     'assign.apps.AssignConfig',
-    'notification.apps.NotificationConfig'
+    'notification.apps.NotificationConfig',
+    'usermessages',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,33 @@
+<form id="id-delete-form" data-id="{{object.id}}" action="{% url 'usermessages.delete' %}">{% csrf_token %}
+    <div class="alert alert-danger"> Are you sure you want to delete this message? </div>
+    <small> Important: You can restore this message later from deleted messages tab. </small>
+    <div class="detail" style="margin-top: 0px;">
+        <ul>
+            <li> <b> From: </b> {{object.message_from}} </li>
+            <li> <b> To: </b> {% for t in object.message_to.all %} {{t}} {% endfor %} </li> 
+            <li> <b> Sent at: </b> {{object.sent_at}} </li> 
+            <li> <b> Subject: </b> {{object.subject}} </li>
+        </ul>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Confirm">
+</form>
+
+<script>
+    $(document).ready(function() {
+        $("#id-delete-form").submit(function(e) {
+            e.preventDefault();
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+            $.ajax({
+                headers: {'X-CSRFToken': csrftoken},
+                type: 'POST',
+                url: $(this).attr("action"),
+                data: {
+                    'id': $(this).attr("data-id")
+                },
+                success: function(response) {
+                    window.location.href = "{% url 'usermessages.main' %}";
+                }
+            });
+        });
+    });
+</script>
