@@ -3959,7 +3959,7 @@
 					<div id="skillsdiv">
 						<input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
 						{% if user.profile.get_skills_labels|length > 0 %}{{user.profile.get_skills_labels|join:', '}}{% endif %}">
-						<input type="hidden" value="{{ user.profile.userSkills }}" name="skills-tags-json" id="skills-tags-json">
+						<input type="hidden" value="{% if not user.profile.userSkills %}[]{% else %}{{user.profile.userSkills}}{% endif %}" name="skills-tags-json" id="skills-tags-json">
 						<ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
 							display: none;
 							position: relative;
@@ -3991,7 +3991,7 @@
 					<div id="interestsdiv">
 						<input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests" value="
 						{% if user.profile.get_interests_labels|length > 0 %}{{user.profile.get_interests_labels|join:', '}}{% endif %}">
-						<input type="hidden" value="{{ user.profile.userInterests }}" name="interests-tags-json" id="interests-tags-json">
+						<input type="hidden" value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}" name="interests-tags-json" id="interests-tags-json">
 						<ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
 							display: none;
 							position: relative;
