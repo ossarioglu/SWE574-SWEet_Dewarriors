@@ -107,3 +107,14 @@ def assignService(request, rID):
             return HttpResponse("A problem occured. Please try again later")
     else:
         return redirect('home')
+
+
+# This is for listing all approved assignment for both provider and receiver
+# Login is required to see details of services
+#@login_required(login_url='login')
+def handshaking(request):
+    providedAssignment = Assignment.objects.filter(approverID=request.user)
+    receivedAssignment = Assignment.objects.filter(requesterID=request.user)
+
+    context = {'providedAssignments':providedAssignment, "receivedAssignments":receivedAssignment}
+    return render(request, 'assign/handshake.html', context)

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcoming/Landing Page</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>    
+        <title>My Offerings</title>
+
+    </head>
+    <body>
+
+        {% include 'navbar.html' %}
+
+
+        <!-- This page is for listing assignments to user
+            Page gets providedAssignments, receivedAssignments from backend as input /-->
+
+        <!-- Styling for Div containers /-->
+        <style>
+            .offerings-container{
+                display: grid;
+                grid-template-columns: 2fr 6fr 4fr; 
+            }
+            .format-container{
+                display: grid;
+                grid-template-columns: 3fr 3fr 5fr; 
+            }
+            .applications-container{
+                display: grid;
+                grid-template-columns: 1fr 2fr 2fr 2fr; 
+            }
+        </style>
+        
+        <!-- This lists the assignments for offered services /-->
+        {% if providedAssignments.count > 0 %}
+            </span> 
+                <hr>
+                <h4> Offered Services </h4>
+                <hr>
+            <span>
+
+            {% for myAssign in providedAssignments %}
+
+                <!-- For each assignment, related service information is displayed to user /-->
+                <div class="offerings-container">
+                    <div>
+                    </div>
+
+                    <div>
+                        <span>
+                            <div class="format-container">
+                                <div>
+                                    <img src="{{myAssign.requestID.serviceID.photo.url}}" width="150" height="150"> 
+                                </div>
+                                <div>
+                                    <h3> {{ myAssign.requestID.serviceID.title }}</h3>
+                                    <h7>by</h7>
+                                    <h5> @{{ myAssign.requestID.serviceID.owner }}</h5>
+                                    <h7>at</h7>
+                                    <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
+                                    <h7>to</h7>
+                                    <h5> @{{ myAssign.requestID.requesterID }} </h5>
+                                </div>
+                                <div>
+                                    <h5> {{ myAssign.requestID.serviceID.duration }} hour(s) {{ myAssign.requestID.serviceID.get_type }} </h5>
+                                    <h5> on {{ myAssign.requestID.serviceID.start_date }}</h5>
+                                    <h6> with </h6> <h5>{{ myAssign.requestID.serviceID.participant_limit }} capacity </h5>
+                                    <hr>
+                                    <h6> {{ myAssign.requestID.serviceID.get_type }} at {{ myAssign.requestID.serviceID.get_tag_labels }} category</h6>
+                                    <hr>
+                        
+                                    <!-- If service has not started yet, user cannot confirm this assigment,
+                                        meaning confirm this service has happened /-->
+
+                                    {% if myAssign.requestID.serviceID.startingDate|timesince >= "1 min"  %}
+                                        <a class="btn btn-primary btn-sm" href="{% url 'confirmService' myAssign.assignID %}" role="button">Confirm Service</a>
+                                    {% else %}
+                                        <p class="text-danger">You can confirm the services after it happens</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </span> 
+                        <hr>
+
+                    </div>
+
+                    <div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <!-- This lists the assignments for received services /-->
+        {% if receivedAssignments.count > 0 %}
+            </span> 
+                <hr>
+                <h4> Received Services </h4>
+                <hr>
+            <span>
+
+            {% for myAssign in receivedAssignments %}
+                
+                <!-- For each assignment, related service information is displayed to user /-->
+                <div class="offerings-container">
+                    <div>
+                    </div>
+
+                    <div>
+                        <span>
+                            <div class="format-container">
+                                <div>
+                                    <img src="{{myAssign.requestID.serviceID.photo.url}}" width="150" height="150"> 
+                                </div>
+                                <div>
+                                    <h3> {{ myAssign.requestID.serviceID.title }}</h3>
+                                    <h7>by</h7>
+                                    <h5> @{{ myAssign.requestID.serviceID.owner }}</h5>
+                                    <h7>at</h7>
+                                    <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
+                                    <h7>to</h7>
+                                    <h5> @{{ myAssign.requestID.requesterID }} </h5>
+                                </div>
+                                <div>
+                                    <h5> {{ myAssign.requestID.serviceID.duration }} hour(s) {{ myAssign.requestID.serviceID.get_type }}</h5>
+                                    <h5> on {{ myAssign.requestID.serviceID.start_date }}</h5>
+                                    <h6> with </h6> <h5>{{ myAssign.requestID.serviceID.participant_limit }} capacity </h5>
+                                    <hr>
+                                    <h6> {{ myAssign.requestID.serviceID.get_type }} at {{ myAssign.requestID.serviceID.get_tag_labels }} category</h6>
+                                    
+                        
+                                    <!-- If service has not started yet, user cannot confirm this assigment,
+                                        meaning confirm this service has happened /-->
+                                    
+                                    {% if myAssign.requestID.serviceID.startingDate|timesince >= "1 min"  %}
+                                        <a class="btn btn-primary btn-sm" href="{% url 'confirmService' myAssign.assignID %}" role="button">Confirm Service</a>
+                                    {% else %}
+                                        <p class="text-danger">You can confirm the services after it happens</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </span> 
+                        <hr>
+
+                    </div>
+                    
+                    <div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    
+    </body>
+</html>
