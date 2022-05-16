@@ -24,5 +24,8 @@ urlpatterns = [
     path('notification/', notificationview.notifications, name ="notifications"), 
     path('notification/<str:nID>/', notificationview.changeNote, name ="changeNote"), 
 
+# URLs for handshaking process: listing and confirming assignments
+    path('handshake/', assignview.handshaking, name ="handshake"), 
+
 
 ]
