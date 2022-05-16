@@ -75,7 +75,7 @@
                                     <!-- If service has not started yet, user cannot confirm this assigment,
                                         meaning confirm this service has happened /-->
 
-                                    {% if myAssign.requestID.serviceID.startingDate|timesince >= "1 min"  %}
+                                    {% if myAssign.requestID.serviceID.start_date|timesince >= "1 min"  %}
                                         <a class="btn btn-primary btn-sm" href="{% url 'confirmService' myAssign.assignID %}" role="button">Confirm Service</a>
                                     {% else %}
                                         <p class="text-danger">You can confirm the services after it happens</p>
@@ -136,7 +136,7 @@
                                     <!-- If service has not started yet, user cannot confirm this assigment,
                                         meaning confirm this service has happened /-->
                                     
-                                    {% if myAssign.requestID.serviceID.startingDate|timesince >= "1 min"  %}
+                                    {% if myAssign.requestID.serviceID.start_date|timesince >= "1 min"  %}
                                         <a class="btn btn-primary btn-sm" href="{% url 'confirmService' myAssign.assignID %}" role="button">Confirm Service</a>
                                     {% else %}
                                         <p class="text-danger">You can confirm the services after it happens</p>

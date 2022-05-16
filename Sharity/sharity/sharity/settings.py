@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apply.apps.ApplyConfig',
     'assign.apps.AssignConfig',
     'notification.apps.NotificationConfig',
+    'feedback.apps.FeedbackConfig',
     'usermessages',
 ]
 
