@@ -71,6 +71,7 @@ class OfferSearchForm(forms.ModelForm):
         'class': 'search-form-owner',
         'placeholder': 'Search by owner name'
     }))
+    distance = forms.IntegerField()
     class Meta:
         model = Offer
         fields = [
@@ -81,6 +82,8 @@ class OfferSearchForm(forms.ModelForm):
             'tags',
             'type',
         ]
+
+    field_order = ['title', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -120,5 +123,16 @@ class OfferSearchForm(forms.ModelForm):
         self.fields['type'].choices = new_choices
         self.fields['type'].initial = ''
 
+        self.fields['distance'].widget.attrs.update({
+            'id': 'search-distance',
+            'class': 'search-form-distance',
+            'placeholder': 'Search by distance'
+        })
+
         for key in self.fields.keys():
             self.fields[key].required = False
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        cleaned_data['location-json'] = self.data.get('location-json')
+        return cleaned_data

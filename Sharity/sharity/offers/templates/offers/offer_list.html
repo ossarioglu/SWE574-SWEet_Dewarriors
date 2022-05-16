@@ -13,6 +13,7 @@
             <form id='search-form' get-offers-url="{% url 'ajax_load_results' %}" autocomplete="off"> {% csrf_token %}
                 {{form.as_p}}
                 <input type='submit' id="id_filter_button" class='btn btn-success' value='Filter'/>
+                <input type="hidden" value="" name="location-json" id="location-json">
                 <input type="hidden" value="[]" name="tags-json" id="tags-json">
                 <button class='btn btn-success'> <a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a> </button>
             </form>
@@ -65,6 +66,7 @@
 
                     <div class="col-sm-6">
                         <div class="card">
+                            <img src="{{result.photo.url}}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title"> {{result.title}} </h5>
                                 <p class="card-text"> <b> Start date: </b> {{result.start_date}} </p>
@@ -90,6 +92,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('#search-distance').tooltip({'trigger':'hover', 'title': 'Distance represents kilometer distance from your selected location to the offer, if no location is selected, your profile location is taken.'});
             $("#search-form").submit(function(e) {
                 $(".spinner-border").show();
                 e.preventDefault();
@@ -162,6 +165,7 @@
 
                             $('.location').click(function() {
                                 let resultIndex = $(this).attr('id').split('-')[1]
+                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
                                 $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
                                 $('#location').css('background-repeat', 'no-repeat');
                                 $('#location').css('background-position', '98% center');
@@ -250,8 +254,13 @@
 
 {% block styles %}
     <style>
+        .small-dist {
+            font-size: 12px;
+        }
+
         #search-form {
             margin-bottom: 20px;
+            width: 270px;
         }
 
         .search-container {
@@ -269,7 +278,7 @@
         }
 
         .search-sidebar {
-            margin-right: 50px;
+            margin-right: 10px;
         }
 
         .clear-button {
