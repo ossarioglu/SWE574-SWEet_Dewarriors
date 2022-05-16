@@ -12,8 +12,11 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
 from django.http import JsonResponse
 from django.db.models import Q
+from functools import reduce
+import operator
 
-
+from member.models import Profile
+from .utils import distance, get_lat, get_long
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -54,8 +57,15 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
     model = Offer
 
 
-class AjaxHandlerView(LoginRequiredMixin, FormView):
+class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
     form_class = OfferSearchForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def form_invalid(self, form):
         if self.request.is_ajax():
@@ -67,6 +77,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
             filters = {}
             tag_args = Q()
             title_args = Q()
+            location_args = Q()
             filter_flag = False
             filter_words = {
                 'title': '__icontains',
@@ -77,8 +88,14 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
                 'type': '',
                 'owner': '__username__icontains'
             }
+
+            # get search parameter -> distance
+            d = form.cleaned_data.pop('distance')
+            # get search parameter -> location
+            ljson = form.cleaned_data.pop('location-json')
+
             for key, value in form.cleaned_data.items():
-                if value != '' and value is not None:
+                if value != '' and value != '[]' and value is not None:
                     filter_flag = True
                     if key == 'tags':
                         context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
@@ -88,6 +105,10 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
                         context[key + '_query'] = value
                         for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
                             title_args |= Q(**{key + filter_words[key]: tag})
+                    elif key == 'location':
+                        context[key + '_query'] = value
+                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            location_args |= Q(**{key + filter_words[key]: tag})
                     else:
                         if key == 'type':
                             context[key + '_query'] = 'Service' if value == 1 else 'Event'
@@ -95,7 +116,39 @@ class AjaxHandlerView(LoginRequiredMixin, FormView):
                             context[key + '_query'] = value  
                         filters[key + filter_words[key]] = value
 
-            context['result_list'] = Offer.objects.filter(*(tag_args, title_args), **filters).exclude(owner=self.request.user)
+            # if only location
+            if ljson == '' and d is None:
+                arguments = tag_args & title_args & location_args
+            else:
+                arguments = (tag_args & title_args) | location_args
+
+            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user)
+
+            ### handle location-json and distance filters last ###
+            # if location-json and distance queries are present
+            if d is not None and ljson != '':
+                filter_flag = True
+                # get desired location
+                profile_loc = (get_lat(ljson), get_long(ljson))
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                context['distance_query'] = d
+            # else if only distance query is present
+            elif d is not None and ljson == '':
+                filter_flag = True
+                # get desired location
+                profile = Profile.objects.get(user=self.request.user)
+                profile_loc = (profile.get_latitude(), profile.get_longitude())
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                context['distance_query'] = d
+            # else if only location-json query is present
+            else:
+                filter_flag = True
+                # get desired location
+                profile_loc = (get_lat(ljson), get_long(ljson))
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
+                context['distance_query'] = d
+
+            context['result_list'] = qs
             context['filter_flag'] = filter_flag
 
             return render(self.request, 'offers/ajax_offer_results.html', context)
