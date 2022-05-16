@@ -4,6 +4,8 @@ from member import views as memberview
 from apply import views as applyview
 from assign import views as assignview
 from notification import views as notificationview
+from feedback import views as feedbackview
+
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -26,6 +28,7 @@ urlpatterns = [
 
 # URLs for handshaking process: listing and confirming assignments
     path('handshake/', assignview.handshaking, name ="handshake"), 
+    path('confirm/<str:asNum>/', feedbackview.confirmation, name ="confirmService"), 
 
 
 ]
