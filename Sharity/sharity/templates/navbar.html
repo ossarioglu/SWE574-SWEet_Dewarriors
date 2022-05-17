@@ -8,7 +8,7 @@
 /-->
 
 <script>
-    $(document).on("submit", "#id-search-bar", function(e) {
+    $(document).on("submit", "#id-search-bar", function (e) {
         e.preventDefault();
         var url = $(this).attr("search-url");
         url += "?title=" + $("#id-query").val();
@@ -20,87 +20,122 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
 
-        <!-- This is for displaying Logo. Logo is linked to homepage /-->
-        <div class="col-1"> 
-            <span class="navbar-brand mb-0 b">   </span>
-        </div>
+    <!-- This is for displaying Logo. Logo is linked to homepage /-->
+    <div class="col-1">
+        <span class="navbar-brand mb-0 b">   </span>
+    </div>
 
-        <div class="col-2">
-            <a href="{% url 'home' %}">
-                <img src="{% static 'images/main/logo.png' %}" />
-                <!--h1> socializeUS Logo</h1-->
-            </a>   
-            <span class="navbar-brand mb-0 fs-2 align-middle">   Sharity</span>
-        </div>
+    <div class="col-2">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/main/logo.png' %}"/>
+            <!--h1> socializeUS Logo</h1-->
+        </a>
+        <span class="navbar-brand mb-0 fs-2 align-middle">   Sharity</span>
+    </div>
 
-        <!-- This is for Search bar. When user inputs data and press Enter, it triggers search query at timeline /-->
-        <div class="col-6">
-            <form class="d-flex" id="id-search-bar" search-url="{% url 'offer.list' %}">
-                <a href="{% url 'home' %}" class="text-decoration-none align-middle">
-                    <span class="navbar-brand mb-0 b "> Home  </span>
-                </a> 
-                <a href="{% url 'home' %}" class="text-decoration-none align-middle">
-                    <span class="navbar-brand mb-0 b"> About  </span>                
-                </a> 
-                
-                {% if request.user.is_authenticated %} 
-                    <a href="{% url 'offers.create' %}" class="text-decoration-none align-middle">
-                        <span class="navbar-brand mb-0 b"> Create Offer  </span>
-                    </a>  
-                {% else %}
-                    <a href="{% url 'offer.list' %}" class="text-decoration-none align-middle">
-                        <span class="navbar-brand mb-0 b"> Offers  </span>
-                    </a> 
-                {% endif %}
+    <!-- This is for Search bar. When user inputs data and press Enter, it triggers search query at timeline /-->
+    <div class="col-6">
+        <form class="d-flex" id="id-search-bar" search-url="{% url 'offer.list' %}">
+            <a href="{% url 'home' %}" class="text-decoration-none align-middle">
+                <span class="navbar-brand mb-0 b "> Home  </span>
+            </a>
+            <a href="{% url 'home' %}" class="text-decoration-none align-middle">
+                <span class="navbar-brand mb-0 b"> About  </span>
+            </a>
 
-                <img style="width: 48px;height: 22px;justify-content: center;margin: 9px;"src="{% static 'images/main/search.png' %}" type="submit"/>
-                <input class="form-control me-2" type="text" name="title" id="id-query" placeholder="Search offers by title" />
-            </form>
-        </div>  
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'offers.create' %}" class="text-decoration-none align-middle">
+                    <span class="navbar-brand mb-0 b"> Create Offer  </span>
+                </a>
+            {% else %}
+                <a href="{% url 'offer.list' %}" class="text-decoration-none align-middle">
+                    <span class="navbar-brand mb-0 b"> Offers  </span>
+                </a>
+            {% endif %}
 
-        <div class="col-1"> 
-            <span class="navbar-brand mb-0 h1">  </span>
-        </div>
+            <img style="max-width: 48px;height: 22px;justify-content: center;margin: 9px;"
+                 src="{% static 'images/main/search.png' %}" type="submit"/>
+            <input class="form-control me-2" type="text" name="title" id="id-query"
+                   placeholder="Search offers by title"/>
+        </form>
+    </div>
 
-        {% if request.user.is_authenticated %} 
-        
+    <div class="col-1">
+        <span class="navbar-brand mb-0 h1">  </span>
+    </div>
+
+    {% if request.user.is_authenticated %}
+
         <!-- If user is authenticated, then user profile picture is displayed with a badge on it showing number of unread notifications/-->
         <a class="btn btn-white btn-sm position-relative" href="{% url 'notifications' %}" role="button">
-            <img src="/static/images/Profiles/male.png" class="rounded-circle position-relative"  alt={{ request.user }} width="50" height="50">
+            <img src="/static/images/Profiles/male.png" class="rounded-circle position-relative"
+                 alt={{ request.user }} width="50" height="50">
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ notes }}
+                <div id="notificationCount"></div>
               <span class="visually-hidden"></span>
             </span>
         </a>
 
-            <!-- This is dropdown menu for user having options:
-                - Available Credit : Credit + Inprocess Credits
-                - Profile Link for viewing profile details
-                - Action Link for listing awating assignments for handshaking
-                - Logout Link /-->
-            <div class="dropdown">
-                <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ request.user }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <p class="dropdown-item text-primary"> Credits: {{ user.profile.creditAmount|add:user.profile.creditInprocess }} Ch </p>
-                    <hr>
-                    <a class="dropdown-item" href="{% url 'profile' request.user %}">Profile</a>
-                    <a class="dropdown-item" href="{% url 'listmyofferings' %}">My Offers</a>
-                    <a class="dropdown-item" href="{% url 'handshake' %}">Handshaking</a>
-                    <a class="dropdown-item" href="{% url 'usermessages.main' %}">Mails</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>
-                </div>
+        <script>
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: "/notification/getall/",
+                    success: function (response) {
+                        document.getElementById("notificationCount").innerText = response.count
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            });
+
+        </script>
+<style>
+
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: .75em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+</style>
+        <!-- This is dropdown menu for user having options:
+            - Available Credit : Credit + Inprocess Credits
+            - Profile Link for viewing profile details
+            - Action Link for listing awating assignments for handshaking
+            - Logout Link /-->
+        <div class="dropdown">
+            <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ request.user }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <p class="dropdown-item text-primary"> Credits:
+                    {{ user.profile.creditAmount|add:user.profile.creditInprocess }} Ch </p>
+                <hr>
+                <a class="dropdown-item" href="{% url 'profile' request.user %}">Profile</a>
+                <a class="dropdown-item" href="{% url 'listmyofferings' %}">My Offers</a>
+                <a class="dropdown-item" href="{% url 'handshake' %}">Handshaking</a>
+                <a class="dropdown-item" href="{% url 'usermessages.main' %}">Mails</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a>
             </div>
+        </div>
 
         <!-- If user is not authenticated, then Sing-In and Sign-Up buttons are displayed/-->
-        {% else %}
-            <div class="col-2">
-                <a class="btn btn-success rounded-pill" href="{% url 'login' %}" role="button">Login</a>
-                <a class="btn btn-warning rounded-pill" href="{% url 'signup' %}" role="button">Sign Up</a>
-            </div> 
-        {% endif %}
+    {% else %}
+        <div class="col-2">
+            <a class="btn btn-success rounded-pill" href="{% url 'login' %}" role="button">Login</a>
+            <a class="btn btn-warning rounded-pill" href="{% url 'signup' %}" role="button">Sign Up</a>
+        </div>
+    {% endif %}
 
 </nav>
 
