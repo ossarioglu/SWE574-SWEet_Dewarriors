@@ -1,0 +1,59 @@
+<div id="id-main-card" class="card" data-id="{{object.id}}">
+    <h5 class="card-header"> 
+        <span id="id-message-subject"> {{object.subject}} </span>
+        <small style="float: right;"> {{object.sent_at|date:"l j M Y - H:i"}} </small>
+    </h5>
+    <div class="card-body" style="padding: 10px; padding-left: 20px;">
+        <h5 id="id-message-people" class="card-title">
+            From: <a id="id-message-from" href="{% url 'profile' userKey=object.message_from.user.username %}"> {{object.message_from}} </a> <br>
+            To: {% for t in object.message_to.all %} <a id="id-message-to-{{t.id}}" href="{% url 'profile' userKey=t.user.username %}"> {{t}} </a> {% endfor %}
+        </h5>
+        <p class="card-text"> {{object.body}} </p>
+        {% if deleted_messages %}
+            <a id="id-restore" href="{% url 'usermessages.restore' %}" class="btn btn-primary">Restore</a>
+        {% else %}
+            <a id="id-reply" href="{% url 'usermessages.create' %}" class="btn btn-primary">Reply</a>
+            <a id="id-reply-all" href="{% url 'usermessages.create' %}" class="btn btn-primary">Reply All</a>
+            <a id="id-delete" href="{% url 'usermessages.delete' %}" class="btn btn-primary">Delete</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if children|length > 0 %}
+<h4 style="margin-top: 5px;">Other Messages in This Conversation</h4>
+    {% for msg in children %}
+        <div class="card" style="margin-top: 5px;">
+            <h5 class="card-header">
+                <span id="id-message-subject"> {{msg.subject}} </span>
+                <small style="float: right;"> {{msg.sent_at|date:"l j M Y - H:i"}} </small>
+            </h5>
+            <div class="card-body" style="padding: 10px; padding-left: 20px;">
+                <h5 class="card-title">
+                    From: <a id="id-message-from" href="{% url 'profile' userKey=msg.message_from.user.username %}"> {{msg.message_from}} </a> <br>
+                    To: {{msg.message_to.all|join:', '}}
+                </h5>
+                <p class="card-text"> {{msg.body}} </p>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<style>
+    #id-message-from {
+        text-decoration: none;
+        color: black;
+    }
+
+    #id-message-from:hover {
+        color: blue;
+    }
+
+    a[id*='id-message-to'] {
+        text-decoration: none;
+        color: black;
+    }
+
+    a[id*='id-message-to']:hover {
+        color: blue;
+    }
+</style>

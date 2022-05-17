@@ -4,6 +4,8 @@ from django.shortcuts import redirect, render
 from apply.models import Application
 from assign.models import Assignment
 from offers.models import Offer
+from notification.models import Notification
+
 
 # This is for listing assingments for the services
 # Login is required to see details of services 
@@ -57,51 +59,62 @@ def assignService(request, rID):
             remainingCapacity = newassignment.requestID.serviceID.participant_limit - allAccepted
 
             # New notification is created for requesters to inform that the application is accepted, and request is approved
- #           newnote = Notification.objects.create(
- #                   serviceID=myRequest.serviceID, 
- #                   receiverID=myRequest.requesterID, 
- #                   noteContent=request.user.username
- #                               +' approved your request for '
- #                               + myRequest.serviceID.keywords, 
- #                   status='Unread'
- #              )
- #           if newnote:
+            newnote = Notification.objects.create(
+                    serviceID=myRequest.serviceID, 
+                    receiverID=myRequest.requesterID, 
+                    noteContent=request.user.username
+                                +' approved your request for '
+                                + myRequest.serviceID.title, 
+                    status='Unread'
+               )
+            if newnote:
 
                 # After the assignment, if there is no availbe capacility, all 'Inprocess' applications' status are updated as 'Rejected'
                 # Credits for these applications are released back
                 # A notification is sent to requester to inform than application is rejected due to capacity constraint
 
- #               if remainingCapacity == 0:
- #                   openRequests = Requestservice.objects.filter(status='Inprocess').filter(serviceID=myRequest.serviceID)
- #                   
- #                   for openRqst in openRequests:
- #                       openRqst.status = 'Rejected'
- #                       openRqst.save()
+                if remainingCapacity == 0:
+                    openRequests = Application.objects.filter(status='Inprocess').filter(serviceID=myRequest.serviceID)
+                    
+                    for openRqst in openRequests:
+                        openRqst.status = 'Rejected'
+                        openRqst.save()
 
- #                       # Credits given back
- #                       creditNeeded = 0
- #                       if openRqst.serviceID.serviceType == "Offering":
- #                           creditNeeded = openRqst.serviceID.duration
- #                       blkQnt= creditNeeded
- #                       openRqst.requesterID.profile.blockCredit(+blkQnt)
- #                       openRqst.requesterID.profile.save()
+                        # Credits given back
+                        creditNeeded = 0
+                        if openRqst.serviceID.serviceType == "Offering":
+                            creditNeeded = openRqst.serviceID.duration
+                        blkQnt= creditNeeded
+                        openRqst.requesterID.profile.blockCredit(+blkQnt)
+                        openRqst.requesterID.profile.save()
                         
                         # Notification for rejection
- #                       newnote = Notification.objects.create(
- #                               serviceID=openRqst.serviceID, 
- #                               receiverID=openRqst.requesterID, 
- #                               noteContent=request.user.username
- #                                           +' could not acceept your request for '
- #                                           + myRequest.serviceID.keywords
- #                                           +' due to capacity constraints',
- #                               status='Unread'
- #                           )
+                        newnote = Notification.objects.create(
+                                serviceID=openRqst.serviceID, 
+                                receiverID=openRqst.requesterID, 
+                                noteContent=request.user.username
+                                            +' could not acceept your request for '
+                                            + myRequest.serviceID.title
+                                            +' due to capacity constraints',
+                                status='Unread'
+                            )
                 
                 # User is sent back to assignment page to see updates.
-            application = Application.objects.filter(serviceID=myRequest.serviceID)
-            context = {'offers':myRequest.serviceID, "applications":application, "remainingCapacity":remainingCapacity}
-            return render(request, 'assign/assignment.html', context)
+                application = Application.objects.filter(serviceID=myRequest.serviceID)
+                context = {'offers':myRequest.serviceID, "applications":application, "remainingCapacity":remainingCapacity}
+                return render(request, 'assign/assignment.html', context)
         else:
             return HttpResponse("A problem occured. Please try again later")
     else:
         return redirect('home')
+
+
+# This is for listing all approved assignment for both provider and receiver
+# Login is required to see details of services
+#@login_required(login_url='login')
+def handshaking(request):
+    providedAssignment = Assignment.objects.filter(approverID=request.user)
+    receivedAssignment = Assignment.objects.filter(requesterID=request.user)
+
+    context = {'providedAssignments':providedAssignment, "receivedAssignments":receivedAssignment}
+    return render(request, 'assign/handshake.html', context)

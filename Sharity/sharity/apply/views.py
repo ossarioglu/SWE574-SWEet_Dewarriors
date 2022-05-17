@@ -2,6 +2,7 @@ import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from apply.models import Application
+from notification.models import Notification
 
 from offers.models import Offer
 
@@ -43,19 +44,19 @@ def requestOffer(request, sID):
                 request.user.profile.save()
 
                 # A notification is created for service provider to inform that user is applied to this service
-    #            newnote = Notification.objects.create(
-    #                serviceID=offer, 
-    #                receiverID=offer.providerID, 
-    #                noteContent=request.user.username+' applied for ' 
-    #                            + offer.keywords,
-    #                            status='Unread'
-    #                )
+                newnote = Notification.objects.create(
+                    serviceID=offer, 
+                    receiverID=offer.owner, 
+                    noteContent=request.user.username+' applied for ' 
+                                 + offer.title,
+                                 status='Unread'
+                    )
 
                 # After notification is created, user is sent back to services information page
-     #           if newnote:
-                application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-                context = {'object':Offer.objects.get(uuid=sID), "applications":application}
-                return render(request, 'offers/offer_detail.html', context)
+                if newnote:
+                    application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
+                    context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+                    return render(request, 'offers/offer_detail.html', context)
             else:
                 return HttpResponse("A problem occured. Please try again later")
         else:

@@ -15,10 +15,12 @@ class OfferCreateForm(forms.ModelForm):
     start_date = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'datepicker',
+        "type" : "datetime-local"
     }))
     amendment_deadline = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'datepicker',
+        "type": "datetime-local"
     }))
     duration = forms.IntegerField(widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -64,6 +66,12 @@ class OfferCreateForm(forms.ModelForm):
 
 
 class OfferSearchForm(forms.ModelForm):
+    owner = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
+        'id': 'search-owner',
+        'class': 'search-form-owner',
+        'placeholder': 'Search by owner name'
+    }))
+    distance = forms.IntegerField()
     class Meta:
         model = Offer
         fields = [
@@ -73,8 +81,9 @@ class OfferSearchForm(forms.ModelForm):
             'duration',
             'tags',
             'type',
-            'owner'
         ]
+
+    field_order = ['title', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,12 +116,23 @@ class OfferSearchForm(forms.ModelForm):
             'id': 'search-type',
             'class': 'search-form-type',
         })
-        self.fields['type'].initial = 1
-        self.fields['owner'].widget = forms.TextInput(attrs={
-            'id': 'search-owner',
-            'class': 'search-form-owner',
-            'placeholder': 'Search by owner name'
+        
+        new_choices = list(self.fields['type'].choices)
+        new_choices.remove(('', '---------'))
+        new_choices.insert(0, ('', 'All'))
+        self.fields['type'].choices = new_choices
+        self.fields['type'].initial = ''
+
+        self.fields['distance'].widget.attrs.update({
+            'id': 'search-distance',
+            'class': 'search-form-distance',
+            'placeholder': 'Search by distance'
         })
 
         for key in self.fields.keys():
             self.fields[key].required = False
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        cleaned_data['location-json'] = self.data.get('location-json')
+        return cleaned_data

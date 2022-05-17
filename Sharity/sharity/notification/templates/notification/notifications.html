@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcoming/Landing Page</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>    
+        <title>My Offerings</title>
+
+    </head>
+    <body>
+
+        {% include 'navbar.html' %}
+
+        <style>
+            .notes-container{
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr; 
+            }
+            .format-container{
+                display: grid;
+                grid-template-columns: 5fr 3fr 3fr; 
+            }
+        </style>
+        
+        
+        <div class="notes-container">
+                <div>
+                </div>
+        
+                <div>
+                    <!-- If there are no notifications, this is displayed to user /-->
+                    <span>
+                        <h3> Notifications </h3>
+                        <hr>
+                    </span>
+                    {% if myNotes.count < 1 %}
+                        <h6> There is no messages </h6>
+                    {% endif %}
+        
+                    <!-- All notes for this user is displayed as rows
+                        Each row has:
+                            - content of the note, 
+                            - a button linked to service related to this note, 
+                            - and action buton to make note Read or Unread 
+                    /-->
+                    {% for note in myNotes %}
+                        <span>
+                            <div class="format-container">
+                                <div>
+                                    <h7> {{ note.noteContent }}</h7>
+                                </div>
+                                <div>
+                                    <a class="btn btn-outline-success" href="{% url 'offers.detail' note.serviceID.uuid %}" role="button">Go to Service</a>
+                                </div>
+                                <div>
+                                    {% if note.status == 'Read' %}
+                                        <a class="btn btn-outline-primary" href="{% url 'changeNote' note.noteID %}" role="button">Status : Read</a>  
+                                    {% else %}
+                                        <a class="btn btn-outline-success" href="{% url 'changeNote' note.noteID %}" role="button">Status : UnRead</a>  
+                                    {% endif %} 
+                                </div>
+                                
+                            </div>
+                        </span> 
+                    {% endfor %}
+        
+                    <hr>
+                </div>
+        
+                <div>
+                </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    
+    </body>
+</html>

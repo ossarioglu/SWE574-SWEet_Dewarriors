@@ -6,6 +6,13 @@
 
 {% block content %}
     <div>
+
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status" style="display: none;">
+              <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
         {% if filter_flag %}
                 <div class="applied-filters">
                     <h5 class="applied-filters-header"> <u> Applied filters </u> </h5>
@@ -30,7 +37,7 @@
                     {% endif %}
 
                     {% if tags_query %}
-                        <b> Tags: </b> {{tags_query}} <span> <svg id="id-remove-filter-tags" class="remove-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <b> Tags: </b> {{tags_query|join:', '}} <span> <svg id="id-remove-filter-tags" class="remove-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/></svg><br></span>
                     {% endif %}
 
@@ -42,6 +49,11 @@
                     {% if owner_query %}
                         <b> Owner: </b> {{owner_query}} <span> <svg id="id-remove-filter-owner" class="remove-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/></svg><br></span>
+                    {% endif %}
+
+                    {% if distance_query %}
+                    <b> Distance: </b> {{distance_query}} KM <span> <svg id="id-remove-filter-distance" class="remove-filter" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/></svg><br></span>
                     {% endif %}
                 </div>
             {% endif %}
@@ -55,26 +67,20 @@
 
                 <div class="col-sm-6">
                     <div class="card">
+                        <img src="{{result.photo.url}}" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title"> {{result.title}} </h5>
-                            <p class="card-text"> Starts at {{result.start_date}} </p>
-                            <p class="card-text"> Duration: {{result.duration}} </p>
-                            <p class="card-text"> Type: {{result.get_type}} </p>
-                            <p class="card-text"> Tags: {{result.get_tag_labels|join:", "}} </p>
-                            <p class="card-text"> Location: {{result.get_formatted_address}} </p>
-                            <p class="card-text"> Owner: {{result.owner}} </p>
+                            <p class="card-text"> <b> Start date: </b> {{result.start_date}} </p>
+                            <p class="card-text"> <b> Duration: </b> {{result.duration}} </p>
+                            <p class="card-text"> <b> Type: </b> {{result.get_type}} </p>
+                            <p class="card-text"> <b> Tags: </b> {{result.get_tag_labels|join:", "}} </p>
+                            <p class="card-text"> <b> Location: </b> {{result.get_formatted_address}} </p>
+                            <p class="card-text"> <b> Owner: </b> {{result.owner}} </p>
                             <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
                             <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
                         </div>
                     </div>
                 </div>
-            {% comment %} ************************************
-                <p> <b> {{result.title}} </b> </p>
-                <p> Starts at {{result.start_date}} </p>
-                <p> Duration: {{result.duration}} hours </p>
-                <p> Type: {{result.type}} </p>
-                <p> Tag: {{result.tags}} </p>
-                <p> Location: {{result.location}} </p> {% endcomment %}
             {% empty %}
             {% endfor %}
         </div>
@@ -85,149 +91,17 @@
 {% block js %}
     <script>
         $(document).ready(function() {
-            $("#id-remove-filter-title").click(function(e) {
-                $("#search-title").val("");
+            $(".remove-filter").click(function(e) {
+                $(".spinner-border").show();
+                var attribute = $(this).attr("id").split("-")[3];
+                $("#search-" + attribute).val("");
                 $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
+                    type: 'POST',
+                    url: $("#search-form").attr("get-offers-url"),
+                    data: $("#search-form").serialize(),
                     success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-duration").click(function(e) {
-                $("#search-duration").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-start_date").click(function(e) {
-                $("#search-start_date").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-tags").click(function(e) {
-                $("#search-tags").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-type").click(function(e) {
-                $("#search-type").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-location").click(function(e) {
-                $("#search-location").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
-                    }
-                });
-            });
-
-            $("#id-remove-filter-owner").click(function(e) {
-                $("#search-owner").val("");
-                $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
-                    },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
+                        $(".spinner-border").hide();
+                        $("#id_results").html(response);
                     }
                 });
             });
@@ -249,7 +123,7 @@
         }
 
         .results {
-            width: 80%;
+            width: 97%;
         }
     </style>
 {% endblock styles %}

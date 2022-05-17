@@ -1,0 +1,97 @@
+{% csrf_token %}
+{% for mail in object_list %}
+    {% if request.user.profile in mail.is_read_by.all %}
+        <a href="{% url 'usermessages.detail' %}" is-mail-read="True" data-id="{{mail.id}}" class="list-group-item list-group-item-action">
+    {% else %}
+        <a href="{% url 'usermessages.detail' %}" is-mail-read="False" data-id="{{mail.id}}" class="list-group-item list-group-item-action" style="background-color: #D1EAF0;">
+    {% endif %}
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"> From: {{mail.message_from}} </h5>
+            <small> {{mail.sent_at|date:"l j M Y - H:i"}} </small>
+        </div>
+        <p class="mb-1"> {{mail.subject}} </p>
+        <small> {{mail.body|truncatewords_html:8}} </small>
+    </a>
+{% empty %}
+    <h5> You have no messages! </h5>
+{% endfor %}
+
+<nav aria-label="..." style="margin-top: 10px;">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'usermessages.inbox' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+        {% endif %}
+        {% for p in page_obj.paginator.page_range %}
+            {% if page_obj.number == p %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="{% url 'usermessages.inbox' %}?page={{ p }}"> {{p}} <span class="sr-only">(current)</span></a>
+                </li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="{% url 'usermessages.inbox' %}?page={{ p }}"> {{p}} </a></li>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'usermessages.inbox' %}?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<script>
+    $(".page-link").click(function(e) {
+        $("#id-spinner").show();
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            success: function(response) {
+                $("#id-spinner").hide();
+                $(".content").html(response);
+            }
+        });
+    });
+</script>
+
+<script>
+    $(".list-group-item").click(function(e) {
+        e.preventDefault();
+        var id = $(this).attr("data-id");
+        var elem = $(this);
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            data: {
+                'id': id
+            },
+            success: function(response) {
+                $("#id-messages-detail").html(response);
+                if (elem.attr("is-mail-read") === "False") {
+                    $.ajax({
+                        headers: {'X-CSRFToken': csrftoken},
+                        type: 'POST',
+                        url: "{% url 'usermessages.update' %}",
+                        data: {
+                            'id': id
+                        },
+                        success: function(response) {
+                            elem.css("background-color", "");
+                            update_num_of_unread_mails();
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>

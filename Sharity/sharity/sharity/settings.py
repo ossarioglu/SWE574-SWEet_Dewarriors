@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'offers',
     'apply.apps.ApplyConfig',
     'assign.apps.AssignConfig',
+    'notification.apps.NotificationConfig',
+    'feedback.apps.FeedbackConfig',
+    'usermessages',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +90,7 @@ WSGI_APPLICATION = 'sharity.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sharity',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'pgdb',

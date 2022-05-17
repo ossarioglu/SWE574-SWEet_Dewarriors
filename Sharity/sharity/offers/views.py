@@ -1,7 +1,7 @@
 import json
 
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View, FormView
 from django.views.generic.edit import FormMixin
 from .models import Offer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -10,8 +10,13 @@ from .forms import OfferCreateForm, OfferSearchForm
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
+from django.http import JsonResponse
+from django.db.models import Q
+from functools import reduce
+import operator
 
-
+from member.models import Profile
+from .utils import distance, get_lat, get_long
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -52,68 +57,120 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
     model = Offer
 
 
-class AjaxHandlerView(LoginRequiredMixin, View):
-    def get(self, request):
-        context = {}
-        result = Offer.objects.all().exclude(owner=request.user)
+class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
+    form_class = OfferSearchForm
 
-        title_query = request.GET.get('title_query')
-        location_query = request.GET.get('location_query')
-        start_date_query = request.GET.get('start_date_query')
-        duration_query = request.GET.get('duration_query')
-        tags_query = request.GET.get('tags_query')
-        offer_type_query = request.GET.get('type_query')
-        owner_query = request.GET.get('owner_query')
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
-        # filter by title
-        if title_query:
-            result = result.filter(title__icontains=title_query)
-        # filter by location
-        if location_query:
-            result = result.filter(location__icontains=location_query)
-        # filter by start date
-        if start_date_query:
-            result = result.filter(start_date__gt=start_date_query)
-        # filter by duration
-        if duration_query:
-            result = result.filter(duration__lte=duration_query)
-        # filter by tags
-        if tags_query:
-            result = result.filter(tags__icontains=tags_query)
-        # filter by type
-        if offer_type_query:
-            result = result.filter(type=offer_type_query)
-        # filter by owner
-        if owner_query:
-            result = result.filter(owner__username__icontains=owner_query)
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+    
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            context = {}
+            filters = {}
+            tag_args = Q()
+            title_args = Q()
+            location_args = Q()
+            filter_flag = False
+            filter_words = {
+                'title': '__icontains',
+                'location': '__icontains',
+                'start_date': '__gte',
+                'duration': '__lte',
+                'tags': '__icontains',
+                'type': '',
+                'owner': '__username__icontains'
+            }
 
-        context['filter_flag'] = False
-        for key, value in self.request.GET.items():
-            if key in ['title_query', 'location_query', 'start_date_query', 'duration_query', 'tags_query',
-                       'type_query', 'owner_query'] and value:
-                if key == 'type_query':
-                    context[key] = list(filter(lambda x: x[0] == int(value), Offer.Type.choices))[0][1]
-                else:
-                    context[key] = value
-                context['filter_flag'] = True
+            # get search parameter -> distance
+            d = form.cleaned_data.pop('distance')
+            # get search parameter -> location
+            ljson = form.cleaned_data.pop('location-json')
 
-        context['result_list'] = result
+            for key, value in form.cleaned_data.items():
+                if value != '' and value != '[]' and value is not None:
+                    filter_flag = True
+                    if key == 'tags':
+                        context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
+                        for tag in [i.strip() for i in value.split(',') if i.strip() != '']:
+                            tag_args |= Q(**{key + filter_words[key]: tag})
+                    elif key == 'title':
+                        context[key + '_query'] = value
+                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            title_args |= Q(**{key + filter_words[key]: tag})
+                    elif key == 'location':
+                        context[key + '_query'] = value
+                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            location_args |= Q(**{key + filter_words[key]: tag})
+                    else:
+                        if key == 'type':
+                            context[key + '_query'] = 'Service' if value == 1 else 'Event'
+                        else:
+                            context[key + '_query'] = value  
+                        filters[key + filter_words[key]] = value
 
-        return render(request, 'offers/ajax_offer_results.html', context)
+            # if only location
+            if ljson == '' and d is None:
+                arguments = tag_args & title_args & location_args
+            else:
+                arguments = (tag_args & title_args) | location_args
 
+            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user)
 
-# @method_decorator(never_cache, name='dispatch')
-# @method_decorator(csrf_exempt, name='dispatch')
+            ### handle location-json and distance filters last ###
+            # if location-json and distance queries are present
+            if d is not None and ljson != '':
+                filter_flag = True
+                # get desired location
+                profile_loc = (get_lat(ljson), get_long(ljson))
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                context['distance_query'] = d
+            # else if only distance query is present
+            elif d is not None and ljson == '':
+                filter_flag = True
+                # get desired location
+                profile = Profile.objects.get(user=self.request.user)
+                profile_loc = (profile.get_latitude(), profile.get_longitude())
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                context['distance_query'] = d
+            # else if only location-json query is present
+            else:
+                filter_flag = True
+                # get desired location
+                profile_loc = (get_lat(ljson), get_long(ljson))
+                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
+                context['distance_query'] = d
+
+            context['result_list'] = qs
+            context['filter_flag'] = filter_flag
+
+            return render(self.request, 'offers/ajax_offer_results.html', context)
+
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
 
     def get_queryset(self):
-        result = Offer.objects.all().exclude(owner=self.request.user)
+        if self.request.GET.get('title'):
+            args = Q()
+            for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
+                args |= Q(**{'title__icontains': keyword})
+            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user)
+        else:
+            result = Offer.objects.all().exclude(owner=self.request.user)
         return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
+        if self.request.GET.get('title'):
+            context['title_query'] = self.request.GET.get('title')
         return context
