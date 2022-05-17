@@ -53,7 +53,7 @@
                     </a> 
                 {% endif %}
 
-                <img src="{% static 'images/main/search.png' %}" type="submit"/>
+                <img style="width: 48px;height: 22px;justify-content: center;margin: 9px;"src="{% static 'images/main/search.png' %}" type="submit"/>
                 <input class="form-control me-2" type="text" name="title" id="id-query" placeholder="Search offers by title" />
             </form>
         </div>  
@@ -66,7 +66,7 @@
         
         <!-- If user is authenticated, then user profile picture is displayed with a badge on it showing number of unread notifications/-->
         <a class="btn btn-white btn-sm position-relative" href="{% url 'notifications' %}" role="button">
-            <img src="{{user.profile.userPicture.url}}" class="rounded-circle position-relative"  alt={{ request.user }} width="50" height="50"> 
+            <img src="/static/images/Profiles/male.png" class="rounded-circle position-relative"  alt={{ request.user }} width="50" height="50">
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{ notes }}
               <span class="visually-hidden"></span>
