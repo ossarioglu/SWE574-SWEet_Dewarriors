@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-
+from decouple import config
 from offers.models import Offer
 from .forms import MyRegisterForm
 
@@ -55,7 +55,6 @@ def signOut(request):
 def signUp(request):
     # Customized form for user information is called.
     form = MyRegisterForm()
-
     # When user details are posted, the information is matched with User model's field
     # Mandatory fields for quick signup is Username, Password, Name and Surname, Email, and Location 
     if request.method == 'POST':
