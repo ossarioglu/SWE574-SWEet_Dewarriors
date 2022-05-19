@@ -21,8 +21,9 @@ urlpatterns = [
     path('cancelapply/<uuid:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
     path('assign/<uuid:rID>/', assignview.assignService, name="offers.assign"),
     path('assignoffer/<uuid:ofnum>/', assignview.assigning, name="offers.listassign"),
+    path('notification/getall/', views.notificationcount, name='ajax_load_results'),
 
-# URLs for notification process: listing and updating
+    # URLs for notification process: listing and updating
     path('notification/', notificationview.notifications, name ="notifications"), 
     path('notification/<str:nID>/', notificationview.changeNote, name ="changeNote"), 
 
