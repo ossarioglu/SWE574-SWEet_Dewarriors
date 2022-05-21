@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'tags',
     'locations',
     'offers',
+    'actstream',
     'apply.apps.ApplyConfig',
     'assign.apps.AssignConfig',
 ]
@@ -58,7 +60,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'sharity.urls'
-
+SITE_ID = 1
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
