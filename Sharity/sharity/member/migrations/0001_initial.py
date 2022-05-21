@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('userInterests', models.TextField(max_length=1000, null=True)),
                 ('userLocation', models.CharField(max_length=100)),
                 ('userBadge', models.TextField(default='None', max_length=100, null=True)),
-                ('userPicture', models.ImageField(default='male.png', null=True, upload_to='Profiles')),
+                ('userPicture', models.ImageField(default='/static/images/Profiles/male.png', null=True, upload_to='Profiles')),
                 ('creditInprocess', models.IntegerField(default=0)),
                 ('user', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

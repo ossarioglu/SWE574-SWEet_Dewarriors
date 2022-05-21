@@ -85,6 +85,14 @@ class Profile(models.Model):
         payload = json.loads(str(self.userLocation).replace("\\'", '"'))
         return payload['formatted_address']
 
+    def get_latitude(self):
+        payload = json.loads(str(self.userLocation).replace("\\'", '"'))
+        return payload['geometry']['location']['lat']
+
+    def get_longitude(self):
+        payload = json.loads(str(self.userLocation).replace("\\'", '"'))
+        return payload['geometry']['location']['lng']
+
     def get_skills_labels(self):
         if len(str(self.userSkills).strip()) > 0:
             payload = json.loads(str(self.userSkills).replace("\\'", '"'))

@@ -5,13 +5,14 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-
+from decouple import config
 from offers.models import Offer
 from .forms import MyRegisterForm
 
 # Models and Formed used in this app
 from .models import Profile
 
+from usermessages.models import UserInbox
 
 # Sign-in Functionality
 def signinPage(request):
@@ -54,7 +55,6 @@ def signOut(request):
 def signUp(request):
     # Customized form for user information is called.
     form = MyRegisterForm()
-
     # When user details are posted, the information is matched with User model's field
     # Mandatory fields for quick signup is Username, Password, Name and Surname, Email, and Location 
     if request.method == 'POST':
@@ -76,6 +76,9 @@ def signUp(request):
             """
             newProfile = Profile.objects.create(user=user, userLocation=request.POST.get('location-json'))
             newProfile.save()
+
+            # after profile is saved, an inbox for that Profile instance is created
+            inbox = UserInbox.objects.create(owner=newProfile)
 
             # After user is created, page is redirected to home page
             # Error is rendered in case there is problem in sign-up process

@@ -3,6 +3,9 @@ from . import views
 from member import views as memberview
 from apply import views as applyview
 from assign import views as assignview
+from notification import views as notificationview
+from feedback import views as feedbackview
+
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -18,6 +21,15 @@ urlpatterns = [
     path('cancelapply/<uuid:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
     path('assign/<uuid:rID>/', assignview.assignService, name="offers.assign"),
     path('assignoffer/<uuid:ofnum>/', assignview.assigning, name="offers.listassign"),
+    path('notification/getall/', views.notificationcount, name='ajax_load_results'),
+
+    # URLs for notification process: listing and updating
+    path('notification/', notificationview.notifications, name ="notifications"), 
+    path('notification/<str:nID>/', notificationview.changeNote, name ="changeNote"), 
+
+# URLs for handshaking process: listing and confirming assignments
+    path('handshake/', assignview.handshaking, name ="handshake"), 
+    path('confirm/<str:asNum>/', feedbackview.confirmation, name ="confirmService"), 
 
 
 ]
