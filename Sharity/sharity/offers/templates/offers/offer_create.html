@@ -7248,6 +7248,12 @@
                         {% endif %}
                         <input type="hidden" value="[]" name="tags-json" id="tags-json">
                         {{ form.claims }}
+                    <ol class="list-group list-group-numbered" id="tags-wrapper" style="
+						display: none;
+						position: relative;
+						background-color: rgb(255, 255, 255);
+						padding-left: calc(var(--bs-gutter-x) / 2);
+						margin-bottom: 1rem;"></ol>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Participant Limit</label>
@@ -7289,7 +7295,7 @@
                     <div id="googleMap" style="width:100%;height:400px;"></div>
                 </div>
 
-                <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKfrDnj_uke36gzh7N9aWel_FF3e_U9V0"></script>
 
                 <script>
                     $(document).ready(function () {

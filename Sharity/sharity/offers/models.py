@@ -4,7 +4,7 @@ import json
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-
+from actstream import action
 
 class Offer(models.Model):
 
@@ -15,6 +15,10 @@ class Offer(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        action.send(self.owner, verb='created an offer',action_object=self)
+        super(Offer, self).save(*args, **kwargs)
 
     uuid = models.UUIDField(
         primary_key=True,

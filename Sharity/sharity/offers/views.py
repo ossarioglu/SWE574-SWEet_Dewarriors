@@ -26,11 +26,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         print(form.errors)
 
-    def get(self, request, *args, **kwargs):
-        context = locals()
 
-        context['googleapis'] = config('GOOGLE_API_KEY')
-        return render(request,self.template_name, context)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
