@@ -24,4 +24,6 @@ urlpatterns = [
     path('locations/', include('locations.urls')),
     path('offers/', include('offers.urls')),
     path('mail/', include('usermessages.urls')),
+    path('activity/', include('actstream.urls')),
+    path('ajax/load-results/', AjaxHandlerView.as_view(), name='ajax_load_results'),
 ]
