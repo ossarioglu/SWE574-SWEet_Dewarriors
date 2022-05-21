@@ -92,7 +92,7 @@ def signUp(request):
 # This is getting user information
 def userProfile(request, userKey):
     user = User.objects.get(username=userKey)
-    context = {'user': user, }
+    context = {'user': user,'googleapis':config('GOOGLE_API_KEY') }
     return render(request, 'member/profile.html', context)
 
 

@@ -12,9 +12,10 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
 from django.http import JsonResponse
 from django.db.models import Q
+from decouple import config
+from django.shortcuts import render
 from functools import reduce
 import operator
-
 from member.models import Profile
 from .utils import distance, get_lat, get_long
 @method_decorator(never_cache, name='dispatch')
@@ -22,9 +23,14 @@ from .utils import distance, get_lat, get_long
 class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
-
     def form_invalid(self, form):
         print(form.errors)
+
+    def get(self, request, *args, **kwargs):
+        context = locals()
+
+        context['googleapis'] = config('GOOGLE_API_KEY')
+        return render(request,self.template_name, context)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -93,6 +99,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             d = form.cleaned_data.pop('distance')
             # get search parameter -> location
             ljson = form.cleaned_data.pop('location-json')
+
 
             for key, value in form.cleaned_data.items():
                 if value != '' and value != '[]' and value is not None:
