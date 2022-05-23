@@ -3953,8 +3953,10 @@
 					<span>Badges</span>
 				</div>
                 <ul style="margin-top: 10px;margin-left: 78px;">
-                    <li>1</li>
-                    <li>2</li>
+					{% if user.Nbadge.is_active %} <li> <span class="badge rounded-pill bg-primary">Newcomer</span> </li> {% endif %}
+					{% if user.CBbadge.is_active %} <li> <span class="badge rounded-pill bg-info text-dark">Community Builder</span> </li> {% endif %}
+					{% if user.GSPbadge.is_active %} <li> <span class="badge rounded-pill bg-secondary">Great Service Provider</span> </li> {% endif %}
+					{% if user.MEObadge.is_active %} <li> <span class="badge rounded-pill bg-success">Master Event Organizer</span> </li> {% endif %}
                 </ul>
 			</div>
 			<div id="creditdiv">
