@@ -75,7 +75,12 @@
                             <p class="card-text"> <b> Type: </b> {{result.get_type}} </p>
                             <p class="card-text"> <b> Tags: </b> {{result.get_tag_labels|join:", "}} </p>
                             <p class="card-text"> <b> Location: </b> {{result.get_formatted_address}} </p>
-                            <p class="card-text"> <b> Owner: </b> {{result.owner}} </p>
+                            <p class="card-text"> <b> Owner: </b> {{result.owner}}
+                                {% if result.owner.Nbadge.is_active %} <span class="badge rounded-pill bg-primary">Newcomer</span> {% endif %}
+                                {% if result.owner.CBbadge.is_active %} <span class="badge rounded-pill bg-info text-dark">Community Builder</span> {% endif %}
+                                {% if result.owner.GSPbadge.is_active %} <span class="badge rounded-pill bg-secondary">Great Service Provider</span> {% endif %}
+                                {% if result.owner.MEObadge.is_active %} <span class="badge rounded-pill bg-success">Master Event Organizer</span> {% endif %}
+                            </p>
                             <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
                             <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
                         </div>

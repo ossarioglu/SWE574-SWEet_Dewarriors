@@ -14,6 +14,10 @@ from .models import Profile
 
 from usermessages.models import UserInbox
 
+from badges.signals import profile_detail
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Sign-in Functionality
 def signinPage(request):
     # If user is already autheticated there is no need for sign-in, so page is redirected to home
@@ -89,11 +93,31 @@ def signUp(request):
     return render(request, 'member/signup.html', {'form': form})
 
 
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'member/profile.html'
+    model = User
+
+    def get_object(self):
+        user = User.objects.get(username=self.kwargs.get('userKey'))
+        return user
+        
+    def dispatch(self, request, *args, **kwargs):
+        # send signal for badges
+        profile_detail.send(sender=Profile, owner_pk=[self.get_object().pk])
+        return super().dispatch(request, *args, **kwargs)
+
 # This is getting user information
-def userProfile(request, userKey):
-    user = User.objects.get(username=userKey)
-    context = {'user': user, }
-    return render(request, 'member/profile.html', context)
+# def userProfile(request, userKey):
+#     user = User.objects.get(username=userKey)
+#     context = {'user': user, }
+#     context['newcomer'] = hasattr(user, 'Nbadge')
+#     context['cb'] = hasattr(user, 'CBbadge')
+#     context['gsp'] = hasattr(user, 'GSPbadge')
+#     context['meo'] = hasattr(user, 'MEObadge')
+
+#     # send signal for badges
+#     profile_detail.send(sender=Profile, owner_pk=user.pk)
+#     return render(request, 'member/profile.html', context)
 
 
 # This is for updating user profile
