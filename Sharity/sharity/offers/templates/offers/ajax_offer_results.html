@@ -97,6 +97,11 @@
     <script>
         $(document).ready(function() {
             $(".remove-filter").click(function(e) {
+                if ($(this).attr("id") === "id-remove-filter-location") {
+                    $("#location-json").val("");
+                } else if ($(this).attr("id") === "id-remove-filter-tags") {
+                    $("#tags-json").val("");
+                }
                 $(".spinner-border").show();
                 var attribute = $(this).attr("id").split("-")[3];
                 $("#search-" + attribute).val("");
