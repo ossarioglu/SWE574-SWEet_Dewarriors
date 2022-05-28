@@ -6,17 +6,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from decouple import config
+from django.http import JsonResponse
 from offers.models import Offer
 from .forms import MyRegisterForm
-
+from actstream.actions import follow, unfollow
 # Models and Formed used in this app
 from .models import Profile
+from actstream.models import following, followers
 
 from usermessages.models import UserInbox
 
 from badges.signals import profile_detail
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # Sign-in Functionality
 def signinPage(request):
@@ -55,7 +58,34 @@ def signOut(request):
     return redirect('home')
 
 
-# This is for sign-up of new users
+def followUser(request):
+    username = request.POST.get('username')
+    user = User.objects.get(username=username)
+    follow(request.user, user)
+    followers_list = followers(user)
+    following_list = following(user)
+
+    followers_count = len(followers_list) if len(followers_list) > 0 else 0
+    following_count = len(following_list) if len(following_list) > 0 else 0
+
+
+
+    return JsonResponse({"followersCount": followers_count,"followingCount": following_count})
+
+
+def unfollowUser(request):
+    username = request.POST.get('username')
+    user = User.objects.get(username=username)
+    unfollow(request.user, user)
+    followers_list = followers(user)
+    following_list = following(user)
+    followers_count = len(followers_list) if len(followers_list) > 0 else 0
+    following_count = len(following_list) if len(following_list) > 0 else 0
+
+
+    return JsonResponse({"followersCount": followers_count,"followingCount": following_count})
+
+    # This is for sign-up of new users
 def signUp(request):
     # Customized form for user information is called.
     form = MyRegisterForm()
@@ -92,6 +122,23 @@ def signUp(request):
 
     return render(request, 'member/signup.html', {'form': form})
 
+    # This is getting user information
+def userProfile(request, userKey):
+    user = User.objects.get(username=userKey)
+    followers_list = followers(user)
+    is_already_followed = True if len(
+        list(filter(lambda x: x.username == request.user.username, followers_list))) > 0 else False
+
+    following_list = following(user)
+    followers_count = len(followers_list) if len(followers_list) > 0 else 0
+    following_count = len(following_list) if len(following_list) > 0 else 0
+
+    context = {'user': user,
+               'isAlreadyFollowed': is_already_followed,
+               'googleapis': config('GOOGLE_API_KEY'),
+               "followersCount": followers_count,
+               "followingCount": following_count}
+    return render(request, 'member/profile.html', context)
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'member/profile.html'
@@ -100,7 +147,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_object(self):
         user = User.objects.get(username=self.kwargs.get('userKey'))
         return user
-        
+
     def dispatch(self, request, *args, **kwargs):
         # send signal for badges
         profile_detail.send(sender=Profile, owner_pk=[self.get_object().pk])
@@ -119,9 +166,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 #     profile_detail.send(sender=Profile, owner_pk=user.pk)
 #     return render(request, 'member/profile.html', context)
 
-
 # This is for updating user profile
-# Login is required to see details of services 
+# Login is required to see details of services
 
 # @login_required(login_url='login')
 def updateProfile(request, userKey):
@@ -159,18 +205,15 @@ def updateProfile(request, userKey):
     context = {'form': form, 'myProfile': myProfile, 'user': user}
     return render(request, 'member/updateprofile.html', context)
 
-
 def home(request):
     context = {'info': ''}
     return render(request, 'base/home.html', context)
 
-
 def listofferings(request):
-
     myuser = request.user
     # Queried service is retreived from all services
     offer = Offer.objects.filter(owner=myuser)
 
     # Serve information, and application info is sent to front-end
-    context = {'offerings':offer}
+    context = {'offerings': offer}
     return render(request, 'assign/myofferings.html', context)

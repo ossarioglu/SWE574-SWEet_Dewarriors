@@ -12,6 +12,10 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
 from django.http import JsonResponse
 from django.db.models import Q
+from decouple import config
+from django.shortcuts import render
+from functools import reduce
+import operator
 
 from badges.signals import offer_detail, timeline
 from badges.models import *
@@ -24,9 +28,10 @@ from .utils import distance, get_lat, get_long, order_offers
 class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
-
     def form_invalid(self, form):
         print(form.errors)
+
+
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -99,6 +104,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             d = form.cleaned_data.pop('distance')
             # get search parameter -> location
             ljson = form.cleaned_data.pop('location-json')
+
 
             for key, value in form.cleaned_data.items():
                 if value != '' and value != '[]' and value is not None:
@@ -191,3 +197,7 @@ class OfferListView(LoginRequiredMixin, ListView):
         if self.request.GET.get('title'):
             context['title_query'] = self.request.GET.get('title')
         return context
+
+
+
+

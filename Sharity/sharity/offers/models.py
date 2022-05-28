@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 from datetime import timedelta
+from actstream import action
+
 class Offer(models.Model):
 
     class Type(models.IntegerChoices):
@@ -45,6 +47,7 @@ class Offer(models.Model):
 
     def save(self, *args, **kwargs):
         """Override end_date attribute"""
+        action.send(self.owner, verb='created an offer', action_object=self)
         self.end_date = self.start_date + timedelta(hours=self.duration)
         super().save(*args, **kwargs)
 

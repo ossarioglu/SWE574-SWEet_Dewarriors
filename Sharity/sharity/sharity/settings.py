@@ -30,7 +30,11 @@ ALLOWED_HOSTS = ["localhost","ec2-52-214-80-212.eu-west-1.compute.amazonaws.com"
 
 
 # Application definition
-
+ACTSTREAM_SETTINGS = {
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'GFK_FETCH_DEPTH': 1,
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

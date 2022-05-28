@@ -1,212 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-            crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="text/javascript">
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let form = document.getElementById('registerform');
-            let previousQueryLength;
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault()
-                let locationQuery = document.getElementById('location').value;
-                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
-                    let request = axios.get('/locations/search/?query=' + locationQuery)
-                        .then(function (response) {
-                            $('#location-wrapper .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.results.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start location');
-                                $(newLi).attr('id', 'location-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('background-image', 'url("' + response.data.response.results[x].icon + '")');
-                                $(newLi).css('background-repeat', 'no-repeat');
-                                $(newLi).css('background-position', '98% center');
-                                $(newLi).css('background-size', '5%');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.results[x].name);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.results[x].formatted_address);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#location-wrapper').css('display', 'flex');
-                                $('#location-wrapper').append(newLi);
-                            }
-
-                            $('.location').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
-                                $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
-                                $('#location').css('background-repeat', 'no-repeat');
-                                $('#location').css('background-position', '98% center');
-                                $('#location').css('background-size', '5%');
-                                $('#location').val(response.data.response.results[resultIndex].formatted_address);
-                                $('#location-wrapper').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = locationQuery.length
-                        })
-                }
-            });
-
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                let skillsTagsQuery = document.getElementById('skills').value.split(',').at(-1).trim();
-                if (skillsTagsQuery.length >= 2 && skillsTagsQuery.length < 15 && previousQueryLength !== skillsTagsQuery.length) {
-                    let request = axios.get('/tags/search/?query=' + skillsTagsQuery)
-                        .then(function (response) {
-                            $('#tags-wrapper-skills .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.search.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
-                                $(newLi).attr('id', 'tags-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.search[x].label);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#tags-wrapper-skills').css('display', 'flex');
-                                $('#tags-wrapper-skills').append(newLi);
-                            }
-
-                            $('.tags').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                let existingValue = JSON.parse($('#skills-tags-json').val());
-                                existingValue.push(response.data.response.search[resultIndex]);
-                                $('#skills-tags-json').val(JSON.stringify(existingValue));
-                                var stringValue = '';
-                                existingValue.forEach(function (tag) {
-                                    stringValue += tag.label + ', ';
-                                });
-                                $('#skills').val(stringValue);
-                                $('#skills-tags-json').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = skillsTagsQuery.length
-                        })
-                }
-            });
-
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                let interestsTagsQuery = document.getElementById('interests').value.split(',').at(-1).trim();
-                if (interestsTagsQuery.length >= 2 && interestsTagsQuery.length < 15 && previousQueryLength !== interestsTagsQuery.length) {
-                    let request = axios.get('/tags/search/?query=' + interestsTagsQuery)
-                        .then(function (response) {
-                            $('#tags-wrapper-interests .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.search.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
-                                $(newLi).attr('id', 'tags-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.search[x].label);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#tags-wrapper-interests').css('display', 'flex');
-                                $('#tags-wrapper-interests').append(newLi);
-                            }
-
-                            $('.tags').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                let existingValue = JSON.parse($('#interests-tags-json').val());
-                                existingValue.push(response.data.response.search[resultIndex]);
-                                $('#interests-tags-json').val(JSON.stringify(existingValue));
-                                var stringValue = '';
-                                existingValue.forEach(function (tag) {
-                                    stringValue += tag.label + ', ';
-                                });
-                                $('#interests').val(stringValue);
-                                $('#interests-tags-json').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = interestsTagsQuery.length
-                        })
-                }
-            });
-
-            $('#submit-button').click(function (event) {
-                event.preventDefault();
-                $('#location').val($('#location-json').val());
-                $('#skills').val($('#skills-tags-json').val());
-                $('#interests').val($('#interests-tags-json').val());
-                $('#registerform').submit();
-            });
-
-            $(document).mouseup(function (e) {
-                let locationContainer = $('#location-wrapper');
-                let skillsContainer = $('#tags-wrapper-skills');
-                let interestsContainer = $('#tags-wrapper-interests');
-
-                if (!locationContainer.is(e.target) && locationContainer.has(e.target).length === 0) {
-                    locationContainer.hide();
-                }
-
-                if (!skillsContainer.is(e.target) && skillsContainer.has(e.target).length === 0) {
-                    skillsContainer.hide();
-                }
-
-                if (!interestsContainer.is(e.target) && interestsContainer.has(e.target).length === 0) {
-                    interestsContainer.hide();
-                }
-            });
-        });
-    </script>
+    <title>Welcoming/Landing Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style id="applicationStylesheet" type="text/css">
         .mediaViewInfo {
-            --web-view-name: Profile Page;
-            --web-view-id: Profile_Page;
+            --web-view-name: Welcoming/Landing Page;
+            --web-view-id: WelcomingLanding_Page;
             --web-scale-on-resize: true;
             --web-enable-deep-linking: true;
         }
 
         :root {
-            --web-view-ids: Profile_Page;
+            --web-view-ids: WelcomingLanding_Page;
         }
 
         * {
@@ -216,43 +30,61 @@
             border: none;
         }
 
-        #Profile_Page {
+        #WelcomingLanding_Page {
             position: absolute;
             width: 1920px;
             height: 1080px;
             background-color: rgba(255, 255, 255, 1);
             overflow: hidden;
-            --web-view-name: Profile Page;
-            --web-view-id: Profile_Page;
+            --web-view-name: Welcoming/Landing Page;
+            --web-view-id: WelcomingLanding_Page;
             --web-scale-on-resize: true;
             --web-enable-deep-linking: true;
         }
 
-        #Rectangle_125 {
-            fill: rgba(76, 171, 148, 1);
+        #start_sharing_knowledge {
+            position: absolute;
+            width: 661px;
+            height: 254px;
+            left: 368px;
+            top: 286px;
+            overflow: visible;
         }
 
-        .Rectangle_125 {
+        #image_study {
             position: absolute;
+            width: 588px;
+            height: 591px;
+            left: 1046px;
+            top: 169px;
             overflow: visible;
-            width: 820px;
-            height: 938px;
-            left: 104px;
-            top: 143px;
         }
 
         #logo {
             position: absolute;
             width: 64px;
             height: 69px;
-            left: 117px;
-            top: 12px;
+            left: 111px;
+            top: 9px;
             overflow: visible;
         }
 
+        #Rectangle_59 {
+            fill: rgba(76, 171, 148, 1);
+        }
+
+        .Rectangle_59 {
+            position: absolute;
+            overflow: visible;
+            width: 1140px;
+            height: 247px;
+            left: 390px;
+            top: 892px;
+        }
+
         #Home {
-            left: 737px;
-            top: 30px;
+            left: 731px;
+            top: 27px;
             position: absolute;
             overflow: visible;
             width: 58px;
@@ -262,12 +94,13 @@
             font-style: normal;
             font-weight: normal;
             font-size: 20px;
-            color: rgba(0, 0, 0, 1);
+            color: rgba(40, 167, 69, 1);
+            text-decoration: underline;
         }
 
         #About {
-            left: 823px;
-            top: 30px;
+            left: 817px;
+            top: 27px;
             position: absolute;
             overflow: visible;
             width: 58px;
@@ -281,8 +114,8 @@
         }
 
         #Offers {
-            left: 909px;
-            top: 30px;
+            left: 903px;
+            top: 27px;
             position: absolute;
             overflow: visible;
             width: 58px;
@@ -295,22 +128,35 @@
             color: rgba(0, 0, 0, 1);
         }
 
-        #Rectangle_106 {
+        #Rectangle_60 {
+            fill: rgba(76, 171, 148, 1);
+        }
+
+        .Rectangle_60 {
+            position: absolute;
+            overflow: visible;
+            width: 193px;
+            height: 55px;
+            left: 427px;
+            top: 610px;
+        }
+
+        #Rectangle_61 {
             fill: rgba(250, 162, 75, 1);
         }
 
-        .Rectangle_106 {
+        .Rectangle_61 {
             position: absolute;
             overflow: visible;
             width: 164px;
             height: 55px;
-            left: 1639px;
-            top: 12px;
+            left: 1633px;
+            top: 9px;
         }
 
         #Sharity {
-            left: 200px;
-            top: 23px;
+            left: 194px;
+            top: 20px;
             position: absolute;
             overflow: visible;
             width: 145px;
@@ -323,7 +169,7 @@
             color: rgba(34, 40, 51, 1);
         }
 
-        #Rectangle_107 {
+        #Rectangle_62 {
             fill: transparent;
             stroke: rgba(112, 112, 112, 1);
             stroke-width: 1px;
@@ -333,21 +179,21 @@
             shape-rendering: auto;
         }
 
-        .Rectangle_107 {
+        .Rectangle_62 {
             position: absolute;
             overflow: visible;
             width: 137px;
             height: 22px;
-            left: 1067px;
-            top: 30px;
+            left: 1061px;
+            top: 27px;
         }
 
         #iconactionsearch_24px {
             position: absolute;
             width: 24px;
             height: 24px;
-            left: 1040px;
-            top: 28px;
+            left: 1034px;
+            top: 25px;
             overflow: visible;
         }
 
@@ -378,9 +224,24 @@
             transform: matrix(1, 0, 0, 1, 0, 0);
         }
 
-        #Logout {
-            left: 1685px;
-            top: 28px;
+        #Login {
+            left: 1530px;
+            top: 25px;
+            position: absolute;
+            overflow: visible;
+            width: 58px;
+            height: 23px;
+            text-align: left;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 20px;
+            color: rgba(0, 0, 0, 1);
+        }
+
+        #Sign_Up {
+            left: 1679px;
+            top: 25px;
             position: absolute;
             overflow: visible;
             width: 86px;
@@ -393,591 +254,1958 @@
             color: rgba(255, 255, 255, 1);
         }
 
-        #Profile {
-            left: 1527px;
-            top: 28px;
+        #Explore_Offers {
+            left: 460px;
+            top: 627px;
             position: absolute;
             overflow: visible;
-            width: 63px;
-            height: 23px;
+            width: 129px;
+            height: 22px;
             text-align: left;
-            font-family: Helvetica Neue LT Std;
+            font-family: Helvetica Neue;
             font-style: normal;
             font-weight: normal;
             font-size: 20px;
-            color: rgba(40, 167, 69, 1);
-            text-decoration: underline;
+            color: rgba(255, 255, 255, 1);
         }
 
-        #profilepicdiv {
+        #clock {
             position: absolute;
-            width: 628px;
-            height: 470px;
-            left: 209px;
-            top: 338px;
+            width: 212px;
+            height: 218px;
+            left: 1561px;
+            top: 865px;
             overflow: visible;
         }
 
-        #namesurnamediv {
-            left: 233px;
-            top: 213px;
+        #Sharity_is_an_online_platform_ {
+            left: 440px;
+            top: 524px;
             position: absolute;
             overflow: visible;
-            width: 438px;
+            width: 538px;
             height: 60px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 50px;
-            color: rgba(255, 255, 255, 1);
+            font-size: 17px;
+            color: rgba(0, 0, 0, 1);
         }
 
-        #memberinfodiv {
-            left: 997px;
-            top: 189px;
+
+        #Component_2__1 {
             position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 492px;
+            top: 775px;
             overflow: visible;
-            width: 807px;
-            height: 125px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 50px;
-            color: rgba(112, 112, 112, 1);
         }
 
-        #emaildiv {
-            left: 237px;
-            top: 280px;
-            position: absolute;
-            overflow: visible;
-            width: 259px;
-            height: 34px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 1);
-        }
-
-        #Rectangle_126 {
+        #Rectangle_64 {
             fill: rgba(255, 255, 255, 1);
-            stroke: rgba(112, 112, 112, 1);
-            stroke-width: 1px;
-            stroke-linejoin: miter;
-            stroke-linecap: butt;
-            stroke-miterlimit: 4;
-            shape-rendering: auto;
         }
 
-        .Rectangle_126 {
+        .Rectangle_64 {
             position: absolute;
             overflow: visible;
-            width: 628px;
-            height: 137px;
-            left: 209px;
-            top: 807px;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
         }
 
-        #Boundary_ {
+        #Image_2_bu {
+            position: absolute;
+            width: 285px;
+            height: 158px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Barista_vegan_milk_by_Ryan_Su_ {
+            left: 20px;
+            top: 168px;
+            position: absolute;
+            overflow: visible;
+            width: 246px;
+            height: 19px;
+            text-align: left;
+            font-family: Helvetica Neue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
+        }
+
+        #n_4_Handshakes_bw {
+            left: 20px;
+            top: 205px;
+            position: absolute;
+            overflow: visible;
+            width: 92px;
+            height: 14px;
+            text-align: left;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
+        }
+
+        #icontogglestar_24px_bx {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_by {
             fill: transparent;
         }
 
-        .Boundary_ {
+        .Boundary_by {
             position: absolute;
             overflow: visible;
-            width: 64px;
-            height: 64px;
-            left: 566px;
-            top: 840px;
-        }
-
-        #Component_29__1 {
-            position: absolute;
-            width: 245.944px;
-            height: 43.014px;
-            left: 547.5px;
-            top: 850px;
-            overflow: visible;
-        }
-
-        #n_Color_ {
-            fill: rgba(244, 165, 87, 1);
-        }
-
-        .n_Color_ {
-            overflow: visible;
-            position: absolute;
-            width: 47.249px;
-            height: 43.014px;
+            width: 15px;
+            height: 15px;
             left: 0px;
             top: 0px;
-            transform: matrix(1, 0, 0, 1, 0, 0);
         }
 
-        #n_Color_ba {
+        #n_Color_bz {
             fill: rgba(244, 165, 87, 1);
         }
 
-        .n_Color_ba {
+        .n_Color_bz {
             overflow: visible;
             position: absolute;
-            width: 47.249px;
-            height: 43.014px;
-            left: 49.893px;
-            top: 0px;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
             transform: matrix(1, 0, 0, 1, 0, 0);
         }
 
-        #n_Color_bb {
-            fill: rgba(244, 165, 87, 1);
-        }
-
-        .n_Color_bb {
-            overflow: visible;
+        #icontogglestar_24px_cb {
             position: absolute;
-            width: 47.249px;
-            height: 43.014px;
-            left: 99.786px;
-            top: 0px;
-            transform: matrix(1, 0, 0, 1, 0, 0);
-        }
-
-        #n_Color_bc {
-            fill: rgba(244, 165, 87, 1);
-        }
-
-        .n_Color_bc {
-            overflow: visible;
-            position: absolute;
-            width: 46px;
-            height: 42px;
-            left: 199.944px;
-            top: 0.051px;
-            transform: matrix(1, 0, 0, 1, 0, 0);
-        }
-
-        #n_Color_bd {
-            fill: rgba(244, 165, 87, 1);
-        }
-
-        .n_Color_bd {
-            overflow: visible;
-            position: absolute;
-            width: 47.249px;
-            height: 43.014px;
-            left: 149.679px;
-            top: 0px;
-            transform: matrix(1, 0, 0, 1, 0, 0);
-        }
-
-        #n_3_Handshakes {
-            left: 260px;
-            top: 861px;
-            position: absolute;
-            overflow: visible;
-            width: 438px;
-            height: 43px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 30px;
-            color: rgba(112, 112, 112, 1);
-        }
-
-        #usernamediv {
-            left: 233px;
-            top: 172px;
-            position: absolute;
-            overflow: hidden;
-            width: 163px;
-            height: 34px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 30px;
-            color: rgba(255, 255, 255, 1);
-        }
-
-        #Following_12 {
-            left: 260px;
-            top: 971px;
-            position: absolute;
-            overflow: hidden;
-            width: 330px;
-            height: 43px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 40px;
-            color: rgba(255, 255, 255, 1);
-        }
-
-        #Follower_43 {
-            left: 508px;
-            top: 971px;
-            position: absolute;
-            overflow: hidden;
-            width: 272px;
-            height: 43px;
-            text-align: right;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 40px;
-            color: rgba(255, 255, 255, 1);
-        }
-
-        #Rectangle_63 {
-            fill: rgba(239, 166, 10, 1);
-            stroke: rgba(236, 165, 8, 1);
-            stroke-width: 1px;
-            stroke-linejoin: miter;
-            stroke-linecap: butt;
-            stroke-miterlimit: 4;
-            shape-rendering: auto;
-        }
-
-        .Rectangle_63 {
-            position: absolute;
-            overflow: visible;
-            width: 8px;
-            height: 119px;
-            left: 975px;
-            top: 189px;
-        }
-
-        #FormForm_GroupHelperDefault {
-            position: absolute;
-            width: 436.5px;
-            height: 71.149px;
-            left: 983px;
-            top: 332px;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
             overflow: visible;
         }
 
-        #FormInputTextDefault {
-            position: absolute;
-            width: 436px;
-            height: 38px;
-            left: 0.5px;
-            top: 33.148px;
-            overflow: visible;
+        #Boundary_cb {
+            fill: transparent;
         }
 
-        #InputBase {
+        .Boundary_cb {
             position: absolute;
-            width: 436px;
-            height: 38px;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
             left: 0px;
             top: 0px;
+        }
+
+        #n_Color_cb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
             overflow: visible;
         }
 
-        #InputBase_bh {
+        #Boundary_cc {
+            fill: transparent;
+        }
+
+        .Boundary_cc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cb {
+            fill: transparent;
+        }
+
+        .Boundary_cb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cc {
+            fill: transparent;
+        }
+
+        .Boundary_cc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cd {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cd {
+            fill: transparent;
+        }
+
+        .Boundary_cd {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ce {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ce {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cf {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cg {
+            fill: transparent;
+        }
+
+        .Boundary_cg {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ch {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ch {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Rectangle_65 {
             fill: rgba(255, 255, 255, 1);
-            stroke: rgba(0, 0, 0, 1);
-            stroke-width: 1px;
-            stroke-linejoin: miter;
-            stroke-linecap: butt;
-            stroke-miterlimit: 4;
-            shape-rendering: auto;
         }
 
-        .InputBase_bh {
+        .Rectangle_65 {
             position: absolute;
             overflow: visible;
-            width: 438px;
-            height: 40px;
+            width: 285px;
+            height: 241px;
             left: 0px;
             top: 0px;
         }
 
-        #skillsdiv {
-            left: 10.5px;
-            top: 5.5px;
+        #Image_2_bu {
             position: absolute;
-            overflow: visible;
-            width: 100%;
-            white-space: nowrap;
-            line-height: 24px;
-            margin-top: -2px;
-            text-align: left;
-            font-family: HelveticaNeue;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 20px;
-            color: rgba(134, 141, 150, 1);
-        }
-
-        #Group_Label {
+            width: 285px;
+            height: 158px;
             left: 0px;
             top: 0px;
+            overflow: visible;
+        }
+
+        #Barista_vegan_milk_by_Ryan_Su__bv {
+            left: 20px;
+            top: 168px;
             position: absolute;
             overflow: visible;
-            width: 407.5px;
-            height: 24px;
-            line-height: 24px;
-            margin-top: -2px;
+            width: 246px;
+            height: 20px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(112, 112, 112, 1);
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
         }
 
-        #Edit {
-            left: 1685px;
-            top: 308px;
+        #n_4_Handshakes_bw {
+            left: 20px;
+            top: 205px;
             position: absolute;
             overflow: visible;
-            width: 89px;
-            height: 46px;
-            text-align: right;
+            width: 92px;
+            height: 14px;
+            text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(250, 162, 75, 1);
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
         }
 
-        #FormForm_GroupHelperDefault_bl {
+        #icontogglestar_24px_bx {
             position: absolute;
-            width: 436.5px;
-            height: 71.149px;
-            left: 983px;
-            top: 405px;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
             overflow: visible;
         }
 
-        #FormInputTextDefault_bm {
+        #Boundary_by {
+            fill: transparent;
+        }
+
+        .Boundary_by {
             position: absolute;
-            width: 436px;
-            height: 38px;
-            left: 0.5px;
-            top: 33.148px;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_bz {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_bz {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
             overflow: visible;
         }
 
-        #InputBase_bn {
+        #Boundary_cb {
+            fill: transparent;
+        }
+
+        .Boundary_cb {
             position: absolute;
-            width: 436px;
-            height: 38px;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cc {
+            fill: transparent;
+        }
+
+        .Boundary_cc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cb {
+            fill: transparent;
+        }
+
+        .Boundary_cb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cc {
+            fill: transparent;
+        }
+
+        .Boundary_cc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_cc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_cc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cd {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cd {
+            fill: transparent;
+        }
+
+        .Boundary_cd {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ce {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ce {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_cf {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_cg {
+            fill: transparent;
+        }
+
+        .Boundary_cg {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ch {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ch {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Component_4__1 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 818px;
+            top: 772px;
+            overflow: visible;
+        }
+
+        #Component_3__1 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
             left: 0px;
             top: 0px;
             overflow: visible;
         }
 
-        #InputBase_bo {
+        #Component_2__2 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Rectangle_64_cl {
             fill: rgba(255, 255, 255, 1);
-            stroke: rgba(0, 0, 0, 1);
-            stroke-width: 1px;
-            stroke-linejoin: miter;
-            stroke-linecap: butt;
-            stroke-miterlimit: 4;
-            shape-rendering: auto;
         }
 
-        .InputBase_bo {
+        .Rectangle_64_cl {
             position: absolute;
             overflow: visible;
-            width: 438px;
-            height: 40px;
+            width: 285px;
+            height: 241px;
             left: 0px;
             top: 0px;
         }
 
-        #interestsdiv {
-            left: 10.5px;
-            top: 5.5px;
+        #Image_2_cm {
+            position: absolute;
+            width: 285px;
+            height: 158px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Barista_vegan_milk_by_Ryan_Su__cn {
+            left: 20px;
+            top: 168px;
             position: absolute;
             overflow: visible;
-            width: 100%;
-            white-space: nowrap;
-            line-height: 24px;
-            margin-top: -2px;
+            width: 246px;
+            height: 19px;
             text-align: left;
-            font-family: HelveticaNeue;
+            font-family: Helvetica Neue;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(134, 141, 150, 1);
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
         }
 
-        #Group_Label_bq {
-            left: 0px;
-            top: 0px;
+        #n_4_Handshakes_co {
+            left: 20px;
+            top: 205px;
             position: absolute;
             overflow: visible;
-            width: 407.5px;
-            height: 24px;
-            line-height: 24px;
-            margin-top: -2px;
+            width: 92px;
+            height: 14px;
             text-align: left;
-            font-family: Helvetica Neue LT Std;
+            font-family: Helvetica Neue;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(112, 112, 112, 1);
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
         }
 
-        #FormForm_GroupHelperDefault_br {
+        #icontogglestar_24px_dd {
             position: absolute;
-            width: 406.5px;
-            height: 24px;
-            left: 983px;
-            top: 475px;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
             overflow: visible;
         }
 
-        #Group_Label_bs {
+        #Boundary_de {
+            fill: transparent;
+        }
+
+        .Boundary_de {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
             left: 0px;
             top: 0px;
-            position: absolute;
-            overflow: visible;
-            width: 407.5px;
-            height: 24px;
-            line-height: 24px;
-            margin-top: -2px;
-            text-align: left;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 20px;
-            color: rgba(112, 112, 112, 1);
         }
 
-        #creditdiv {
-            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161));
-            left: 679px;
-            top: 172px;
-            position: absolute;
-            overflow: visible;
-            width: 151px;
-            height: 117px;
-            text-align: center;
-            font-family: Helvetica Neue LT Std;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 40px;
-            color: rgba(250, 162, 75, 1);
+        #n_Color_df {
+            fill: rgba(244, 165, 87, 1);
         }
 
-        #FormForm_GroupHelperDefault_by {
+        .n_Color_df {
+            overflow: visible;
             position: absolute;
-            width: 436.5px;
-            height: 71.149px;
-            left: 983px;
-            top: 530.852px;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dm {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
             overflow: visible;
         }
 
-        #FormForm_GroupHelperDefault_bz {
-            position: absolute;
-            width: 436.5px;
-            height: 71.149px;
-            left: 983px;
-            top: 732px;
-            overflow: visible;
+        #Boundary_dn {
+            fill: transparent;
         }
 
-        #FormInputTextDefault_bz {
+        .Boundary_dn {
             position: absolute;
-            width: 436px;
-            height: 38px;
-            left: 0.5px;
-            top: 33.148px;
             overflow: visible;
-        }
-
-        #InputBase_b {
-            position: absolute;
-            width: 436px;
-            height: 38px;
+            width: 15px;
+            height: 15px;
             left: 0px;
             top: 0px;
+        }
+
+        #n_Color_do {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_do {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dp {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
             overflow: visible;
         }
 
-        #InputBase_ca {
+        #Boundary_dq {
+            fill: transparent;
+        }
+
+        .Boundary_dq {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dr {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dr {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dm {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dn {
+            fill: transparent;
+        }
+
+        .Boundary_dn {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_do {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_do {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dp {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dq {
+            fill: transparent;
+        }
+
+        .Boundary_dq {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dr {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dr {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_ds {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dt {
+            fill: transparent;
+        }
+
+        .Boundary_dt {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_du {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_du {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_db {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_db {
+            fill: transparent;
+        }
+
+        .Boundary_db {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Rectangle_65_da {
             fill: rgba(255, 255, 255, 1);
-            stroke: rgba(0, 0, 0, 1);
-            stroke-width: 1px;
-            stroke-linejoin: miter;
-            stroke-linecap: butt;
-            stroke-miterlimit: 4;
-            shape-rendering: auto;
         }
 
-        .InputBase_ca {
+        .Rectangle_65_da {
             position: absolute;
             overflow: visible;
-            width: 438px;
-            height: 40px;
+            width: 285px;
+            height: 241px;
             left: 0px;
             top: 0px;
         }
 
-        .form-control {
-            display: inline-block !important;
-            width: 95% !important;
-            padding: 0.170rem .75rem !important;
-        }
-
-        #buttonSignup {
-            left: 170px;
-            top: 9px;
+        #Play_Soccer_by_Vanessa_Grand {
+            left: 20px;
+            top: 168px;
             position: absolute;
             overflow: visible;
-            width: 75px;
-            white-space: nowrap;
+            width: 246px;
+            height: 20px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 1);
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
         }
 
-        #locationdiv {
-            left: 10.5px;
-            top: 5.5px;
+        #n_5_Handshakes {
+            left: 20px;
+            top: 205px;
             position: absolute;
             overflow: visible;
-            width: 100%;
-            white-space: nowrap;
-            line-height: 24px;
-            margin-top: -2px;
+            width: 92px;
+            height: 14px;
             text-align: left;
-            font-family: HelveticaNeue;
+            font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(134, 141, 150, 1);
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
         }
 
-        #Group_Label_b {
+        #icontogglestar_24px_dd {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_de {
+            fill: transparent;
+        }
+
+        .Boundary_de {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
             left: 0px;
             top: 0px;
+        }
+
+        #n_Color_df {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_df {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dm {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dn {
+            fill: transparent;
+        }
+
+        .Boundary_dn {
             position: absolute;
             overflow: visible;
-            width: 407.5px;
-            height: 24px;
-            line-height: 24px;
-            margin-top: -2px;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_do {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_do {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dp {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dq {
+            fill: transparent;
+        }
+
+        .Boundary_dq {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dr {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dr {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dm {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dn {
+            fill: transparent;
+        }
+
+        .Boundary_dn {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_do {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_do {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_dp {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dq {
+            fill: transparent;
+        }
+
+        .Boundary_dq {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dr {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dr {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_ds {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dt {
+            fill: transparent;
+        }
+
+        .Boundary_dt {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_du {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_du {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Image_4 {
+            position: absolute;
+            width: 285px;
+            height: 160px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #icontogglestar_half_24px {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_dx {
+            fill: transparent;
+        }
+
+        .Boundary_dx {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_dy {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_dy {
+            overflow: visible;
+            position: absolute;
+            width: 11px;
+            height: 10px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Component_8__1 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 1144px;
+            top: 772px;
+            overflow: visible;
+        }
+
+        #Component_7__1 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Component_4__2 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Component_3__1_d {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Component_2__2_d {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Rectangle_64_d {
+            fill: rgba(255, 255, 255, 1);
+        }
+
+        .Rectangle_64_d {
+            position: absolute;
+            overflow: visible;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #Image_2_d {
+            position: absolute;
+            width: 285px;
+            height: 158px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Barista_vegan_milk_by_Ryan_Su__d {
+            left: 20px;
+            top: 168px;
+            position: absolute;
+            overflow: visible;
+            width: 246px;
+            height: 19px;
+            text-align: left;
+            font-family: Helvetica Neue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
+        }
+
+        #n_4_Handshakes_d {
+            left: 20px;
+            top: 205px;
+            position: absolute;
+            overflow: visible;
+            width: 92px;
+            height: 14px;
+            text-align: left;
+            font-family: Helvetica Neue;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
+        }
+
+        #icontogglestar_24px_ex {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_ey {
+            fill: transparent;
+        }
+
+        .Boundary_ey {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ez {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ez {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fb {
+            fill: transparent;
+        }
+
+        .Boundary_fb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fc {
+            fill: transparent;
+        }
+
+        .Boundary_fc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fb {
+            fill: transparent;
+        }
+
+        .Boundary_fb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fc {
+            fill: transparent;
+        }
+
+        .Boundary_fc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fd {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fd {
+            fill: transparent;
+        }
+
+        .Boundary_fd {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fe {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fe {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_eq {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_er {
+            fill: transparent;
+        }
+
+        .Boundary_er {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_es {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_es {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Component_5__1 {
+            position: absolute;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
+        }
+
+        #Rectangle_65_eu {
+            fill: rgba(255, 255, 255, 1);
+        }
+
+        .Rectangle_65_eu {
+            position: absolute;
+            overflow: visible;
+            width: 285px;
+            height: 241px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #Compose_music_by_Ash_Juarez_ {
+            left: 20px;
+            top: 168px;
+            position: absolute;
+            overflow: visible;
+            width: 246px;
+            height: 20px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 20px;
-            color: rgba(112, 112, 112, 1);
+            font-size: 17px;
+            color: rgba(140, 204, 255, 1);
+        }
+
+        #n_5_Handshakes_ew {
+            left: 20px;
+            top: 205px;
+            position: absolute;
+            overflow: visible;
+            width: 92px;
+            height: 14px;
+            text-align: left;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            color: rgba(190, 190, 190, 1);
+        }
+
+        #icontogglestar_24px_ex {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 192px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_ey {
+            fill: transparent;
+        }
+
+        .Boundary_ey {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_ez {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_ez {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fb {
+            fill: transparent;
+        }
+
+        .Boundary_fb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fc {
+            fill: transparent;
+        }
+
+        .Boundary_fc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fb {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 204px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fb {
+            fill: transparent;
+        }
+
+        .Boundary_fb {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fb {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fb {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fc {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 216px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fc {
+            fill: transparent;
+        }
+
+        .Boundary_fc {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fc {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fc {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_24px_fd {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 228px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fd {
+            fill: transparent;
+        }
+
+        .Boundary_fd {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fe {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fe {
+            overflow: visible;
+            position: absolute;
+            width: 11.158px;
+            height: 10.158px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #icontogglestar_border_24px {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: 240px;
+            top: 205px;
+            overflow: visible;
+        }
+
+        #Boundary_fg {
+            fill: transparent;
+        }
+
+        .Boundary_fg {
+            position: absolute;
+            overflow: visible;
+            width: 15px;
+            height: 15px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #n_Color_fh {
+            fill: rgba(244, 165, 87, 1);
+        }
+
+        .n_Color_fh {
+            overflow: visible;
+            position: absolute;
+            width: 11px;
+            height: 10px;
+            left: 2px;
+            top: 2px;
+            transform: matrix(1, 0, 0, 1, 0, 0);
+        }
+
+        #Image_3 {
+            position: absolute;
+            width: 285px;
+            height: 157px;
+            left: 0px;
+            top: 0px;
+            overflow: visible;
         }
     </style>
     <script id="applicationScript">
@@ -3800,301 +5028,638 @@
 
 {% include 'navbar.html' %}
 
+{% block content %}
 
-<div id="Profile_Page">
-    <form method="post" action="{% url 'updateProfile' userKey=user.username %}" id="registerform">
-        {% csrf_token %}
-        <svg class="Rectangle_125">
-            <rect id="Rectangle_125" rx="74" ry="74" x="0" y="0" width="820" height="938">
-            </rect>
-        </svg>
+{% endblock %}
+<div id="WelcomingLanding_Page">
+    <div id="feed" style="width: 40%;margin: 0 auto;height: 750px;overflow:overlay">
+        <h2><i>What is happening? </i></h2>
+        <div id="stream">
+            <img id="loading" src="/../static/loading.gif"/>
 
-        <img id="profilepicdiv" src="{{ user.profile.userPicture.url }}">
-
-        <div id="namesurnamediv">
-            <span>{{ user.first_name }} {{ user.last_name }}</span>
-        </div>
-        <div id="memberinfodiv">
-            <span>{{ user.profile.userDetails }}</span>
-        </div>
-        <div id="memberinfodiv">
-
-            <button id="follow" {% if isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Follow</button>
-            <button id="unfollow" {% if not isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Unfollow</button>
-        </div>
-        <script>
-            $("#follow").click(function (e) {
-                var data = $("#follow").data("id");
-                e.preventDefault();
-                $.ajax({
-                    url: "/member/follow/",
-                    type: 'POST',
-                    data: {username: data},
-                    headers: {"X-CSRFToken": '{{ csrf_token }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    success: function (response) {
-                        console.log(response)
-                        $("#unfollow").show();
-                        $("#follow").hide();
-                        $("#Following_12").html("Following " + response.followingCount)
-                        $("#Follower_43").html("Followers " + response.followersCount)
-                    },
-                    error: function (response) {
-                        console.log(response)
-                    }
+            <script>
+                $(document).ready(function () {
+                    $("#loading").show()
+                    $.ajax({
+                        type: 'GET',
+                        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                        url: "/activity/feed/json/?with_user_activity=true",
+                        data: $("#search-form").serialize(),
+                        success: function (response) {
+                            $("#loading").hide()
+                            console.log(response)
+                            var cardList = "";
+                            for (let i = 0; i < response.items.length; i++) {
+                                var currentItem = response.items[i]
+                                console.log(currentItem)
+                                cardList += `<div class="card" style="margin-bottom: 10px">`
+                                if(currentItem.hasOwnProperty("target")){
+                                       cardList += `<h5 class="card-header"><a href="/member/${currentItem.actor.displayName}">${currentItem.actor.displayName}</a> ${currentItem.verb} <a href="/member/${currentItem.target.displayName}">${currentItem.target.displayName} </a></h5>`
+                                }else{
+                                             cardList += `<h5 class="card-header">${currentItem.title}</h5>`
+                                }
+                                cardList += ` <div class="card-body">`
+                                if (currentItem.hasOwnProperty("object")) {
+                                    cardList += ` <h5 class="card-title" >Offer Name: ${currentItem.object.displayName}</h5>`
+                                } else {
+                                }
+                                cardList += `<p class="card-text" style="float: right;">Created at : ${new Date(currentItem.published).toLocaleString()}</p>`
+                                if (currentItem.hasOwnProperty("object")) {
+                                    url = currentItem.object.url.replace('http://example.com',window.location.hostname)
+                                    cardList += ` <a  href="${url}" class="btn btn-primary">Go to offer </a>`
+                                }
+                                cardList += `</div>`
+                                cardList += `</div>`
+                            }
+                            $("#stream").append(cardList)
+                        }
+                    });
                 })
-            })
-            $("#unfollow").click(function (e) {
-                var data = $("#unfollow").data("id");
-                e.preventDefault();
-                $.ajax({
-                    url: "/member/unfollow/",
-                    type: 'POST',
-                    data: {username: data},
-                    headers: {"X-CSRFToken": '{{ csrf_token }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    success: function (response) {
-                        console.log(response)
-                        $("#unfollow").hide();
-                        $("#follow").show();
-                            $("#Following_12").html("Following " + response.followingCount)
-                        $("#Follower_43").html("Followers " + response.followersCount)
-                    },
-                    error: function (response) {
-                        console.log(response)
-                    }
-                })
-            })
-        </script>
-        <div id="emaildiv">
-            <span>{{ user.email }}</span>
+
+            </script>
         </div>
-        <svg class="Rectangle_126">
-            <rect id="Rectangle_126" rx="0" ry="0" x="0" y="0" width="628" height="137">
+
+    </div>
+    <svg class="Rectangle_59">
+        <rect id="Rectangle_59" rx="59" ry="59" x="0" y="0" width="1140" height="247">
+        </rect>
+    </svg>
+
+    <img id="clock" src="{% static 'images/main/clock.png' %}"
+         srcset="{% static 'images/main/clock.png' %} 1x, {% static 'images/main/clock@2x.png' %} 2x">
+    <div id="Component_2__1" class="Component_2___1">
+
+
+        <svg class="Rectangle_64">
+            <rect id="Rectangle_64" rx="19" ry="19" x="0" y="0" width="285" height="241">
             </rect>
         </svg>
-        <svg class="Boundary_">
-            <rect id="Boundary_" rx="0" ry="0" x="0" y="0" width="64" height="64">
+        <img id="Image_2_bu" src="{% static 'images/main/Image_2_bu.png' %}"
+             srcset="{% static 'images/main/Image_2_bu.png' %} 1x, {% static 'images/main/Image_2_bu@2x.png' %} 2x">
+
+        <div id="Barista_vegan_milk_by_Ryan_Su_">
+            <span>Barista vegan milk</span><span style="color:rgba(0,0,0,1);"> by </span><span>Ryan Su </span>
+        </div>
+        <div id="n_4_Handshakes_bw">
+            <span>34 Handshakes</span>
+        </div>
+        <div id="icontogglestar_24px_bx" class="icon_toggle_star_24px">
+            <svg class="Boundary_by">
+                <rect id="Boundary_by" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_bz" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_bz"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cb" class="icon_toggle_star_24px">
+            <svg class="Boundary_cb">
+                <rect id="Boundary_cb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cb" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cb"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cc" class="icon_toggle_star_24px">
+            <svg class="Boundary_cc">
+                <rect id="Boundary_cc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cc" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cc"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cb" class="icon_toggle_star_24px">
+            <svg class="Boundary_cb">
+                <rect id="Boundary_cb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cb" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cb"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cc" class="icon_toggle_star_24px">
+            <svg class="Boundary_cc">
+                <rect id="Boundary_cc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cc" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cc"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cd" class="icon_toggle_star_24px">
+            <svg class="Boundary_cd">
+                <rect id="Boundary_cd" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_ce" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_ce"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cf" class="icon_toggle_star_24px">
+            <svg class="Boundary_cg">
+                <rect id="Boundary_cg" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_ch" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_ch"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <svg class="Rectangle_65">
+            <rect id="Rectangle_65" rx="19" ry="19" x="0" y="0" width="285" height="241">
             </rect>
         </svg>
-        <div id="Component_29__1" class="Component_29___1">
-            <svg class="n_Color_" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
+        <img id="Image_2_bu" src="{{ offers.0.photo.url }}">
+
+        <div id="Barista_vegan_milk_by_Ryan_Su__bv">
+            <span>{{ offers.0.title }}</span><span
+                style="color:rgba(0,0,0,1);"> by </span><span>{{ offers.0.owner.first_name }} {{ offers.0.owner.last_name }}</span>
+        </div>
+        <div id="n_4_Handshakes_bw">
+            <span>34 Handshakes</span>
+        </div>
+        <div id="icontogglestar_24px_bx" class="icon_toggle_star_24px">
+            <svg class="Boundary_by">
+                <rect id="Boundary_by" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
             </svg>
-            <svg class="n_Color_ba" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_ba"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bb" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_bb"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bc" viewBox="0 0 46 42">
-                <path id="n_Color_bc"
-                      d="M 8.780498504638672 42 L 8.781740188598633 41.99489212036133 L 12.55881690979004 26.45842742919922 L 0 16.00237464904785 L 16.53739547729492 14.65558052062988 L 23 0 L 29.46260643005371 14.63369750976562 L 46 16.00237464904785 L 33.46602630615234 26.45842742919922 L 37.21359252929688 41.9921760559082 L 23 33.75341033935547 L 8.785167694091797 41.9973030090332 L 8.780498504638672 42 Z M 23.00073432922363 9.065167427062988 L 22.99816131591797 9.065669059753418 L 23 29.61953163146973 L 31.67131805419922 34.65855026245117 L 29.37152671813965 25.19916343688965 L 37.00783157348633 18.83322906494141 L 26.93304061889648 17.99172973632812 L 23.00073432922363 9.065167427062988 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bd" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_bd"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
+            <svg class="n_Color_bz" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_bz"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
                 </path>
             </svg>
         </div>
-        <div id="n_3_Handshakes">
-            <span>53 Handshakes</span>
+        <div id="icontogglestar_24px_cb" class="icon_toggle_star_24px">
+            <svg class="Boundary_cb">
+                <rect id="Boundary_cb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cb" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cb"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
         </div>
-        <div id="usernamediv">
-            <span>{{ user.username }}</span>
+        <div id="icontogglestar_24px_cc" class="icon_toggle_star_24px">
+            <svg class="Boundary_cc">
+                <rect id="Boundary_cc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cc" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cc"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
         </div>
-        <div id="Following_12">
-            Following: {{ followingCount }}
+        <div id="icontogglestar_24px_cb" class="icon_toggle_star_24px">
+            <svg class="Boundary_cb">
+                <rect id="Boundary_cb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cb" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cb"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
         </div>
-        <div id="Follower_43">
-            Follower: {{ followersCount }}
+        <div id="icontogglestar_24px_cc" class="icon_toggle_star_24px">
+            <svg class="Boundary_cc">
+                <rect id="Boundary_cc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_cc" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_cc"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
         </div>
-        <svg class="Rectangle_63">
-            <rect id="Rectangle_63" rx="1" ry="1" x="0" y="0" width="8" height="119">
-            </rect>
-        </svg>
-        <div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
-            <div id="FormInputTextDefault" class="Form_Input_Text_Default">
-                <div id="InputBase" class="Input_Base">
-                    <svg class="InputBase_bh">
-                        <rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
+        <div id="icontogglestar_24px_cd" class="icon_toggle_star_24px">
+            <svg class="Boundary_cd">
+                <rect id="Boundary_cd" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_ce" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_ce"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+        <div id="icontogglestar_24px_cf" class="icon_toggle_star_24px">
+            <svg class="Boundary_cg">
+                <rect id="Boundary_cg" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_ch" viewBox="0 0 11.158 10.158">
+                <path id="n_Color_ch"
+                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div id="Component_4__1" class="Component_4___1">
+
+        <div id="Component_3__1" class="Component_3___1">
+
+            <div id="Component_2__2" class="Component_2___2">
+                <svg class="Rectangle_64_cl">
+                    <rect id="Rectangle_64_cl" rx="19" ry="19" x="0" y="0" width="285" height="241">
+                    </rect>
+                </svg>
+                <img id="Image_2_cm" src="{% static 'images/main/Image_2_cm.png' %}"
+                     srcset="{% static 'images/main/Image_2_cm.png' %} 1x, {% static 'images/main/Image_2_cm@2x.png' %} 2x">
+
+                <div id="Barista_vegan_milk_by_Ryan_Su__cn">
+                    <span>Barista vegan milk</span><span style="color:rgba(0,0,0,1);"> by </span><span>Ryan Su </span>
+                </div>
+                <div id="n_4_Handshakes_co">
+                    <span>34 Handshakes</span>
+                </div>
+                <div id="icontogglestar_24px_dd" class="icon_toggle_star_24px">
+                    <svg class="Boundary_de">
+                        <rect id="Boundary_de" rx="0" ry="0" x="0" y="0" width="15" height="15">
                         </rect>
                     </svg>
-                </div>
-                <div id="skillsdiv">
-                    <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
-
-
-                            {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}">
-                    <input type="hidden"
-                           value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
-                           name="skills-tags-json" id="skills-tags-json">
-                    <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
-							display: none;
-							position: relative;
-							background-color: rgb(255, 255, 255);
-							margin-top: 0;
-							padding-left: calc(var(--bs-gutter-x) / 2);
-							margin-bottom: 1rem;
-							width: 567px;
-							z-index: 1;
-							height: 180px;
-							overflow: scroll;"></ol>
-                </div>
-            </div>
-            <div id="Group_Label">
-                <span>Skills</span>
-            </div>
-        </div>
-        <div id="Edit">
-            <span>Edit</span>
-        </div>
-        <div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
-            <div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
-                <div id="InputBase_bn" class="Input_Base">
-                    <svg class="InputBase_bo">
-                        <rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                        </rect>
+                    <svg class="n_Color_df" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_df"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
                     </svg>
                 </div>
-                <div id="interestsdiv">
-                    <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests"
-                           value="
-
-
-                                   {% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
-                    <input type="hidden"
-                           value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
-                           name="interests-tags-json" id="interests-tags-json">
-                    <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
-							display: none;
-							position: relative;
-							background-color: rgb(255, 255, 255);
-							margin-top: 0;
-							padding-left: calc(var(--bs-gutter-x) / 2);
-							margin-bottom: 1rem;
-							width: 567px;
-							z-index: 1;
-							height: 180px;
-							overflow: scroll;"></ol>
-                </div>
-            </div>
-            <div id="Group_Label_bq">
-                <span>Interests</span>
-            </div>
-        </div>
-        <div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
-            <div id="Group_Label_bs">
-                <span>Badges</span>
-            </div>
-            <ul style="margin-top: 10px;margin-left: 78px;">
-                <li>1</li>
-                <li>2</li>
-            </ul>
-        </div>
-        <div id="creditdiv">
-            <span>Credit: {{ user.profile.creditAmount }} hours</span>
-        </div>
-        <div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
-            <div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
-                <div id="InputBase_b" class="Input_Base">
-                    <svg class="InputBase_ca">
-                        <rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                <div id="icontogglestar_24px_dm" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dn">
+                        <rect id="Boundary_dn" rx="0" ry="0" x="0" y="0" width="15" height="15">
                         </rect>
                     </svg>
+                    <svg class="n_Color_do" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_do"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
                 </div>
-                <div id="locationdiv">
-                    <input type="text" class="form-control" name="location" id="location" placeholder="Your Location"
-                           value="">
-                    <div id="googleMap" style="width: 600px;height: 200px;margin-top: 20px;margin-left: -56px;"></div>
-                    <input type="hidden" value="" name="location-json" id="location-json">
-                    <ol class="list-group list-group-numbered" id="location-wrapper" style="
-							display: none;
-							position: relative;
-							background-color: rgb(255, 255, 255);
-							margin-top: 0;
-							padding-left: calc(var(--bs-gutter-x) / 2);
-							margin-bottom: 1rem;
-							width: 567px;
-							z-index: 1;
-							height: 180px;
-							overflow: scroll;
-						"></ol>
+                <div id="icontogglestar_24px_dp" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dq">
+                        <rect id="Boundary_dq" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_dr" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_dr"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dm" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dn">
+                        <rect id="Boundary_dn" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_do" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_do"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dp" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dq">
+                        <rect id="Boundary_dq" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_dr" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_dr"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_ds" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dt">
+                        <rect id="Boundary_dt" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_du" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_du"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_db" class="icon_toggle_star_24px">
+                    <svg class="Boundary_db">
+                        <rect id="Boundary_db" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_dc" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_dc"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <svg class="Rectangle_65_da">
+                    <rect id="Rectangle_65_da" rx="19" ry="19" x="0" y="0" width="285" height="241">
+                    </rect>
+                </svg>
+                <div id="Play_Soccer_by_Vanessa_Grand">
+                    <span>{{ offers.1.title }} </span><span
+                        style="color:rgba(0,0,0,1);">by</span><span> {{ offers.1.owner.first_name }} {{ offers.1.owner.last_name }}</span>
+                </div>
+                <div id="n_5_Handshakes">
+                    <span>65 Handshakes</span>
+                </div>
+                <div id="icontogglestar_24px_dd" class="icon_toggle_star_24px">
+                    <svg class="Boundary_de">
+                        <rect id="Boundary_de" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_df" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_df"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dm" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dn">
+                        <rect id="Boundary_dn" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_do" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_do"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dp" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dq">
+                        <rect id="Boundary_dq" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_dr" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_dr"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dm" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dn">
+                        <rect id="Boundary_dn" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_do" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_do"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_dp" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dq">
+                        <rect id="Boundary_dq" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_dr" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_dr"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
+                </div>
+                <div id="icontogglestar_24px_ds" class="icon_toggle_star_24px">
+                    <svg class="Boundary_dt">
+                        <rect id="Boundary_dt" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                        </rect>
+                    </svg>
+                    <svg class="n_Color_du" viewBox="0 0 11.158 10.158">
+                        <path id="n_Color_du"
+                              d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                        </path>
+                    </svg>
                 </div>
             </div>
-            <div id="Group_Label_b">
-                <span>Location</span>
+            <img id="Image_4" src="{{ offers.1.photo.url }}">
+
+        </div>
+        <div id="icontogglestar_half_24px" class="icon_toggle_star_half_24px">
+            <svg class="Boundary_dx">
+                <rect id="Boundary_dx" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                </rect>
+            </svg>
+            <svg class="n_Color_dy" viewBox="0 0 11 10">
+                <path id="n_Color_dy"
+                      d="M 2.099684476852417 10 L 2.099981546401978 9.998785018920898 L 3.003195285797119 6.299625873565674 L 0 3.810089349746704 L 3.954594612121582 3.489424228668213 L 5.5 0 L 7.045405864715576 3.484214067459106 L 11 3.810089349746704 L 8.002745628356934 6.299625873565674 L 8.898902893066406 9.998137474060059 L 5.5 8.036527633666992 L 2.10080099105835 9.999359130859375 L 2.099684476852417 10 Z M 5.500175952911377 2.158373355865479 L 5.499560356140137 2.158492803573608 L 5.5 7.052270412445068 L 7.5735764503479 8.252036094665527 L 7.02362585067749 5.999801635742188 L 8.849699020385742 4.484102249145508 L 6.440509796142578 4.283745288848877 L 5.500175952911377 2.158373355865479 Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div id="Component_8__1" class="Component_8___1">
+        <div id="Component_7__1" class="Component_7___1">
+            <div id="Component_4__2" class="Component_4___2">
+                <div id="Component_3__1_d" class="Component_3___1">
+                    <div id="Component_2__2_d" class="Component_2___2">
+                        <svg class="Rectangle_64_d">
+                            <rect id="Rectangle_64_d" rx="19" ry="19" x="0" y="0" width="285" height="241">
+                            </rect>
+                        </svg>
+                        <img id="Image_2_d" src="{% static 'images/main/Image_2_d.png' %}"
+                             srcset="{% static 'images/main/Image_2_d.png' %} 1x, {% static 'images/main/Image_2_d@2x.png' %} 2x">
+
+                        <div id="Barista_vegan_milk_by_Ryan_Su__d">
+                            <span>Barista vegan milk</span><span
+                                style="color:rgba(0,0,0,1);"> by </span><span>Ryan Su </span>
+                        </div>
+                        <div id="n_4_Handshakes_d">
+                            <span>34 Handshakes</span>
+                        </div>
+                        <div id="icontogglestar_24px_ex" class="icon_toggle_star_24px">
+                            <svg class="Boundary_ey">
+                                <rect id="Boundary_ey" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_ez" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_ez"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fb" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fb">
+                                <rect id="Boundary_fb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fb" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fb"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fc" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fc">
+                                <rect id="Boundary_fc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fc" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fc"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fb" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fb">
+                                <rect id="Boundary_fb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fb" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fb"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fc" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fc">
+                                <rect id="Boundary_fc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fc" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fc"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fd" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fd">
+                                <rect id="Boundary_fd" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fe" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fe"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_eq" class="icon_toggle_star_24px">
+                            <svg class="Boundary_er">
+                                <rect id="Boundary_er" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_es" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_es"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="Component_5__1" class="Component_5___1">
+                            <svg class="Rectangle_65_eu">
+                                <rect id="Rectangle_65_eu" rx="19" ry="19" x="0" y="0" width="285" height="241">
+                                </rect>
+                            </svg>
+                        </div>
+                        <div id="Compose_music_by_Ash_Juarez_">
+                            <span>{{ offers.2.title }} </span><span
+                                style="color:rgba(0,0,0,1);">by</span><span> {{ offers.2.owner.first_name }} {{ offers.2.owner.last_name }} </span>
+                        </div>
+                        <div id="n_5_Handshakes_ew">
+                            <span>65 Handshakes</span>
+                        </div>
+                        <div id="icontogglestar_24px_ex" class="icon_toggle_star_24px">
+                            <svg class="Boundary_ey">
+                                <rect id="Boundary_ey" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_ez" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_ez"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fb" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fb">
+                                <rect id="Boundary_fb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fb" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fb"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fc" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fc">
+                                <rect id="Boundary_fc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fc" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fc"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fb" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fb">
+                                <rect id="Boundary_fb" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fb" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fb"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fc" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fc">
+                                <rect id="Boundary_fc" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fc" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fc"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div id="icontogglestar_24px_fd" class="icon_toggle_star_24px">
+                            <svg class="Boundary_fd">
+                                <rect id="Boundary_fd" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                                </rect>
+                            </svg>
+                            <svg class="n_Color_fe" viewBox="0 0 11.158 10.158">
+                                <path id="n_Color_fe"
+                                      d="M 5.578795909881592 8.163496971130371 L 9.026492118835449 10.1575927734375 L 8.111569404602051 6.399283409118652 L 11.15759181976318 3.870577335357666 L 7.146438121795654 3.544465303421021 L 5.578795909881592 0 L 4.011154651641846 3.544465303421021 L 0 3.870577335357666 L 3.046022891998291 6.399283409118652 L 2.131100177764893 10.1575927734375 L 5.578795909881592 8.163496971130371 Z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="icontogglestar_border_24px" class="icon_toggle_star_border_24px">
+                <svg class="Boundary_fg">
+                    <rect id="Boundary_fg" rx="0" ry="0" x="0" y="0" width="15" height="15">
+                    </rect>
+                </svg>
+                <svg class="n_Color_fh" viewBox="0 0 11 10">
+                    <path id="n_Color_fh"
+                          d="M 2.099684715270996 10 L 2.099981546401978 9.998785018920898 L 3.003195285797119 6.299625873565674 L 0 3.810089588165283 L 3.954594850540161 3.489424228668213 L 5.5 0 L 7.045405864715576 3.484214067459106 L 11 3.810089588165283 L 8.00274658203125 6.299625873565674 L 8.898902893066406 9.998137474060059 L 5.5 8.036527633666992 L 2.100801229476929 9.999359130859375 L 2.099684715270996 10 Z M 5.5 7.052270412445068 L 5.500287055969238 7.052433490753174 L 7.5735764503479 8.252037048339844 L 7.02362585067749 5.999802112579346 L 8.849699974060059 4.484102249145508 L 6.440510272979736 4.283745765686035 L 5.5 2.157977104187012 L 4.56493616104126 4.27853536605835 L 2.156241655349731 4.47889232635498 L 3.981820106506348 5.994591236114502 L 3.431869506835938 8.246826171875 L 5.499714374542236 7.052433490753174 L 5.5 7.052270412445068 Z">
+                    </path>
+                </svg>
             </div>
         </div>
-        <div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
-            <div id="buttonSignup">
-                <button class="btn btn-primary" style="margin-top: 211px;" form="registerform" type="submit"
-                        id="submit-button" value="Submit">Save
-                </button>
-            </div>
-        </div>
-    </form>
+        <img id="Image_3" src="{{ offers.2.photo.url }}">
+
+    </div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
-
-<script>
-
-    $(document).ready(function () {
-
-        var marker;
-        const geocoder = new google.maps.Geocoder();
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-
-        function showPosition(position) {
-            loadMap(position)
-        }
-
-        function loadMap(position) {
-            var mapProp = {
-                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                zoom: 12,
-            };
-            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng, map);
-            });
-        }
 
 
-        function placeMarker(location, map) {
-            if (marker == null) {
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map
-                });
-            }
-            marker.setPosition(location);
-            var latlng = new google.maps.LatLng(location.lat(), location.lng());
-            geocoder.geocode(
-                {'latLng': latlng},
-                function (results, status) {
-                    $('#location-json').val(JSON.stringify(results[0]));
-                    $('#location').val(results[0].formatted_address);
-                    console.log(results)
-                }
-            );
-        }
-
-        getLocation()
-    })
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
 </body>
 </html>
