@@ -3953,10 +3953,10 @@
 					<span>Badges</span>
 				</div>
                 <ul style="margin-top: 10px;margin-left: 78px;">
-					{% if user.Nbadge.is_active %} <li> <span class="badge rounded-pill bg-primary">Newcomer</span> </li> {% endif %}
-					{% if user.CBbadge.is_active %} <li> <span class="badge rounded-pill bg-info text-dark">Community Builder</span> </li> {% endif %}
-					{% if user.GSPbadge.is_active %} <li> <span class="badge rounded-pill bg-secondary">Great Service Provider</span> </li> {% endif %}
-					{% if user.MEObadge.is_active %} <li> <span class="badge rounded-pill bg-success">Master Event Organizer</span> </li> {% endif %}
+					{% if user.Nbadge.is_active %} <li> <span class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
+					{% if user.CBbadge.is_active %} <li> <span class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
+					{% if user.GSPbadge.is_active %} <li> <span class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
+					{% if user.MEObadge.is_active %} <li> <span class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
                 </ul>
 			</div>
 			<div id="creditdiv">
@@ -4000,6 +4000,16 @@
 		</form>
 	</div>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKfrDnj_uke36gzh7N9aWel_FF3e_U9V0"></script>
+
+<script>
+	$(".rounded-pill").hover(function () {
+		$(this).popover({
+			content: $(this).data('value')
+		}).popover('show');
+	}, function () {
+		$(this).popover('hide');
+	});
+</script>
 
                 <script>
                 {{ GOOGLE_API_KEY }}

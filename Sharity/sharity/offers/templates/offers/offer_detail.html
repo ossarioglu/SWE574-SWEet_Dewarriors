@@ -43,10 +43,10 @@
                             <h3> {{ object.title }}</h3>
                             <h7>by</h7>
                             <h5> @{{ object.owner }} 
-                                {% if object.owner.Nbadge.is_active %} <span class="badge rounded-pill bg-primary">Newcomer</span> {% endif %}
-                                {% if object.owner.CBbadge.is_active %} <span class="badge rounded-pill bg-info text-dark">Community Builder</span> {% endif %}
-                                {% if object.owner.GSPbadge.is_active %} <span class="badge rounded-pill bg-secondary">Great Service Provider</span> {% endif %}
-                                {% if object.owner.MEObadge.is_active %} <span class="badge rounded-pill bg-success">Master Event Organizer</span> {% endif %}
+                                {% if object.owner.Nbadge.is_active %} <span class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> {% endif %}
+                                {% if object.owner.CBbadge.is_active %} <span class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> {% endif %}
+                                {% if object.owner.GSPbadge.is_active %} <span class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> {% endif %}
+                                {% if object.owner.MEObadge.is_active %} <span class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
                             </h5>
                             <h7>at</h7>
                             <h5> {{ object.get_formatted_address }} </h5>
@@ -162,7 +162,15 @@
     </div>
 
 
-
+    <script>
+        $(".rounded-pill").hover(function () {
+            $(this).popover({
+                content: $(this).data('value')
+            }).popover('show');
+        }, function () {
+            $(this).popover('hide');
+        });
+    </script>
 
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
