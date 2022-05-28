@@ -12,15 +12,13 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
 from django.http import JsonResponse
 from django.db.models import Q
-from functools import reduce
-import operator
 
 from badges.signals import offer_detail, timeline
 from badges.models import *
 from django.utils import timezone
 
 from member.models import Profile
-from .utils import distance, get_lat, get_long
+from .utils import distance, get_lat, get_long, order_offers
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -156,7 +154,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
                 context['distance_query'] = d
 
-            context['result_list'] = qs
+            context['result_list'] = order_offers(qs)
             context['filter_flag'] = filter_flag
 
             owners = [offer.owner.pk for offer in qs]
@@ -181,7 +179,7 @@ class OfferListView(LoginRequiredMixin, ListView):
             result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
         else:
             result = Offer.objects.all().exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
-        return result
+        return order_offers(result)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

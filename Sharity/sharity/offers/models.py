@@ -48,6 +48,10 @@ class Offer(models.Model):
         self.end_date = self.start_date + timedelta(hours=self.duration)
         super().save(*args, **kwargs)
 
+    @property
+    def owner_badges(self):
+        return [getattr(self.owner, badge) for badge in ['Nbadge', 'CBbadge', 'GSPbadge', 'MEObadge'] if hasattr(self.owner, badge)]
+
     def get_absolute_url(self):
         return reverse('offers.detail', kwargs={'pk': self.pk})
 
