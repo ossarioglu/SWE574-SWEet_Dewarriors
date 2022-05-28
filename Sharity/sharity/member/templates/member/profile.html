@@ -3993,8 +3993,10 @@
                 <span>Badges</span>
             </div>
             <ul style="margin-top: 10px;margin-left: 78px;">
-                <li>1</li>
-                <li>2</li>
+                {% if user.Nbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
+ 				{% if user.CBbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
+                {% if user.GSPbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
+                {% if user.MEObadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
             </ul>
         </div>
         <div id="creditdiv">
@@ -4040,6 +4042,16 @@
         </div>
     </form>
 </div>
+<script>
+    $("#id-badge").hover(function () {
+        $(this).popover({
+            content: $(this).data('value')
+        }).popover('show');
+    }, function () {
+        $(this).popover('hide');
+    });
+</script>
+
 <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
 
 <script>
