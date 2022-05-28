@@ -5034,23 +5034,50 @@
 <div id="WelcomingLanding_Page">
     <div id="feed" style="width: 40%;margin: 0 auto;height: 750px;overflow:overlay">
         <h2><i>What is happening? </i></h2>
+        <div id="stream">
+            <img id="loading" src="/../static/loading.gif"/>
 
-        {% for s in stream %}
-        <div class="card" style="margin-bottom: 10px">
-            <h5 class="card-header">{{s  }}</h5>
-            <div class="card-body">
-            {% if not s.action_object %}
-            {% else %}
-                     <h5 class="card-title" style="/* float: right; */">Offer Name: {{ s.action_object }}</h5>
-            {% endif %}
-                <p class="card-text" style="float: right;">Created at : {{  s.timestamp}}</p>
-                {% if not s.action_object %}
-                {% else %}
-                   <a href="/offers/{{ s.action_object_object_id }}" class="btn btn-primary">Go to offer</a>
-                {% endif %}
-            </div>
+            <script>
+                $(document).ready(function () {
+                    $("#loading").show()
+                    $.ajax({
+                        type: 'GET',
+                        headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                        url: "/activity/feed/json/?with_user_activity=true",
+                        data: $("#search-form").serialize(),
+                        success: function (response) {
+                            $("#loading").hide()
+                            console.log(response)
+                            var cardList = "";
+                            for (let i = 0; i < response.items.length; i++) {
+                                var currentItem = response.items[i]
+                                console.log(currentItem)
+                                cardList += `<div class="card" style="margin-bottom: 10px">`
+                                if(currentItem.hasOwnProperty("target")){
+                                       cardList += `<h5 class="card-header"><a href="/member/${currentItem.actor.displayName}">${currentItem.actor.displayName}</a> ${currentItem.verb} <a href="/member/${currentItem.target.displayName}">${currentItem.target.displayName} </a></h5>`
+                                }else{
+                                             cardList += `<h5 class="card-header">${currentItem.title}</h5>`
+                                }
+                                cardList += ` <div class="card-body">`
+                                if (currentItem.hasOwnProperty("object")) {
+                                    cardList += ` <h5 class="card-title" >Offer Name: ${currentItem.object.displayName}</h5>`
+                                } else {
+                                }
+                                cardList += `<p class="card-text" style="float: right;">Created at : ${new Date(currentItem.published).toLocaleString()}</p>`
+                                if (currentItem.hasOwnProperty("object")) {
+                                    url = currentItem.object.url.replace('http://example.com',window.location.hostname)
+                                    cardList += ` <a  href="${url}" class="btn btn-primary">Go to offer </a>`
+                                }
+                                cardList += `</div>`
+                                cardList += `</div>`
+                            }
+                            $("#stream").append(cardList)
+                        }
+                    });
+                })
+
+            </script>
         </div>
-{% endfor %}
 
     </div>
     <svg class="Rectangle_59">

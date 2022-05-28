@@ -160,6 +160,7 @@ class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
 
+
     def get_queryset(self):
         if self.request.GET.get('title'):
             args = Q()
@@ -177,3 +178,7 @@ class OfferListView(LoginRequiredMixin, ListView):
         if self.request.GET.get('title'):
             context['title_query'] = self.request.GET.get('title')
         return context
+
+
+
+
