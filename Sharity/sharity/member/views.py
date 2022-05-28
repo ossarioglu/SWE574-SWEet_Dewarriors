@@ -148,6 +148,23 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         user = User.objects.get(username=self.kwargs.get('userKey'))
         return user
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.get_object()
+        followers_list = followers(user)
+        is_already_followed = True if len(
+            list(filter(lambda x: x.username == self.request.user.username, followers_list))) > 0 else False
+
+        following_list = following(user)
+        followers_count = len(followers_list) if len(followers_list) > 0 else 0
+        following_count = len(following_list) if len(following_list) > 0 else 0
+
+        context['followersCount'] = followers_count
+        context['followingCount'] = following_count
+        context['isAlreadyFollowed'] = is_already_followed
+        context['googleapis'] = config('GOOGLE_API_KEY')
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         # send signal for badges
         profile_detail.send(sender=Profile, owner_pk=[self.get_object().pk])
