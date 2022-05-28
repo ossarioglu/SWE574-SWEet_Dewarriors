@@ -138,6 +138,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 profile_loc = (get_lat(ljson), get_long(ljson))
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                 context['distance_query'] = d
+                if 'location_query' not in context.keys():
+                    context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
             # else if only distance query is present
             elif d is not None and ljson == '':
                 filter_flag = True
@@ -152,7 +154,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
-                context['distance_query'] = d
+                if 'location_query' not in context.keys():
+                    context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
 
             context['result_list'] = order_offers(qs)
             context['filter_flag'] = filter_flag
