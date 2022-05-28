@@ -18,7 +18,7 @@ class Notification(models.Model):
     # noteID is created as unique id from UUID object
     noteID = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     # serviceID has a One-to-Many relation with Service object: a service is one service from many Services
-    serviceID = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    serviceID = models.ForeignKey(Offer, on_delete=models.CASCADE, null=True)
     # receiverID has a One-to-Many relation with User object: a notificiation is received by one user from many Users
     receiverID = models.ForeignKey(User, related_name='receiverID', on_delete=models.CASCADE)
     noteContent = models.CharField(max_length=100)

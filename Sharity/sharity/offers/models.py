@@ -4,6 +4,8 @@ import json
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+
+from datetime import timedelta
 from actstream import action
 
 class Offer(models.Model):
@@ -15,10 +17,6 @@ class Offer(models.Model):
 
     def __str__(self):
         return self.title
-
-    def save(self, *args, **kwargs):
-        action.send(self.owner, verb='created an offer',action_object=self)
-        super(Offer, self).save(*args, **kwargs)
 
     uuid = models.UUIDField(
         primary_key=True,
@@ -37,6 +35,7 @@ class Offer(models.Model):
     )
     start_date = models.DateTimeField(verbose_name=_('Start date'))
     duration = models.PositiveIntegerField(verbose_name=_('Duration'))
+    end_date = models.DateTimeField(verbose_name=_('End date'), null=True)
     participant_limit = models.PositiveIntegerField(verbose_name=_('Participant limit'), default=0)
     amendment_deadline = models.DateTimeField(verbose_name=_('Amendment deadline'))
     type = models.PositiveSmallIntegerField(
@@ -45,6 +44,16 @@ class Offer(models.Model):
     )
     photo = models.ImageField(upload_to='static/images/Offers', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        """Override end_date attribute"""
+        action.send(self.owner, verb='created an offer', action_object=self)
+        self.end_date = self.start_date + timedelta(hours=self.duration)
+        super().save(*args, **kwargs)
+
+    @property
+    def owner_badges(self):
+        return [getattr(self.owner, badge) for badge in ['Nbadge', 'CBbadge', 'GSPbadge', 'MEObadge'] if hasattr(self.owner, badge)]
 
     def get_absolute_url(self):
         return reverse('offers.detail', kwargs={'pk': self.pk})

@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .forms import UserMessageModelForm
 from .models import UserMessage, UserInbox
+from notification.models import Notification
 
 # Create your views here.
 class SendMessageView(LoginRequiredMixin, CreateView):
@@ -35,6 +36,17 @@ class SendMessageView(LoginRequiredMixin, CreateView):
         for u in included_users:
             inbox = UserInbox.objects.get(owner=u)
             inbox.content.add(msg)
+
+        # create notification for to_list
+        notifications = []
+        for to in to_list:
+            notifications.append(Notification(
+                serviceID=None,
+                receiverID=to.user,
+                noteContent=self.request.user.username + ' sent you a message.',
+                status='Unread'
+            ))
+        Notification.objects.bulk_create(notifications)
 
         return super().form_valid(form)
 

@@ -16,6 +16,10 @@ from actstream.models import following, followers
 
 from usermessages.models import UserInbox
 
+from badges.signals import profile_detail
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # Sign-in Functionality
 def signinPage(request):
@@ -86,7 +90,7 @@ def signUp(request):
     # Customized form for user information is called.
     form = MyRegisterForm()
     # When user details are posted, the information is matched with User model's field
-    # Mandatory fields for quick signup is Username, Password, Name and Surname, Email, and Location
+    # Mandatory fields for quick signup is Username, Password, Name and Surname, Email, and Location 
     if request.method == 'POST':
         form = MyRegisterForm(request.POST)
         if form.is_valid():
@@ -135,6 +139,32 @@ def userProfile(request, userKey):
                "followersCount": followers_count,
                "followingCount": following_count}
     return render(request, 'member/profile.html', context)
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'member/profile.html'
+    model = User
+
+    def get_object(self):
+        user = User.objects.get(username=self.kwargs.get('userKey'))
+        return user
+
+    def dispatch(self, request, *args, **kwargs):
+        # send signal for badges
+        profile_detail.send(sender=Profile, owner_pk=[self.get_object().pk])
+        return super().dispatch(request, *args, **kwargs)
+
+# This is getting user information
+# def userProfile(request, userKey):
+#     user = User.objects.get(username=userKey)
+#     context = {'user': user, }
+#     context['newcomer'] = hasattr(user, 'Nbadge')
+#     context['cb'] = hasattr(user, 'CBbadge')
+#     context['gsp'] = hasattr(user, 'GSPbadge')
+#     context['meo'] = hasattr(user, 'MEObadge')
+
+#     # send signal for badges
+#     profile_detail.send(sender=Profile, owner_pk=user.pk)
+#     return render(request, 'member/profile.html', context)
 
 # This is for updating user profile
 # Login is required to see details of services

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'notification.apps.NotificationConfig',
     'feedback.apps.FeedbackConfig',
     'usermessages',
+    'badges',
 ]
 
 MIDDLEWARE = [

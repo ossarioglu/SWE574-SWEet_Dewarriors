@@ -16,8 +16,13 @@ from decouple import config
 from django.shortcuts import render
 from functools import reduce
 import operator
+
+from badges.signals import offer_detail, timeline
+from badges.models import *
+from django.utils import timezone
+
 from member.models import Profile
-from .utils import distance, get_lat, get_long
+from .utils import distance, get_lat, get_long, order_offers
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -58,6 +63,10 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
 class OfferDetailView(LoginRequiredMixin, DetailView):
     model = Offer
 
+    def dispatch(self, request, *args, **kwargs):
+        offer = self.get_object()
+        offer_detail.send(sender=self.__class__, owner_pk=[offer.owner.pk])
+        return super().dispatch(request, *args, **kwargs)
 
 class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
     form_class = OfferSearchForm
@@ -125,7 +134,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             else:
                 arguments = (tag_args & title_args) | location_args
 
-            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user)
+            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
 
             ### handle location-json and distance filters last ###
             # if location-json and distance queries are present
@@ -135,6 +144,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 profile_loc = (get_lat(ljson), get_long(ljson))
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                 context['distance_query'] = d
+                if 'location_query' not in context.keys():
+                    context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
             # else if only distance query is present
             elif d is not None and ljson == '':
                 filter_flag = True
@@ -144,15 +155,19 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                 context['distance_query'] = d
             # else if only location-json query is present
-            else:
+            elif d is None and ljson != '':
                 filter_flag = True
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
                 qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
-                context['distance_query'] = d
+                if 'location_query' not in context.keys():
+                    context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
 
-            context['result_list'] = qs
+            context['result_list'] = order_offers(qs)
             context['filter_flag'] = filter_flag
+
+            owners = [offer.owner.pk for offer in qs]
+            timeline.send(sender=self.__class__, owner_pk=owners)
 
             return render(self.request, 'offers/ajax_offer_results.html', context)
 
@@ -160,16 +175,20 @@ class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        owners = [offer.owner.pk for offer in self.get_queryset()]
+        timeline.send(sender=self.__class__, owner_pk=owners)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         if self.request.GET.get('title'):
             args = Q()
             for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
                 args |= Q(**{'title__icontains': keyword})
-            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user)
+            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
         else:
-            result = Offer.objects.all().exclude(owner=self.request.user)
-        return result
+            result = Offer.objects.all().exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
+        return order_offers(result)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
