@@ -52,9 +52,15 @@
                                 <div>
                                     <h7> {{ note.noteContent }}</h7>
                                 </div>
-                                <div>
-                                    <a class="btn btn-outline-success" href="{% url 'offers.detail' note.serviceID.uuid %}" role="button">Go to Service</a>
-                                </div>
+                                {% if note.serviceID %}
+                                    <div>
+                                        <a class="btn btn-outline-success" href="{% url 'offers.detail' note.serviceID.uuid %}" role="button">Go to Service</a>
+                                    </div>
+                                {% else %}
+                                    <div>
+                                        <a class="btn btn-outline-success" href="{% url 'usermessages.main' %}" role="button">Go to Inbox</a>
+                                    </div>
+                                {% endif %}
                                 <div>
                                     {% if note.status == 'Read' %}
                                         <a class="btn btn-outline-primary" href="{% url 'changeNote' note.noteID %}" role="button">Status : Read</a>  
