@@ -5,7 +5,7 @@
 {% endblock navbar %}
 
 {% block content %}
-    <div>
+    <div class="result-container">
 
         <div class="d-flex justify-content-center">
             <div class="spinner-border" role="status" style="display: none;">
@@ -59,7 +59,7 @@
             {% endif %}
     </div>
 
-    <div id="id_results" class="results">
+    <div>
         <h2>Found Offers</h2>
         <p> {{result_list|length}} result(s) found </p>
         <div class="row">
@@ -103,29 +103,6 @@
             $(this).popover('hide');
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            $(".remove-filter").click(function(e) {
-                if ($(this).attr("id") === "id-remove-filter-location") {
-                    $("#location-json").val("");
-                } else if ($(this).attr("id") === "id-remove-filter-tags") {
-                    $("#tags-json").val("");
-                }
-                $(".spinner-border").show();
-                var attribute = $(this).attr("id").split("-")[3];
-                $("#search-" + attribute).val("");
-                $.ajax({
-                    type: 'POST',
-                    url: $("#search-form").attr("get-offers-url"),
-                    data: $("#search-form").serialize(),
-                    success: function(response) {
-                        $(".spinner-border").hide();
-                        $("#id_results").html(response);
-                    }
-                });
-            });
-        });
-    </script>
 {% endblock js %}
 
 {% block styles %}
@@ -141,8 +118,5 @@
             height: 17px;
         }
 
-        .results {
-            width: 97%;
-        }
     </style>
 {% endblock styles %}

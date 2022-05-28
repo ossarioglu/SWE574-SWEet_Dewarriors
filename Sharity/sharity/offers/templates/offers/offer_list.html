@@ -12,11 +12,16 @@
             <h2>Filter</h2>
             <form id='search-form' get-offers-url="{% url 'ajax_load_results' %}" autocomplete="off"> {% csrf_token %}
                 {{form.as_p}}
+                <div id="locationdiv">
+                    <div id="googleMap" style="width: 370px; height: 250px; margin-top: 20px; margin-bottom: 10px;"></div>
+                </div>
                 <input type='submit' id="id_filter_button" class='btn btn-success' value='Filter'/>
                 <input type="hidden" value="" name="location-json" id="location-json">
+                <input type="hidden" value="" name="map-json" id="map-json">
                 <input type="hidden" value="[]" name="tags-json" id="tags-json">
                 <button class='btn btn-success'> <a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a> </button>
             </form>
+
             <ol class="list-group list-group-numbered" id="location-wrapper" style="
             display: none;
             width: 270px;
@@ -104,20 +109,115 @@
             $(this).popover('hide');
         });
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKfrDnj_uke36gzh7N9aWel_FF3e_U9V0"></script>
+
+    <script>
+        {{ GOOGLE_API_KEY }}
+            $(document).ready(function () {
+
+                var marker;
+                const geocoder = new google.maps.Geocoder();
+
+                function getLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(showPosition);
+                    } else {
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                    }
+                }
+
+                function showPosition(position) {
+                    loadMap(position)
+                }
+
+                function loadMap(position) {
+                    var mapProp = {
+                        center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                        zoom: 14,
+                    };
+                    var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                    google.maps.event.addListener(map, 'click', function (event) {
+                        placeMarker(event.latLng, map);
+                    });
+                }
+
+                function clearMarker() {
+                    marker.setMap(null);
+                    marker = null;
+                }
+
+                function placeMarker(location, map) {
+                    if (marker == null) {
+                        marker = new google.maps.Marker({
+                            position: location,
+                            map: map
+                        });
+                    }
+                    marker.setPosition(location);
+                    var latlng = new google.maps.LatLng(location.lat(), location.lng());
+                    geocoder.geocode(
+                        {'latLng': latlng},
+                        function (results, status) {
+                            $('#map-json').val(JSON.stringify(results[0]));
+                            //$('#location').val(results[0].formatted_address);
+                            //console.log(results)
+                        }
+                    );
+                }
+
+                getLocation();
+
+                $(document).on("click", ".remove-filter", function(e) {
+                    if ($(this).attr("id") === "id-remove-filter-location") {
+                        $("#location-json").val("");
+                        $("#map-json").val("");
+                        clearMarker();
+                    } else if ($(this).attr("id") === "id-remove-filter-tags") {
+                        $("#tags-json").val("");
+                    }
+                    $(".spinner-border").show();
+                    var attribute = $(this).attr("id").split("-")[3];
+                    $("#search-" + attribute).val("");
+                    $.ajax({
+                        type: 'POST',
+                        url: $("#search-form").attr("get-offers-url"),
+                        data: $("#search-form").serialize(),
+                        success: function(response) {
+                            $(".spinner-border").hide();
+                            $("#id_results").html(response);
+                        }
+                    });
+                });
+            })
+        </script>
+
     <script>
         $(document).ready(function() {
             $('#search-distance').tooltip({'trigger':'hover', 'title': 'Distance represents kilometer distance from your selected location to the offer, if no location is selected, your profile location is taken.'});
             $("#search-form").submit(function(e) {
+                $(".alert").remove();
                 $(".spinner-border").show();
                 e.preventDefault();
+
+                // check if location input is clear, if it is, empty location-json hidden field as well
+                var data = $(this).serializeArray();
+                if (data[7]['value'] === '') {
+                    data[9]['value'] = '';
+                }
 
                 $.ajax({
                     url: $(this).attr("get-offers-url"),
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: data,
                     success: function(response) {
                         $(".spinner-border").hide();
                         $("#id_results").html(response);
+                    },
+                    error: function(response) {
+                        $(".spinner-border").hide();
+                        $(".search-sidebar").append('<div class="alert alert-primary">' + response.responseJSON['__all__'][0] + '</div>');
                     }
                 });
             });
@@ -288,11 +388,12 @@
         }
 
         .results {
-            width: 80%;
+            width: 70%;
         }
 
         .search-sidebar {
             margin-right: 10px;
+            width: 370px;
         }
 
         .clear-button {
