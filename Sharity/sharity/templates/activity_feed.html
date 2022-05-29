@@ -5057,7 +5057,7 @@
                                 console.log(currentItem)
                                 cardList += `<div class="card" style="margin-bottom: 10px">`
                                 if(currentItem.hasOwnProperty("target")){
-                                       cardList += `<h5 class="card-header"><a href="/member/${currentItem.actor.displayName}">${currentItem.actor.displayName}</a> ${currentItem.verb} <a href="/member/${currentItem.target.displayName}">${currentItem.target.displayName} </a></h5>`
+                                       cardList += `<h5 class="card-header"><a href="/member/${currentItem.actor.displayName}/">${currentItem.actor.displayName}</a> ${currentItem.verb} <a href="/member/${currentItem.target.displayName}/">${currentItem.target.displayName} </a></h5>`
                                 }else{
                                              cardList += `<h5 class="card-header">${currentItem.title}</h5>`
                                 }
