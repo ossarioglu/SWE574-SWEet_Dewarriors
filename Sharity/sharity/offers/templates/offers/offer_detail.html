@@ -63,9 +63,9 @@
 
                                     <p class="text-danger">Service is over</>
                                         <h3>  </h3>
-                                    <a class="btn btn-success btn-sm disabled" href="url 'update-offer' object.uuid" role="button">Edit</a>
+                                    <a class="btn btn-success btn-sm disabled" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                    <a class="btn btn-danger btn-sm disabled" href="{url 'delete-offer' object.uuid" role="button">Delete</a>
+                                    <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
 
                                 {% else %}
 
@@ -73,13 +73,13 @@
                                         Assign button is still enabled/-->
                                     {% if object.amendment_deadline|timesince >= "1 min"  %}
                                         <p class="text-danger">Edit timehorizon is over </p>
-                                        <a class="btn btn-success btn-sm disabled" href="url 'update-offer' offers.serviceID" role="button">Edit</a>
+                                        <a class="btn btn-success btn-sm disabled" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                        <a class="btn btn-danger btn-sm disabled" href="url 'delete-offer' offers.serviceID}" role="button">Delete</a>
+                                        <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
                                     {% else %}
-                                        <a class="btn btn-success btn-sm" href="url 'update-offer' offers.serviceID " role="button">Edit</a>
+                                        <a class="btn btn-success btn-sm" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                        <a class="btn btn-danger btn-sm" href="url 'delete-offer' offers.serviceID " role="button">Delete</a>
+                                        <a class="btn btn-danger btn-sm" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
                                     {% endif %}
 
                                   {% endif %}
