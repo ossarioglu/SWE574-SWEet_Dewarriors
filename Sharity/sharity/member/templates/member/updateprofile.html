@@ -20,7 +20,12 @@
             form.addEventListener('keyup', function (event) {
                 event.preventDefault()
                 let locationQuery = document.getElementById('location').value;
-                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
+                if (
+                    $(event.srcElement).attr('id') == 'location' &&
+                    locationQuery.length >= 2 &&
+                    locationQuery.length < 15 &&
+                    previousQueryLength !== locationQuery.length
+                ) {
                     let request = axios.get('/locations/search/?query=' + locationQuery)
                         .then(function (response) {
                             $('#location-wrapper .list-group-item').remove();
@@ -72,7 +77,12 @@
             form.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 let skillsTagsQuery = document.getElementById('skills').value.split(',').at(-1).trim();
-                if (skillsTagsQuery.length >= 2 && skillsTagsQuery.length < 15 && previousQueryLength !== skillsTagsQuery.length) {
+                if (
+                    $(event.srcElement).attr('id') == 'skills' &&
+                    skillsTagsQuery.length >= 2 &&
+                    skillsTagsQuery.length < 15 &&
+                    previousQueryLength !== skillsTagsQuery.length
+                ) {
                     let request = axios.get('/tags/search/?query=' + skillsTagsQuery)
                         .then(function (response) {
                             $('#tags-wrapper-skills .list-group-item').remove();
@@ -121,8 +131,14 @@
 
             form.addEventListener('keyup', function (event) {
                 event.preventDefault();
+
                 let interestsTagsQuery = document.getElementById('interests').value.split(',').at(-1).trim();
-                if (interestsTagsQuery.length >= 2 && interestsTagsQuery.length < 15 && previousQueryLength !== interestsTagsQuery.length) {
+                if (
+                    $(event.srcElement).attr('id') == 'interests' &&
+                    interestsTagsQuery.length >= 2 &&
+                    interestsTagsQuery.length < 15 &&
+                    previousQueryLength !== interestsTagsQuery.length
+                    ) {
                     let request = axios.get('/tags/search/?query=' + interestsTagsQuery)
                         .then(function (response) {
                             $('#tags-wrapper-interests .list-group-item').remove();
