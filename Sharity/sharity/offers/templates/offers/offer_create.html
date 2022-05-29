@@ -114,7 +114,7 @@
                                 existingValue.push(response.data.response.search[resultIndex]);
                                 console.log(existingValue);
                                 $('#tags-json').val(JSON.stringify(existingValue));
-                                var stringValue = '';
+                                let stringValue = '';
                                 existingValue.forEach(function (tag) {
                                     stringValue += tag.label + ', ';
                                 });

@@ -8,7 +8,11 @@ from django.urls import reverse
 from datetime import timedelta
 from actstream import action
 
+
 class Offer(models.Model):
+
+    def __getitem__(self, x):
+        return getattr(self, x)
 
     class Type(models.IntegerChoices):
         """Type of an Offer"""
@@ -26,6 +30,8 @@ class Offer(models.Model):
     )
 
     title = models.CharField(verbose_name=_('Title'), max_length=500)
+    latitude = models.CharField(verbose_name=_('Latitude'), max_length=500, null=True)
+    longitude = models.CharField(verbose_name=_('Longitude'), max_length=500, null=True)
     location = models.TextField()
     tags = models.TextField()
     claims = models.TextField(null=True, default='[]')
