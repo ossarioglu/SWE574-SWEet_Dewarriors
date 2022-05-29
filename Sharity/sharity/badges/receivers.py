@@ -4,6 +4,7 @@ from .models import GreatServiceProviderBadge, MasterEventOrganizerBadge, Newcom
 from django.dispatch import receiver
 from .signals import *
 from django.utils import timezone
+from django.db.models.signals import post_save
 
 
 @receiver(timeline)
@@ -87,6 +88,22 @@ def award_Newcomer_badge(sender, owner_pk, **kwargs):
                     awarded_date=timezone.now()
                 )
 
+
+@receiver(post_save, sender=Profile)
+def award_Newcomer_badge_on_signup(sender, instance, created, **kwargs):
+    # if a new profile object is created
+    if created:
+        print('Awarding Newcomer badge on signup')
+        # check if the user has a badge already
+        try:
+            badge = NewcomerBadge.objects.get(owner__pk=instance.user.pk)
+            active = badge.is_badge_active
+        except NewcomerBadge.DoesNotExist:
+            badge = NewcomerBadge.objects.create(
+                owner=Owner.objects.get(pk=instance.user.pk),
+                awarded_date=timezone.now()
+            )
+    
 
 @receiver(timeline)
 @receiver(profile_detail, sender=Profile)
