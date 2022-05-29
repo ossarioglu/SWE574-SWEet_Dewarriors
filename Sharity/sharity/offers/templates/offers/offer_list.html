@@ -71,7 +71,7 @@
 
                     <div class="col-sm-6">
                         <div class="card">
-                            <img src="{{result.photo.url}}" class="card-img-top" alt="...">
+                            {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                             <div class="card-body">
                                 <h5 class="card-title"> {{result.title}} </h5>
                                 <p class="card-text"> <b> Start date: </b> {{result.start_date}} </p>

@@ -37,7 +37,7 @@
                     <!-- Display details of service /-->
                     <div class="format-container">
                         <div>
-                            <img src="{{object.photo.url }}" width="150" height="150">
+                            {% if object.photo %} <img src="{{object.photo.url }}" width="150" height="150"> {% endif %}
                         </div>
                         <div>
                             <h3> {{ object.title }}</h3>
