@@ -182,21 +182,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         profile_detail.send(sender=Profile, owner_pk=[self.get_object().pk])
         return super().dispatch(request, *args, **kwargs)
 
-# This is getting user information
-# def userProfile(request, userKey):
-#     user = User.objects.get(username=userKey)
-#     context = {'user': user, }
-#     context['newcomer'] = hasattr(user, 'Nbadge')
-#     context['cb'] = hasattr(user, 'CBbadge')
-#     context['gsp'] = hasattr(user, 'GSPbadge')
-#     context['meo'] = hasattr(user, 'MEObadge')
-
-#     # send signal for badges
-#     profile_detail.send(sender=Profile, owner_pk=user.pk)
-#     return render(request, 'member/profile.html', context)
-
-# This is for updating user profile
-# Login is required to see details of services
 
 # @login_required(login_url='login')
 def updateProfile(request, userKey):
@@ -214,15 +199,15 @@ def updateProfile(request, userKey):
     # Returns back to home page after update is done.
     if request.method == 'POST':
 
-        # user.first_name = request.POST.get('firstName')
-        # user.last_name = request.POST.get('lastName')
-        # user.email = request.POST.get('email')
-        # user.save()
+        user.first_name = request.POST.get('firstName')
+        user.last_name = request.POST.get('lastName')
+        user.email = request.POST.get('email')
+        user.save()
 
-        myProfile.userLocation = request.POST.get('location')
-        # myProfile.userDetails = request.POST.get('userDetails')
-        myProfile.userInterests = request.POST.get('interests')
-        myProfile.userSkills = request.POST.get('skills')
+        myProfile.userLocation = request.POST.get('location-json')
+        myProfile.userDetails = request.POST.get('userDetails')
+        myProfile.userInterests = request.POST.get('interests-tags-json')
+        myProfile.userSkills = request.POST.get('skills-tags-json')
         # myProfile.userBadge = request.POST.get('userBadge')
 
         if request.FILES.get('picture') is not None:
@@ -231,7 +216,8 @@ def updateProfile(request, userKey):
 
         return redirect('home')
 
-    context = {'form': form, 'myProfile': myProfile, 'user': user}
+
+    context = {'form': form, 'myProfile': myProfile, 'user': user,'googleapis': config('GOOGLE_API_KEY') }
     return render(request, 'member/updateprofile.html', context)
 
 def home(request):
