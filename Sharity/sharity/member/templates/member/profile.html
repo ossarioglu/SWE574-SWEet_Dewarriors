@@ -12,190 +12,6 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="text/javascript">
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let form = document.getElementById('registerform');
-            let previousQueryLength;
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault()
-                let locationQuery = document.getElementById('location').value;
-                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
-                    let request = axios.get('/locations/search/?query=' + locationQuery)
-                        .then(function (response) {
-                            $('#location-wrapper .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.results.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start location');
-                                $(newLi).attr('id', 'location-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('background-image', 'url("' + response.data.response.results[x].icon + '")');
-                                $(newLi).css('background-repeat', 'no-repeat');
-                                $(newLi).css('background-position', '98% center');
-                                $(newLi).css('background-size', '5%');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.results[x].name);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.results[x].formatted_address);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#location-wrapper').css('display', 'flex');
-                                $('#location-wrapper').append(newLi);
-                            }
-
-                            $('.location').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
-                                $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
-                                $('#location').css('background-repeat', 'no-repeat');
-                                $('#location').css('background-position', '98% center');
-                                $('#location').css('background-size', '5%');
-                                $('#location').val(response.data.response.results[resultIndex].formatted_address);
-                                $('#location-wrapper').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = locationQuery.length
-                        })
-                }
-            });
-
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                let skillsTagsQuery = document.getElementById('skills').value.split(',').at(-1).trim();
-                if (skillsTagsQuery.length >= 2 && skillsTagsQuery.length < 15 && previousQueryLength !== skillsTagsQuery.length) {
-                    let request = axios.get('/tags/search/?query=' + skillsTagsQuery)
-                        .then(function (response) {
-                            $('#tags-wrapper-skills .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.search.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
-                                $(newLi).attr('id', 'tags-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.search[x].label);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#tags-wrapper-skills').css('display', 'flex');
-                                $('#tags-wrapper-skills').append(newLi);
-                            }
-
-                            $('.tags').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                let existingValue = JSON.parse($('#skills-tags-json').val());
-                                existingValue.push(response.data.response.search[resultIndex]);
-                                $('#skills-tags-json').val(JSON.stringify(existingValue));
-                                var stringValue = '';
-                                existingValue.forEach(function (tag) {
-                                    stringValue += tag.label + ', ';
-                                });
-                                $('#skills').val(stringValue);
-                                $('#skills-tags-json').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = skillsTagsQuery.length
-                        })
-                }
-            });
-
-            form.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                let interestsTagsQuery = document.getElementById('interests').value.split(',').at(-1).trim();
-                if (interestsTagsQuery.length >= 2 && interestsTagsQuery.length < 15 && previousQueryLength !== interestsTagsQuery.length) {
-                    let request = axios.get('/tags/search/?query=' + interestsTagsQuery)
-                        .then(function (response) {
-                            $('#tags-wrapper-interests .list-group-item').remove();
-                            for (let x = 0; x < response.data.response.search.length; x++) {
-                                let newLi = document.createElement('li');
-                                let newDiv1 = document.createElement('div');
-                                let newDiv2 = document.createElement('div');
-                                let newSpan = document.createElement('span');
-
-                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
-                                $(newLi).attr('id', 'tags-' + x);
-                                $(newDiv1).addClass('ms-2 me-auto');
-                                $(newLi).css('cursor', 'pointer');
-                                $(newDiv2).addClass('fw-bold');
-                                $(newDiv2).html(response.data.response.search[x].label);
-                                $(newSpan).addClass('badge bg-primary rounded-pill');
-                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
-                                $(newLi).append(newDiv1);
-                                $(newLi).append(newSpan);
-                                $('#tags-wrapper-interests').css('display', 'flex');
-                                $('#tags-wrapper-interests').append(newLi);
-                            }
-
-                            $('.tags').click(function () {
-                                let resultIndex = $(this).attr('id').split('-')[1]
-                                let existingValue = JSON.parse($('#interests-tags-json').val());
-                                existingValue.push(response.data.response.search[resultIndex]);
-                                $('#interests-tags-json').val(JSON.stringify(existingValue));
-                                var stringValue = '';
-                                existingValue.forEach(function (tag) {
-                                    stringValue += tag.label + ', ';
-                                });
-                                $('#interests').val(stringValue);
-                                $('#interests-tags-json').css('display', 'none');
-                            });
-                            request = null;
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            console.log(error);
-                        }).then(function () {
-                            previousQueryLength = interestsTagsQuery.length
-                        })
-                }
-            });
-
-            $('#submit-button').click(function (event) {
-                event.preventDefault();
-                $('#location').val($('#location-json').val());
-                $('#skills').val($('#skills-tags-json').val());
-                $('#interests').val($('#interests-tags-json').val());
-                $('#registerform').submit();
-            });
-
-            $(document).mouseup(function (e) {
-                let locationContainer = $('#location-wrapper');
-                let skillsContainer = $('#tags-wrapper-skills');
-                let interestsContainer = $('#tags-wrapper-interests');
-
-                if (!locationContainer.is(e.target) && locationContainer.has(e.target).length === 0) {
-                    locationContainer.hide();
-                }
-
-                if (!skillsContainer.is(e.target) && skillsContainer.has(e.target).length === 0) {
-                    skillsContainer.hide();
-                }
-
-                if (!interestsContainer.is(e.target) && interestsContainer.has(e.target).length === 0) {
-                    interestsContainer.hide();
-                }
-            });
-        });
-    </script>
 
     <style id="applicationStylesheet" type="text/css">
         .mediaViewInfo {
@@ -423,13 +239,13 @@
             top: 213px;
             position: absolute;
             overflow: visible;
-            width: 438px;
+            width: 488px;
             height: 60px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 50px;
+            font-size: 40px;
             color: rgba(255, 255, 255, 1);
         }
 
@@ -438,13 +254,13 @@
             top: 189px;
             position: absolute;
             overflow: visible;
-            width: 807px;
+            width: 600px;
             height: 125px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 50px;
+            font-size: 40px;
             color: rgba(112, 112, 112, 1);
         }
 
@@ -495,13 +311,18 @@
             top: 840px;
         }
 
-        #Component_29__1 {
+        #ratingstars {
             position: absolute;
             width: 245.944px;
             height: 43.014px;
             left: 547.5px;
             top: 850px;
             overflow: visible;
+            text-align: left;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 30px;
         }
 
         #n_Color_ {
@@ -595,7 +416,7 @@
             position: absolute;
             overflow: hidden;
             width: 163px;
-            height: 34px;
+            height: 40px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
@@ -860,15 +681,32 @@
             top: 172px;
             position: absolute;
             overflow: visible;
-            width: 151px;
-            height: 117px;
+            width: 200px;
+            height: 60px;
             text-align: center;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 40px;
-            color: rgba(250, 162, 75, 1);
+            font-size: 30px;
+            color: rgb(251, 207, 75);
         }
+
+        #followbuttondiv {
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161));
+            left: 679px;
+            top: 260px;
+            position: absolute;
+            overflow: visible;
+            width: 151px;
+            height: 60px;
+            text-align: center;
+            font-family: Helvetica Neue LT Std;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 30px;
+            color: rgb(251, 207, 75);
+        }
+
 
         #FormForm_GroupHelperDefault_by {
             position: absolute;
@@ -3802,7 +3640,6 @@
 
 
 <div id="Profile_Page">
-    <form method="post" action="{% url 'updateProfile' userKey=user.username %}" id="registerform">
         {% csrf_token %}
         <svg class="Rectangle_125">
             <rect id="Rectangle_125" rx="74" ry="74" x="0" y="0" width="820" height="938">
@@ -3817,15 +3654,13 @@
         <div id="memberinfodiv">
             <span>{{ user.profile.userDetails }}</span>
         </div>
-        <div id="memberinfodiv">
 
-            <button id="follow" {% if isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Follow</button>
-            <button id="unfollow" {% if not isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Unfollow</button>
+        <div id="memberinfodiv">
         </div>
         <script>
-            $("#follow").click(function (e) {
+            function followEvent(){
+                console.log("Click")
                 var data = $("#follow").data("id");
-                e.preventDefault();
                 $.ajax({
                     url: "/member/follow/",
                     type: 'POST',
@@ -3841,11 +3676,12 @@
                     error: function (response) {
                         console.log(response)
                     }
+                
                 })
-            })
-            $("#unfollow").click(function (e) {
+            }
+            
+            function unfollowEvent(){
                 var data = $("#unfollow").data("id");
-                e.preventDefault();
                 $.ajax({
                     url: "/member/unfollow/",
                     type: 'POST',
@@ -3862,7 +3698,10 @@
                         console.log(response)
                     }
                 })
-            })
+            
+            }
+
+            
         </script>
         
         <div id="emaildiv">
@@ -3876,32 +3715,8 @@
             <rect id="Boundary_" rx="0" ry="0" x="0" y="0" width="64" height="64">
             </rect>
         </svg>
-        <div id="Component_29__1" class="Component_29___1">
-            <svg class="n_Color_" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_ba" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_ba"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bb" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_bb"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bc" viewBox="0 0 46 42">
-                <path id="n_Color_bc"
-                      d="M 8.780498504638672 42 L 8.781740188598633 41.99489212036133 L 12.55881690979004 26.45842742919922 L 0 16.00237464904785 L 16.53739547729492 14.65558052062988 L 23 0 L 29.46260643005371 14.63369750976562 L 46 16.00237464904785 L 33.46602630615234 26.45842742919922 L 37.21359252929688 41.9921760559082 L 23 33.75341033935547 L 8.785167694091797 41.9973030090332 L 8.780498504638672 42 Z M 23.00073432922363 9.065167427062988 L 22.99816131591797 9.065669059753418 L 23 29.61953163146973 L 31.67131805419922 34.65855026245117 L 29.37152671813965 25.19916343688965 L 37.00783157348633 18.83322906494141 L 26.93304061889648 17.99172973632812 L 23.00073432922363 9.065167427062988 Z">
-                </path>
-            </svg>
-            <svg class="n_Color_bd" viewBox="0 0 47.249 43.014">
-                <path id="n_Color_bd"
-                      d="M 23.6242561340332 34.56956481933594 L 38.22404861450195 43.01386642456055 L 34.34967041015625 27.09873580932617 L 47.24851226806641 16.39054679870605 L 30.26267623901367 15.00957584381104 L 23.6242561340332 0 L 16.98584175109863 15.00957584381104 L 0 16.39054679870605 L 12.89884567260742 27.09873580932617 L 9.024466514587402 43.01386642456055 L 23.6242561340332 34.56956481933594 Z">
-                </path>
-            </svg>
+        <div id="ratingstars" class="ratingstars">
+            <b class="text-primary">Rating:</b>  {{user.profile.userReputation}}
         </div>
         <div id="n_3_Handshakes">
             <span>53 Handshakes</span>
@@ -3914,35 +3729,35 @@
         </div>
         <div id="Follower_43">
             Follower: {{ followersCount }}
+      
         </div>
         <svg class="Rectangle_63">
             <rect id="Rectangle_63" rx="1" ry="1" x="0" y="0" width="8" height="119">
             </rect>
         </svg>
-        <div id="Edit">
-            <span>Edit</span>
-        </div> 
 
         <div id="creditdiv">
             <span>Credit: {{ user.profile.creditAmount }} hours</span>
+
+
+        </div>
+
+        <div id="followbuttondiv">
+
+            {% if user != request.user %} 
+
+                <button id="follow" onclick="followEvent()" {% if isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Follow</button>
+                <button id="unfollow" onclick="unfollowEvent()" {% if not isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Unfollow</button>
+            {% endif %}
+
         </div>
 
         <div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault" class="Form_Input_Text_Default">
-                <div id="InputBase" class="Input_Base">
-                    <svg class="InputBase_bh">
-                        <rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                        </rect>
-                    </svg>
-                </div>
                 <div id="skillsdiv">
-                    <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
 
-
-                            {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}">
-                    <input type="hidden"
-                           value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
-                           name="skills-tags-json" id="skills-tags-json">
+                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}
+                    
                     <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
 							display: none;
 							position: relative;
@@ -3955,29 +3770,22 @@
 							height: 180px;
 							overflow: scroll;"></ol>
                 </div>
+
             </div>
             <div id="Group_Label">
-                <span>Skills</span>
+                <span><b class="text-success">Skills</b>
+                </span>
             </div>
         </div>
 
         <div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
                 <div id="InputBase_bn" class="Input_Base">
-                    <svg class="InputBase_bo">
-                        <rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                        </rect>
-                    </svg>
+
                 </div>
                 <div id="interestsdiv">
-                    <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests"
-                           value="
-
-
-                                   {% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
-                    <input type="hidden"
-                           value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
-                           name="interests-tags-json" id="interests-tags-json">
+                    {% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}
+                    
                     <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
 							display: none;
 							position: relative;
@@ -3992,35 +3800,33 @@
                 </div>
             </div>
             <div id="Group_Label_bq">
-                <span>Interests</span>
+                <span><b class="text-success">Interests</b>
+                    </span>
             </div>
         </div>
 
         <div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
             <div id="Group_Label_bs">
-                <span>Badges</span>
+                <span><b class="text-success">Badges</b>
+                </span>
+
             </div>
             <ul style="margin-top: 10px;margin-left: 78px;">
-                {% if user.Nbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
- 				{% if user.CBbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
-                {% if user.GSPbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
-                {% if user.MEObadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
+                {% if user.Nbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
+ 				{% if user.CBbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
+                {% if user.GSPbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
+                {% if user.MEObadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
             </ul>
         </div>
 
         <div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
                 <div id="InputBase_b" class="Input_Base">
-                    <svg class="InputBase_ca">
-                        <rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                        </rect>
-                    </svg>
+
                 </div>
                 <div id="locationdiv">
-                    <input type="text" class="form-control" name="location" id="location" placeholder="Your Location"
-                           value="">
-                    <div id="googleMap" style="width: 600px;height: 200px;margin-top: 20px;margin-left: -56px;"></div>
-                    <input type="hidden" value="" name="location-json" id="location-json">
+                    {{ user.profile.get_formatted_address}}
+
                     <ol class="list-group list-group-numbered" id="location-wrapper" style="
 							display: none;
 							position: relative;
@@ -4036,18 +3842,11 @@
                 </div>
             </div>
             <div id="Group_Label_b">
-                <span>Location</span>
+                <span><b class="text-success">Location</b>
+                </span>
             </div>
         </div>
 
-        <div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
-            <div id="buttonSignup">
-                <button class="btn btn-primary" style="margin-top: 211px;" form="registerform" type="submit"
-                        id="submit-button" value="Submit">Save
-                </button>
-            </div>
-        </div>
-    </form>
 </div>
 
 <script>
@@ -4060,61 +3859,5 @@
     });
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
-
-<script>
-
-    $(document).ready(function () {
-
-        var marker;
-        const geocoder = new google.maps.Geocoder();
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-
-        function showPosition(position) {
-            loadMap(position)
-        }
-
-        function loadMap(position) {
-            var mapProp = {
-                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                zoom: 12,
-            };
-            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng, map);
-            });
-        }
-
-
-        function placeMarker(location, map) {
-            if (marker == null) {
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map
-                });
-            }
-            marker.setPosition(location);
-            var latlng = new google.maps.LatLng(location.lat(), location.lng());
-            geocoder.geocode(
-                {'latLng': latlng},
-                function (results, status) {
-                    $('#location-json').val(JSON.stringify(results[0]));
-                    $('#location').val(results[0].formatted_address);
-                    console.log(results)
-                }
-            );
-        }
-
-        getLocation()
-    })
-</script>
 </body>
 </html>
