@@ -151,9 +151,13 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 filter_flag = True
                 # get desired location
                 profile = Profile.objects.get(user=self.request.user)
-                profile_loc = (profile.get_latitude(), profile.get_longitude())
-                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
-                context['distance_query'] = d
+                try:
+                    profile_loc = (profile.get_latitude(), profile.get_longitude())
+                    qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                    context['distance_query'] = d
+                except json.JSONDecodeError:
+                    form.add_error('__all__', 'Profile has no location.')
+                    return self.form_invalid(form)
             # else if only location-json query is present
             elif d is None and ljson != '':
                 filter_flag = True
