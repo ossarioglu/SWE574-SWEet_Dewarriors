@@ -1,181 +1,437 @@
-<h1> Update Profile </h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
 
-<div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
-    <div id="FormInputTextDefault" class="Form_Input_Text_Default">
-        <div id="InputBase" class="Input_Base">
-            <svg class="InputBase_bh">
-                <rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                </rect>
-            </svg>
-        </div>
-        <div id="skillsdiv">
-            <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.getElementById('registerform');
+            let previousQueryLength;
+            form.addEventListener('keyup', function (event) {
+                event.preventDefault()
+                let locationQuery = document.getElementById('location').value;
+                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
+                    let request = axios.get('/locations/search/?query=' + locationQuery)
+                        .then(function (response) {
+                            $('#location-wrapper .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.results.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
 
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start location');
+                                $(newLi).attr('id', 'location-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('background-image', 'url("' + response.data.response.results[x].icon + '")');
+                                $(newLi).css('background-repeat', 'no-repeat');
+                                $(newLi).css('background-position', '98% center');
+                                $(newLi).css('background-size', '5%');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.results[x].name);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.results[x].formatted_address);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#location-wrapper').css('display', 'flex');
+                                $('#location-wrapper').append(newLi);
+                            }
 
-                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}">
-            <input type="hidden"
-                   value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
-                   name="skills-tags-json" id="skills-tags-json">
-            <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
-                    display: none;
-                    position: relative;
-                    background-color: rgb(255, 255, 255);
-                    margin-top: 0;
-                    padding-left: calc(var(--bs-gutter-x) / 2);
-                    margin-bottom: 1rem;
-                    width: 567px;
-                    z-index: 1;
-                    height: 180px;
-                    overflow: scroll;"></ol>
-        </div>
-    </div>
-    <div id="Group_Label">
-        <span>Skills</span>
-    </div>
-</div>
-<div id="Edit">
-    <span>Edit</span>
-</div>
-<div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
-    <div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
-        <div id="InputBase_bn" class="Input_Base">
-            <svg class="InputBase_bo">
-                <rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                </rect>
-            </svg>
-        </div>
-        <div id="interestsdiv">
-            <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests"
-                   value="
-
-
-                           {% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
-            <input type="hidden"
-                   value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
-                   name="interests-tags-json" id="interests-tags-json">
-            <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
-                    display: none;
-                    position: relative;
-                    background-color: rgb(255, 255, 255);
-                    margin-top: 0;
-                    padding-left: calc(var(--bs-gutter-x) / 2);
-                    margin-bottom: 1rem;
-                    width: 567px;
-                    z-index: 1;
-                    height: 180px;
-                    overflow: scroll;"></ol>
-        </div>
-    </div>
-    <div id="Group_Label_bq">
-        <span>Interests</span>
-    </div>
-</div>
-<div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
-    <div id="Group_Label_bs">
-        <span>Badges</span>
-    </div>
-    <ul style="margin-top: 10px;margin-left: 78px;">
-        {% if user.Nbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
-         {% if user.CBbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
-        {% if user.GSPbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
-        {% if user.MEObadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
-    </ul>
-</div>
-<div id="creditdiv">
-    <span>Credit: {{ user.profile.creditAmount }} hours</span>
-</div>
-<div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
-    <div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
-        <div id="InputBase_b" class="Input_Base">
-            <svg class="InputBase_ca">
-                <rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
-                </rect>
-            </svg>
-        </div>
-        <div id="locationdiv">
-            <input type="text" class="form-control" name="location" id="location" placeholder="Your Location"
-                   value="">
-            <div id="googleMap" style="width: 600px;height: 200px;margin-top: 20px;margin-left: -56px;"></div>
-            <input type="hidden" value="" name="location-json" id="location-json">
-            <ol class="list-group list-group-numbered" id="location-wrapper" style="
-                    display: none;
-                    position: relative;
-                    background-color: rgb(255, 255, 255);
-                    margin-top: 0;
-                    padding-left: calc(var(--bs-gutter-x) / 2);
-                    margin-bottom: 1rem;
-                    width: 567px;
-                    z-index: 1;
-                    height: 180px;
-                    overflow: scroll;
-                "></ol>
-        </div>
-    </div>
-    <div id="Group_Label_b">
-        <span>Location</span>
-    </div>
-</div>
-<div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
-    <div id="buttonSignup">
-        <button class="btn btn-primary" style="margin-top: 211px;" form="registerform" type="submit"
-                id="submit-button" value="Submit">Save
-        </button>
-    </div>
-</div>
-
-<script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
-
-<script>
-
-    $(document).ready(function () {
-
-        var marker;
-        const geocoder = new google.maps.Geocoder();
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-
-        function showPosition(position) {
-            loadMap(position)
-        }
-
-        function loadMap(position) {
-            var mapProp = {
-                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                zoom: 12,
-            };
-            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng, map);
+                            $('.location').click(function () {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
+                                $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
+                                $('#location').css('background-repeat', 'no-repeat');
+                                $('#location').css('background-position', '98% center');
+                                $('#location').css('background-size', '5%');
+                                $('#location').val(response.data.response.results[resultIndex].formatted_address);
+                                $('#location-wrapper').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = locationQuery.length
+                        })
+                }
             });
+
+            form.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                let skillsTagsQuery = document.getElementById('skills').value.split(',').at(-1).trim();
+                if (skillsTagsQuery.length >= 2 && skillsTagsQuery.length < 15 && previousQueryLength !== skillsTagsQuery.length) {
+                    let request = axios.get('/tags/search/?query=' + skillsTagsQuery)
+                        .then(function (response) {
+                            $('#tags-wrapper-skills .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.search.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
+
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
+                                $(newLi).attr('id', 'tags-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.search[x].label);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#tags-wrapper-skills').css('display', 'flex');
+                                $('#tags-wrapper-skills').append(newLi);
+                            }
+
+                            $('.tags').click(function () {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                let existingValue = JSON.parse($('#skills-tags-json').val());
+                                existingValue.push(response.data.response.search[resultIndex]);
+                                $('#skills-tags-json').val(JSON.stringify(existingValue));
+                                var stringValue = '';
+                                existingValue.forEach(function (tag) {
+                                    stringValue += tag.label + ', ';
+                                });
+                                $('#skills').val(stringValue);
+                                $('#skills-tags-json').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = skillsTagsQuery.length
+                        })
+                }
+            });
+
+            form.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                let interestsTagsQuery = document.getElementById('interests').value.split(',').at(-1).trim();
+                if (interestsTagsQuery.length >= 2 && interestsTagsQuery.length < 15 && previousQueryLength !== interestsTagsQuery.length) {
+                    let request = axios.get('/tags/search/?query=' + interestsTagsQuery)
+                        .then(function (response) {
+                            $('#tags-wrapper-interests .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.search.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
+
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
+                                $(newLi).attr('id', 'tags-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.search[x].label);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#tags-wrapper-interests').css('display', 'flex');
+                                $('#tags-wrapper-interests').append(newLi);
+                            }
+
+                            $('.tags').click(function () {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                let existingValue = JSON.parse($('#interests-tags-json').val());
+                                existingValue.push(response.data.response.search[resultIndex]);
+                                $('#interests-tags-json').val(JSON.stringify(existingValue));
+                                var stringValue = '';
+                                existingValue.forEach(function (tag) {
+                                    stringValue += tag.label + ', ';
+                                });
+                                $('#interests').val(stringValue);
+                                $('#interests-tags-json').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = interestsTagsQuery.length
+                        })
+                }
+            });
+
+            $('#submit-button').click(function (event) {
+                event.preventDefault();
+                $('#location').val($('#location-json').val());
+                $('#skills').val($('#skills-tags-json').val());
+                $('#interests').val($('#interests-tags-json').val());
+                $('#registerform').submit();
+            });
+
+            $(document).mouseup(function (e) {
+                let locationContainer = $('#location-wrapper');
+                let skillsContainer = $('#tags-wrapper-skills');
+                let interestsContainer = $('#tags-wrapper-interests');
+
+                if (!locationContainer.is(e.target) && locationContainer.has(e.target).length === 0) {
+                    locationContainer.hide();
+                }
+
+                if (!skillsContainer.is(e.target) && skillsContainer.has(e.target).length === 0) {
+                    skillsContainer.hide();
+                }
+
+                if (!interestsContainer.is(e.target) && interestsContainer.has(e.target).length === 0) {
+                    interestsContainer.hide();
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+    <style>
+        .profile-container{
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr; 
         }
+    </style>
 
+    <div class="profile-container">
 
-        function placeMarker(location, map) {
-            if (marker == null) {
-                marker = new google.maps.Marker({
-                    position: location,
-                    map: map
+        <div></div>
+
+        <div> 
+
+            <form class="row g-3 needs-validation" method="post" action="{% url 'updateProfile' userKey=user.username %}" enctype="multipart/form-data" novalidate id="registerform">
+                {% csrf_token %}
+
+                    <!-- Text Field for user's firstname /-->
+                    <div class="col-md-6">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">First Name</span>
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{user.first_name}}" aria-describedby="inputGroupPrepend" required>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Text Field for user's last name /-->
+                    <div class="col-md-6">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">Last Name</span>
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{user.last_name}}" aria-describedby="inputGroupPrepend" required>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Text Field for user's email /-->
+                    <div class="col-md-6">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">Email</span>
+                            <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" aria-describedby="inputGroupPrepend" required>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Field for user's skills /-->
+                    <div class="col-md-6">
+                        <div class="input-group has-validation" id="skillsdiv">
+                            <span class="input-group-text" id="inputGroupPrepend">Skills</span>
+                            <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
+                                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}" 
+                                    aria-describedby="inputGroupPrepend" required>
+                            <input type="hidden"
+                                value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
+                                name="skills-tags-json" id="skills-tags-json">
+                            
+                            <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
+                                display: none;
+                                position: relative;
+                                background-color: rgb(255, 255, 255);
+                                margin-top: 0;
+                                padding-left: calc(var(--bs-gutter-x) / 2);
+                                margin-bottom: 1rem;
+                                width: 567px;
+                                z-index: 1;
+                                height: 180px;
+                                overflow: scroll;">
+                            </ol>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Field for user's interests /-->
+                    <div class="col-md-12">
+                        <div class="input-group has-validation" id="interestsdiv">
+                            <span class="input-group-text" id="inputGroupPrepend">Interests</span>
+                            <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests" 
+                                value="{% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
+                            <input type="hidden" 
+                                value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
+                                name="interests-tags-json" id="interests-tags-json">    
+                            <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
+                                display: none;
+                                position: relative;
+                                background-color: rgb(255, 255, 255);
+                                margin-top: 0;
+                                padding-left: calc(var(--bs-gutter-x) / 2);
+                                margin-bottom: 1rem;
+                                width: 567px;
+                                z-index: 1;
+                                height: 180px;
+                                overflow: scroll;">
+                            </ol>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TextArea Field for user's user details /-->
+                    <div class="col-md-12">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">Details</span>
+                            <textarea class="form-control" id="userDetails" name="userDetails"  aria-describedby="inputGroupPrepend" rows="3" required> {{myProfile.userDetails}} </textarea>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Field for user's location /-->
+                    <div class="col-md-12">
+                        <div class="input-group has-validation" id="locationdiv">
+                            <span class="input-group-text" id="inputGroupPrepend">Location</span>
+                            <input type="text" class="form-control" id="location" name="location" placeholder="Your Location" 
+                                value="{{ user.profile.get_formatted_address}}" aria-describedby="inputGroupPrepend" required>
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-md-12">
+                        <div class="input-group has-validation">
+                            <div id="googleMap" style="width: 100%;height: 200px;margin-top: 0px;margin-left: 0px;"></div>
+                            <input type="hidden" name="location-json" id="location-json"
+                                value="{% if not user.profile.userLocation %}[]{% else %}{{ user.profile.userLocation }}{% endif %}" >
+                            <ol class="list-group list-group-numbered" id="location-wrapper" style="
+                                display: none;
+                                position: relative;
+                                background-color: rgb(255, 255, 255);
+                                margin-top: 0;
+                                padding-left: calc(var(--bs-gutter-x) / 2);
+                                margin-bottom: 1rem;
+                                width: 567px;
+                                z-index: 1;
+                                height: 180px;
+                                overflow: scroll;">
+                            </ol>                            
+                            <div class="invalid-feedback">
+                                Please choose a keyword.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File picker field for user's profile picture /-->
+                    <div class="col-md-9">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">Profile Picture</span>
+                            <input type="file" class="form-control-file" id="picture" name="picture"  aria-describedby="inputGroupPrepend" required value="{{form.userPicture}}" >
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+        
+                    </div>
+
+                            
+                    <div class="col-3" id="buttonSignup">
+                        <button class="btn btn-outline-success"  form="registerform" type="submit" id="submit-button" value="Submit">Update Profile Information</button>
+                    </div>
+
+            </form>
+
+        </div>
+
+        <div></div>
+                
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            var marker;
+            const geocoder = new google.maps.Geocoder();
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else {
+                    x.innerHTML = "Geolocation is not supported by this browser.";
+                }
+            }
+
+            function showPosition(position) {
+                loadMap(position)
+            }
+
+            function loadMap(position) {
+                var mapProp = {
+                    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                    zoom: 12,
+                };
+                var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                google.maps.event.addListener(map, 'click', function (event) {
+                    placeMarker(event.latLng, map);
                 });
             }
-            marker.setPosition(location);
-            var latlng = new google.maps.LatLng(location.lat(), location.lng());
-            geocoder.geocode(
-                {'latLng': latlng},
-                function (results, status) {
-                    $('#location-json').val(JSON.stringify(results[0]));
-                    $('#location').val(results[0].formatted_address);
-                    console.log(results)
-                }
-            );
-        }
 
-        getLocation()
-    })
-</script>
+
+            function placeMarker(location, map) {
+                if (marker == null) {
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                }
+                marker.setPosition(location);
+                var latlng = new google.maps.LatLng(location.lat(), location.lng());
+                geocoder.geocode(
+                    {'latLng': latlng},
+                    function (results, status) {
+                        $('#location-json').val(JSON.stringify(results[0]));
+                        $('#location').val(results[0].formatted_address);
+                        console.log(results)
+                    }
+                );
+            }
+
+            getLocation()
+        })
+    </script>
+</body>
+</html>

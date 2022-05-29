@@ -251,7 +251,7 @@
 
         #memberinfodiv {
             left: 997px;
-            top: 189px;
+            top: 150px;
             position: absolute;
             overflow: visible;
             width: 600px;
@@ -260,7 +260,7 @@
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 40px;
+            font-size: 30px;
             color: rgba(112, 112, 112, 1);
         }
 
@@ -397,7 +397,7 @@
 
         #n_3_Handshakes {
             left: 260px;
-            top: 861px;
+            top: 850px;
             position: absolute;
             overflow: visible;
             width: 438px;
@@ -431,7 +431,7 @@
             position: absolute;
             overflow: hidden;
             width: 330px;
-            height: 43px;
+            height: 50px;
             text-align: left;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
@@ -446,7 +446,7 @@
             position: absolute;
             overflow: hidden;
             width: 272px;
-            height: 43px;
+            height: 50px;
             text-align: right;
             font-family: Helvetica Neue LT Std;
             font-style: normal;
@@ -471,7 +471,7 @@
             width: 8px;
             height: 119px;
             left: 975px;
-            top: 189px;
+            top: 150px;
         }
 
         #FormForm_GroupHelperDefault {
@@ -721,8 +721,8 @@
             position: absolute;
             width: 436.5px;
             height: 71.149px;
-            left: 983px;
-            top: 732px;
+            left: 883px;
+            top: 762px;
             overflow: visible;
         }
 
@@ -769,9 +769,9 @@
             padding: 0.170rem .75rem !important;
         }
 
-        #buttonSignup {
-            left: 170px;
-            top: 9px;
+        #buttonUpdate {
+            left: 100px;
+            top: 20px;
             position: absolute;
             overflow: visible;
             width: 75px;
@@ -780,7 +780,7 @@
             font-family: Helvetica Neue LT Std;
             font-style: normal;
             font-weight: normal;
-            font-size: 16px;
+            font-size: 30px;
             color: rgba(255, 255, 255, 1);
         }
 
@@ -3655,8 +3655,6 @@
             <span>{{ user.profile.userDetails }}</span>
         </div>
 
-        <div id="memberinfodiv">
-        </div>
         <script>
             function followEvent(){
                 console.log("Click")
@@ -3716,10 +3714,10 @@
             </rect>
         </svg>
         <div id="ratingstars" class="ratingstars">
-            <b class="text-primary">Rating:</b>  {{user.profile.userReputation}}
+            Rating: <b class="text-primary">{{user.profile.userReputation}}</b> 
         </div>
         <div id="n_3_Handshakes">
-            <span>53 Handshakes</span>
+            <span><b class="text-danger">{{handshakes}}</b> Handshakes</span>
         </div>
         <div id="usernamediv">
             <span>{{ user.username }}</span>
@@ -3745,9 +3743,8 @@
         <div id="followbuttondiv">
 
             {% if user != request.user %} 
-
-                <button id="follow" onclick="followEvent()" {% if isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Follow</button>
-                <button id="unfollow" onclick="unfollowEvent()" {% if not isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Unfollow</button>
+                <button type="button" class="btn btn-primary" id="follow" onclick="followEvent()" {% if isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Follow</button>
+                <button type="button" class="btn btn-danger" id="unfollow" onclick="unfollowEvent()" {% if not isAlreadyFollowed %} style="display:none"{% endif %} data-id="{{ user.username }}">Unfollow</button>
             {% endif %}
 
         </div>
@@ -3811,7 +3808,7 @@
                 </span>
 
             </div>
-            <ul style="margin-top: 10px;margin-left: 78px;">
+            <ul style="margin-top: 20px;margin-left: 5px;">
                 {% if user.Nbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
  				{% if user.CBbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
                 {% if user.GSPbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
@@ -3848,6 +3845,18 @@
         </div>
 
 </div>
+
+
+{% if user == request.user %} 
+<div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
+    <div id="buttonUpdate">
+        <a class="btn btn-outline-success btn-lg" href="{% url 'updateProfile' user.username %}" role="button">Update Profile</a>
+
+    </div>
+</div>
+{% endif %}
+
+
 
 <script>
     $("#id-badge").hover(function () {
