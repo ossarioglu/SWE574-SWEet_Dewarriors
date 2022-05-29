@@ -48,7 +48,7 @@
                             <div>
                                 <h3> {{ offers.title }}</h3>
                                 <h7>by</h7>
-                                <h5> @{{ offers.owner }}</h5>
+                                <h5> <a class="text-decoration-none" href="{% url 'profile' offers.owner %}">@{{ offers.owner }}</a></h5>
                                 <h7>at</h7>
                                 <h5> {{ offers.get_formatted_address }} </h5>
                             </div>

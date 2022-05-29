@@ -58,7 +58,7 @@
                                 <div>
                                     <h3> {{ myAssign.requestID.serviceID.title }}</h3>
                                     <h7>by</h7>
-                                    <h5> @{{ myAssign.requestID.serviceID.owner }}</h5>
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' myAssign.requestID.serviceID.owner %}">@{{ myAssign.requestID.serviceID.owner }}</a></h5>
                                     <h7>at</h7>
                                     <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
                                     <h7>to</h7>
@@ -119,7 +119,7 @@
                                 <div>
                                     <h3> {{ myAssign.requestID.serviceID.title }}</h3>
                                     <h7>by</h7>
-                                    <h5> @{{ myAssign.requestID.serviceID.owner }}</h5>
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' myAssign.requestID.serviceID.owner %}">@{{ myAssign.requestID.serviceID.owner }}</a></h5>
                                     <h7>at</h7>
                                     <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
                                     <h7>to</h7>
