@@ -143,9 +143,15 @@ def userProfile(request, userKey):
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'member/profile.html'
     model = User
-
+    
     def get_object(self):
         user = User.objects.get(username=self.kwargs.get('userKey'))
+        # This is to check whether there is a valid profile for user
+        check = Profile.objects.filter(user=user)
+        if  len(check) == 0:
+            newProfile = Profile.objects.create(user=user)
+            newProfile.save()
+
         return user
 
     def get_context_data(self, **kwargs):
