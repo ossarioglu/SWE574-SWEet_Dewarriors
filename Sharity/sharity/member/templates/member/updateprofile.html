@@ -1,1 +1,181 @@
 <h1> Update Profile </h1>
+
+<div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
+    <div id="FormInputTextDefault" class="Form_Input_Text_Default">
+        <div id="InputBase" class="Input_Base">
+            <svg class="InputBase_bh">
+                <rect id="InputBase_bh" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                </rect>
+            </svg>
+        </div>
+        <div id="skillsdiv">
+            <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
+
+
+                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}">
+            <input type="hidden"
+                   value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
+                   name="skills-tags-json" id="skills-tags-json">
+            <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
+                    display: none;
+                    position: relative;
+                    background-color: rgb(255, 255, 255);
+                    margin-top: 0;
+                    padding-left: calc(var(--bs-gutter-x) / 2);
+                    margin-bottom: 1rem;
+                    width: 567px;
+                    z-index: 1;
+                    height: 180px;
+                    overflow: scroll;"></ol>
+        </div>
+    </div>
+    <div id="Group_Label">
+        <span>Skills</span>
+    </div>
+</div>
+<div id="Edit">
+    <span>Edit</span>
+</div>
+<div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
+    <div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
+        <div id="InputBase_bn" class="Input_Base">
+            <svg class="InputBase_bo">
+                <rect id="InputBase_bo" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                </rect>
+            </svg>
+        </div>
+        <div id="interestsdiv">
+            <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests"
+                   value="
+
+
+                           {% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
+            <input type="hidden"
+                   value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
+                   name="interests-tags-json" id="interests-tags-json">
+            <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
+                    display: none;
+                    position: relative;
+                    background-color: rgb(255, 255, 255);
+                    margin-top: 0;
+                    padding-left: calc(var(--bs-gutter-x) / 2);
+                    margin-bottom: 1rem;
+                    width: 567px;
+                    z-index: 1;
+                    height: 180px;
+                    overflow: scroll;"></ol>
+        </div>
+    </div>
+    <div id="Group_Label_bq">
+        <span>Interests</span>
+    </div>
+</div>
+<div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
+    <div id="Group_Label_bs">
+        <span>Badges</span>
+    </div>
+    <ul style="margin-top: 10px;margin-left: 78px;">
+        {% if user.Nbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
+         {% if user.CBbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
+        {% if user.GSPbadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
+        {% if user.MEObadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
+    </ul>
+</div>
+<div id="creditdiv">
+    <span>Credit: {{ user.profile.creditAmount }} hours</span>
+</div>
+<div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
+    <div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
+        <div id="InputBase_b" class="Input_Base">
+            <svg class="InputBase_ca">
+                <rect id="InputBase_ca" rx="5" ry="5" x="0" y="0" width="436" height="38">
+                </rect>
+            </svg>
+        </div>
+        <div id="locationdiv">
+            <input type="text" class="form-control" name="location" id="location" placeholder="Your Location"
+                   value="">
+            <div id="googleMap" style="width: 600px;height: 200px;margin-top: 20px;margin-left: -56px;"></div>
+            <input type="hidden" value="" name="location-json" id="location-json">
+            <ol class="list-group list-group-numbered" id="location-wrapper" style="
+                    display: none;
+                    position: relative;
+                    background-color: rgb(255, 255, 255);
+                    margin-top: 0;
+                    padding-left: calc(var(--bs-gutter-x) / 2);
+                    margin-bottom: 1rem;
+                    width: 567px;
+                    z-index: 1;
+                    height: 180px;
+                    overflow: scroll;
+                "></ol>
+        </div>
+    </div>
+    <div id="Group_Label_b">
+        <span>Location</span>
+    </div>
+</div>
+<div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
+    <div id="buttonSignup">
+        <button class="btn btn-primary" style="margin-top: 211px;" form="registerform" type="submit"
+                id="submit-button" value="Submit">Save
+        </button>
+    </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        var marker;
+        const geocoder = new google.maps.Geocoder();
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            loadMap(position)
+        }
+
+        function loadMap(position) {
+            var mapProp = {
+                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                zoom: 12,
+            };
+            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng, map);
+            });
+        }
+
+
+        function placeMarker(location, map) {
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+            marker.setPosition(location);
+            var latlng = new google.maps.LatLng(location.lat(), location.lng());
+            geocoder.geocode(
+                {'latLng': latlng},
+                function (results, status) {
+                    $('#location-json').val(JSON.stringify(results[0]));
+                    $('#location').val(results[0].formatted_address);
+                    console.log(results)
+                }
+            );
+        }
+
+        getLocation()
+    })
+</script>

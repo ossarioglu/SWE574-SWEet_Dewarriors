@@ -73,7 +73,7 @@
 
         <!-- If user is authenticated, then user profile picture is displayed with a badge on it showing number of unread notifications/-->
         <a class="btn btn-white btn-sm position-relative" href="{% url 'notifications' %}" role="button">
-            <img src="/static/images/Profiles/male.png" class="rounded-circle position-relative"
+            <img src="{{user.profile.userPicture.url}}" class="rounded-circle position-relative"
                  alt={{ request.user }} width="50" height="50">
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 <div id="notificationCount"></div>

@@ -3919,6 +3919,14 @@
             <rect id="Rectangle_63" rx="1" ry="1" x="0" y="0" width="8" height="119">
             </rect>
         </svg>
+        <div id="Edit">
+            <span>Edit</span>
+        </div> 
+
+        <div id="creditdiv">
+            <span>Credit: {{ user.profile.creditAmount }} hours</span>
+        </div>
+
         <div id="FormForm_GroupHelperDefault" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault" class="Form_Input_Text_Default">
                 <div id="InputBase" class="Input_Base">
@@ -3952,9 +3960,7 @@
                 <span>Skills</span>
             </div>
         </div>
-        <div id="Edit">
-            <span>Edit</span>
-        </div>
+
         <div id="FormForm_GroupHelperDefault_bl" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault_bm" class="Form_Input_Text_Default">
                 <div id="InputBase_bn" class="Input_Base">
@@ -3989,6 +3995,7 @@
                 <span>Interests</span>
             </div>
         </div>
+
         <div id="FormForm_GroupHelperDefault_br" class="Form_Form_Group_Helper_Default">
             <div id="Group_Label_bs">
                 <span>Badges</span>
@@ -4000,9 +4007,7 @@
                 {% if user.MEObadge.is_active %} <li> <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
             </ul>
         </div>
-        <div id="creditdiv">
-            <span>Credit: {{ user.profile.creditAmount }} hours</span>
-        </div>
+
         <div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
             <div id="FormInputTextDefault_bz" class="Form_Input_Text_Default">
                 <div id="InputBase_b" class="Input_Base">
@@ -4034,6 +4039,7 @@
                 <span>Location</span>
             </div>
         </div>
+
         <div id="FormForm_GroupHelperDefault_bz" class="Form_Form_Group_Helper_Default">
             <div id="buttonSignup">
                 <button class="btn btn-primary" style="margin-top: 211px;" form="registerform" type="submit"
@@ -4043,6 +4049,7 @@
         </div>
     </form>
 </div>
+
 <script>
     $("#id-badge").hover(function () {
         $(this).popover({
