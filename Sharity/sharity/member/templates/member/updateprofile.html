@@ -205,7 +205,7 @@
     <style>
         .profile-container{
             display: grid;
-            grid-template-columns: 1fr 3fr 1fr; 
+            grid-template-columns: 1fr 3fr 1fr;
         }
     </style>
 
@@ -213,7 +213,7 @@
 
         <div></div>
 
-        <div> 
+        <div>
 
             <form class="row g-3 needs-validation" method="post" action="{% url 'updateProfile' userKey=user.username %}" enctype="multipart/form-data" novalidate id="registerform">
                 {% csrf_token %}
@@ -228,7 +228,7 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Text Field for user's last name /-->
                     <div class="col-md-6">
                         <div class="input-group has-validation">
@@ -239,7 +239,7 @@
                             </div>
                         </div>
                     </div>
-        
+
                     <!-- Text Field for user's email /-->
                     <div class="col-md-6">
                         <div class="input-group has-validation">
@@ -256,12 +256,12 @@
                         <div class="input-group has-validation" id="skillsdiv">
                             <span class="input-group-text" id="inputGroupPrepend">Skills</span>
                             <input type="text" class="form-control" name="skills" id="skills" placeholder="Your Skills" value="
-                                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}" 
+                                    {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}"
                                     aria-describedby="inputGroupPrepend" required>
                             <input type="hidden"
                                 value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
                                 name="skills-tags-json" id="skills-tags-json">
-                            
+
                             <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
                                 display: none;
                                 position: relative;
@@ -284,11 +284,11 @@
                     <div class="col-md-12">
                         <div class="input-group has-validation" id="interestsdiv">
                             <span class="input-group-text" id="inputGroupPrepend">Interests</span>
-                            <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests" 
+                            <input type="text" class="form-control" name="interests" id="interests" placeholder="Your Interests"
                                 value="{% if user.profile.get_interests_labels|length > 0 %}{{ user.profile.get_interests_labels|join:', '}}{% endif %}">
-                            <input type="hidden" 
+                            <input type="hidden"
                                 value="{% if not user.profile.userInterests %}[]{% else %}{{ user.profile.userInterests }}{% endif %}"
-                                name="interests-tags-json" id="interests-tags-json">    
+                                name="interests-tags-json" id="interests-tags-json">
                             <ol class="list-group list-group-numbered" id="tags-wrapper-interests" style="
                                 display: none;
                                 position: relative;
@@ -322,14 +322,14 @@
                     <div class="col-md-12">
                         <div class="input-group has-validation" id="locationdiv">
                             <span class="input-group-text" id="inputGroupPrepend">Location</span>
-                            <input type="text" class="form-control" id="location" name="location" placeholder="Your Location" 
+                            <input type="text" class="form-control" id="location" name="location" placeholder="Your Location"
                                 value="{{ user.profile.get_formatted_address}}" aria-describedby="inputGroupPrepend" required>
                             <div class="invalid-feedback">
                                 Please choose a keyword.
                             </div>
                         </div>
                     </div>
-        
+
                     <div class="col-md-12">
                         <div class="input-group has-validation">
                             <div id="googleMap" style="width: 100%;height: 200px;margin-top: 0px;margin-left: 0px;"></div>
@@ -346,7 +346,7 @@
                                 z-index: 1;
                                 height: 180px;
                                 overflow: scroll;">
-                            </ol>                            
+                            </ol>
                             <div class="invalid-feedback">
                                 Please choose a keyword.
                             </div>
@@ -362,10 +362,10 @@
                                 Looks good!
                             </div>
                         </div>
-        
+
                     </div>
 
-                            
+
                     <div class="col-3" id="buttonSignup">
                         <button class="btn btn-outline-success"  form="registerform" type="submit" id="submit-button" value="Submit">Update Profile Information</button>
                     </div>
@@ -375,40 +375,32 @@
         </div>
 
         <div></div>
-                
+
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
 
-    <script>
+<script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            var marker;
-            const geocoder = new google.maps.Geocoder();
+        var marker;
+        const geocoder = new google.maps.Geocoder();
 
-            function getLocation() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
-            }
+        function getLocation() {
+           loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
+        }
 
-            function showPosition(position) {
-                loadMap(position)
-            }
-
-            function loadMap(position) {
-                var mapProp = {
-                    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                    zoom: 12,
-                };
-                var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-                google.maps.event.addListener(map, 'click', function (event) {
-                    placeMarker(event.latLng, map);
-                });
-            }
+        function loadMap(position) {
+            var mapProp = {
+                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                zoom: 12,
+            };
+            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng, map);
+            });
+        }
 
 
             function placeMarker(location, map) {

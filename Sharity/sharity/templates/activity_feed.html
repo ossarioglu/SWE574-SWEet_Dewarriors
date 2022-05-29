@@ -5048,7 +5048,10 @@
                         success: function (response) {
                             $("#loading").hide()
                             console.log(response)
+
                             var cardList = "";
+
+                            if(response.items.length === 0){cardList = `<h5>Your feed is empty</h5>` }
                             for (let i = 0; i < response.items.length; i++) {
                                 var currentItem = response.items[i]
                                 console.log(currentItem)
@@ -5065,7 +5068,7 @@
                                 }
                                 cardList += `<p class="card-text" style="float: right;">Created at : ${new Date(currentItem.published).toLocaleString()}</p>`
                                 if (currentItem.hasOwnProperty("object")) {
-                                    url = currentItem.object.url.replace('http://example.com',window.location.hostname)
+                                    url = currentItem.object.url.replace('example.com',window.location.hostname)
                                     cardList += ` <a  href="${url}" class="btn btn-primary">Go to offer </a>`
                                 }
                                 cardList += `</div>`

@@ -5034,7 +5034,7 @@
 <div id="WelcomingLanding_Page">
     <div id="feed" style="width: 40%;margin: 0 auto;height: 750px;overflow:overlay">
         <h2><i>What is happening? </i></h2>
-
+        {% if(len(stream)==0 %}<h5>Your feed is empty</h5>{% endif %}
         {% for s in stream %}
         <div class="card" style="margin-bottom: 10px">
             <h5 class="card-header">{{s  }}</h5>

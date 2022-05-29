@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from decouple import config
+
 from django.http import JsonResponse
 from offers.models import Offer
 from assign.models import Assignment
@@ -16,7 +16,7 @@ from .models import Profile
 from actstream.models import following, followers
 
 from usermessages.models import UserInbox
-
+from decouple import config
 from badges.signals import profile_detail
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -121,7 +121,8 @@ def signUp(request):
         else:
             messages.error(request, 'An error occurred during registration')
 
-    return render(request, 'member/signup.html', {'form': form})
+
+    return render(request, 'member/signup.html', {'form': form,"googleapis":config('GOOGLE_API_KEY')})
 
     # This is getting user information
 def userProfile(request, userKey):

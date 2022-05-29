@@ -7248,7 +7248,7 @@
                         {% endif %}
                         <input type="hidden" value="[]" name="tags-json" id="tags-json">
                         {{ form.claims }}
-                    <ol class="list-group list-group-numbered" id="tags-wrapper" style="
+                        <ol class="list-group list-group-numbered" id="tags-wrapper" style="
 						display: none;
 						position: relative;
 						background-color: rgb(255, 255, 255);
@@ -7303,11 +7303,7 @@
                         const geocoder = new google.maps.Geocoder();
 
                         function getLocation() {
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(showPosition);
-                            } else {
-                                x.innerHTML = "Geolocation is not supported by this browser.";
-                            }
+                         loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
                         }
 
                         function showPosition(position) {
