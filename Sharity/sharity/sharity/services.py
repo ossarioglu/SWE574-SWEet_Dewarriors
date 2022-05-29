@@ -70,5 +70,5 @@ class SharityOfferRecommender:
             offers_ordered_by_relevance_scores_dataset.append(
                 next(filter(lambda offer: str(offer.uuid) == relevance_score_key, offers), None)
             )
-        print(offers_ordered_by_relevance_scores_dataset[0:limit])
+
         return offers_ordered_by_relevance_scores_dataset[0:limit]
