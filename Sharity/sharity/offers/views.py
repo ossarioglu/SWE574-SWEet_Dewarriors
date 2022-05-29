@@ -1,6 +1,6 @@
 import json
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View, FormView
 from django.views.generic.edit import FormMixin
 from .models import Offer
@@ -10,7 +10,7 @@ from .forms import OfferCreateForm, OfferSearchForm
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from decouple import config
 from django.shortcuts import render
@@ -215,6 +215,19 @@ class OfferListView(LoginRequiredMixin, ListView):
             context['title_query'] = self.request.GET.get('title')
         return context
 
+
+def deleteOffer(request, sID):
+    
+    offer = Offer.objects.get(uuid=sID)
+    
+    if request.user != offer.owner:
+        return HttpResponse('You are not allowed to delete this offer')
+    
+    #If confirmation from user is posted, record for service is deleted.
+    if request.method == 'POST':
+        offer.delete()
+        return redirect('home')
+    return render(request, 'offers/delete.html', {'obj':offer})
 
 
 

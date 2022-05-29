@@ -26,7 +26,7 @@ urlpatterns = [
     path('assign/<uuid:rID>/', assignview.assignService, name="offers.assign"),
     path('assignoffer/<uuid:ofnum>/', assignview.assigning, name="offers.listassign"),
     path('offers/update/<uuid:sID>/', offerview.OfferUpdateView.as_view(), name='offers.update'),
-    path('offers/delete/<uuid:sID>/', offerview.OfferUpdateView.as_view(), name='offers.delete'),
+    path('offers/delete/<uuid:sID>/', offerview.deleteOffer, name='offers.delete'),
     path('notification/getall/', views.notificationcount, name='ajax_load_results'),
     path('activity/feed/', views.activity_feed, name='activity.feed'),
     # URLs for notification process: listing and updating
