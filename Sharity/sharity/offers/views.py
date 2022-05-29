@@ -41,11 +41,12 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         claims = []
 
         if 'entities' in wb_get_entities_response:
-            for entity in wb_get_entities_response['entities'].values():
-                for claim_id in entity['claims']:
+            for entity_id in wb_get_entities_response['entities']:
+                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
                     if claim_id in ['P31', 'P279']:
-                        for claim in entity['claims'][claim_id]:
+                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
                             claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                claims.append(entity_id)
 
         form.instance.claims = json.dumps(claims, separators=(',', ':'))
 
