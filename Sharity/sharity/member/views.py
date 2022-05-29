@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from decouple import config
 from django.http import JsonResponse
 from offers.models import Offer
+from assign.models import Assignment
 from .forms import MyRegisterForm
 from actstream.actions import follow, unfollow
 # Models and Formed used in this app
@@ -165,10 +166,15 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         followers_count = len(followers_list) if len(followers_list) > 0 else 0
         following_count = len(following_list) if len(following_list) > 0 else 0
 
+        providedAssignment = Assignment.objects.filter(approverID=user).filter(status='Closed')
+        receivedAssignment = Assignment.objects.filter(requesterID=user).filter(status='Closed')
+
         context['followersCount'] = followers_count
         context['followingCount'] = following_count
         context['isAlreadyFollowed'] = is_already_followed
         context['googleapis'] = config('GOOGLE_API_KEY')
+        context['handshakes'] = len(providedAssignment) + len(receivedAssignment)
+        
         return context
 
     def dispatch(self, request, *args, **kwargs):
