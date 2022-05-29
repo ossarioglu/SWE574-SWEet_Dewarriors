@@ -82,7 +82,7 @@ def assignService(request, rID):
 
                         # Credits given back
                         creditNeeded = 0
-                        if openRqst.serviceID.serviceType == "Offering":
+                        if openRqst.serviceID.get_type() == "Service":
                             creditNeeded = openRqst.serviceID.duration
                         blkQnt= creditNeeded
                         openRqst.requesterID.profile.blockCredit(+blkQnt)
