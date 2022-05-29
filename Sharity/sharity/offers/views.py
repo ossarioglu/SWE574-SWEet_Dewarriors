@@ -31,8 +31,6 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         print(form.errors)
 
-
-
     def form_valid(self, form):
         form.instance.owner = self.request.user
 
@@ -52,6 +50,21 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         form.instance.claims = json.dumps(claims, separators=(',', ':'))
 
         return super().form_valid(form)
+
+    @method_decorator(csrf_protect)
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+class OfferUpdateView(LoginRequiredMixin, UpdateView):
+    model = Offer
+    form_class = OfferCreateForm
+    template_name = 'offers/update_offer.html'
+    def form_invalid(self, form):
+        print(form.errors)
+
+    def get_object(self, *args, **kwargs):
+        offer = Offer.objects.get(uuid=self.kwargs['sID'])
+        return offer
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):

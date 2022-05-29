@@ -5,6 +5,7 @@ from apply import views as applyview
 from assign import views as assignview
 from notification import views as notificationview
 from feedback import views as feedbackview
+from offers import views as offerview
 
 
 urlpatterns = [
@@ -24,6 +25,8 @@ urlpatterns = [
     path('cancelapply/<uuid:rID>/', applyview.deleteRequest, name="offers.apply.cancel"),
     path('assign/<uuid:rID>/', assignview.assignService, name="offers.assign"),
     path('assignoffer/<uuid:ofnum>/', assignview.assigning, name="offers.listassign"),
+    path('offers/update/<uuid:sID>/', offerview.OfferUpdateView.as_view(), name='offers.update'),
+    path('offers/delete/<uuid:sID>/', offerview.OfferUpdateView.as_view(), name='offers.delete'),
     path('notification/getall/', views.notificationcount, name='ajax_load_results'),
     path('activity/feed/', views.activity_feed, name='activity.feed'),
     # URLs for notification process: listing and updating
