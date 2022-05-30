@@ -4,10 +4,10 @@ from django.db import models
 class UserMessage(models.Model):
     message_to = models.ManyToManyField('member.Profile', related_name='recipients')
     message_from = models.ForeignKey('member.Profile', related_name='sender', on_delete=models.CASCADE)
-    child = models.ForeignKey('self', null=True, related_name='parent', on_delete=models.SET_NULL)
+    child = models.ForeignKey('self', null=True, related_name='parent', on_delete=models.SET_NULL, blank=True)
     subject = models.CharField(max_length=100, null=True, blank=True)
     body = models.TextField()
-    is_read_by = models.ManyToManyField('member.Profile', related_name='seen')
+    is_read_by = models.ManyToManyField('member.Profile', related_name='seen', blank=True)
     sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class UserMessage(models.Model):
 
 class UserInbox(models.Model):
     owner = models.ForeignKey('member.Profile', related_name='inbox', on_delete=models.CASCADE)
-    content = models.ManyToManyField(UserMessage, related_name='inbox_content')
+    content = models.ManyToManyField(UserMessage, related_name='inbox_content', blank=True)
 
     def __str__(self):
         return self.owner.user.username
