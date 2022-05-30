@@ -20,6 +20,8 @@ from decouple import config
 from badges.signals import profile_detail
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from tags.services import TagService
+import json
 
 
 # Sign-in Functionality
@@ -213,6 +215,24 @@ def updateProfile(request, userKey):
 
         if request.FILES.get('picture') is not None:
             myProfile.userPicture = request.FILES.get('picture')
+
+        skills_json = json.loads(myProfile.userSkills.replace("\\'", '"'))
+        interests_json = json.loads(myProfile.userInterests.replace("\\'", '"'))
+
+        tag_ids = tuple([interest['id'] for interest in interests_json]) + tuple([skill['id'] for skill in skills_json])
+        wb_get_entities_response = TagService.find_by_ids(tag_ids)
+        claims = []
+
+        if 'entities' in wb_get_entities_response:
+            for entity_id in wb_get_entities_response['entities']:
+                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                    if claim_id in ['P31', 'P279']:
+                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                claims.append(entity_id)
+
+        myProfile.claims = json.dumps(claims, separators=(',', ':'))
+
         myProfile.save()
 
         return redirect('home')

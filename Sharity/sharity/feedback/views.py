@@ -93,9 +93,11 @@ def confirmation(request, asNum):
                     # Credits are now deducted given to providers
                     # Provider gets credits only for one service, not from all participants
                     creditNeeded = 0
-                    if myAssignment.requestID.serviceID.get_type == "Service":
+                    if myAssignment.requestID.serviceID.get_type() == "Service":
                         creditNeeded = myAssignment.requestID.serviceID.duration
                     blkQnt= creditNeeded
+    
+
                     myAssignment.requestID.serviceID.owner.profile.updateCredit(+blkQnt)
                     myAssignment.requestID.serviceID.owner.profile.userReputation = myRating
 
@@ -111,7 +113,6 @@ def confirmation(request, asNum):
                                 sumRating += feeds.rating
                                 countRating += 1
                             myRating = sumRating / countRating
-
                             myRequest.requesterID.profile.updateCredit(-blkQnt)
                             myRequest.requesterID.profile.blockCredit(+blkQnt)
                             myRequest.requesterID.profile.userReputation = myRating

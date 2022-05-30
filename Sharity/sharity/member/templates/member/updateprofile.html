@@ -233,7 +233,7 @@
 
             <form class="row g-3 needs-validation" method="post" action="{% url 'updateProfile' userKey=user.username %}" enctype="multipart/form-data" novalidate id="registerform">
                 {% csrf_token %}
-
+                <input type="hidden" name="claims" value="[]" id="id_claims">
                     <!-- Text Field for user's firstname /-->
                     <div class="col-md-6">
                         <div class="input-group has-validation">
@@ -277,7 +277,6 @@
                             <input type="hidden"
                                 value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
                                 name="skills-tags-json" id="skills-tags-json">
-
                             <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
                                 display: none;
                                 position: relative;

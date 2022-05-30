@@ -49,7 +49,7 @@
                             <div>
                                 <h3> {{ myAssignment.requestID.serviceID.title }}</h3>
                                 <h7>by</h7>
-                                <h5> <a class="text-decoration-none" href="{% url 'profile' myAssign.requestID.serviceID.owner %}">@{{ myAssign.requestID.serviceID.owner }}</a></h5>
+                                <h5> <a class="text-decoration-none" href="{% url 'profile' myAssignment.requestID.serviceID.owner %}">@{{ myAssignment.requestID.serviceID.owner }}</a></h5>
                                 <h7>to</h7>
                                 {% if myAssignment.requestID.serviceID.providerID == request.user %}
                                     <h5> @{{ myAssignment.requestID.requesterID }}</h5>
