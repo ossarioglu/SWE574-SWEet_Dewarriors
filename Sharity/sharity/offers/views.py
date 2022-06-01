@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView, View, FormView
 from django.views.generic.edit import FormMixin
 from .models import Offer
+from apply.models import Application
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
 from .forms import OfferCreateForm, OfferForm, OfferSearchForm
@@ -67,6 +68,21 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         offer = self.get_object()
         offer_detail.send(sender=self.__class__, owner_pk=[offer.owner.pk])
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_object(self):
+        offer = Offer.objects.get(uuid=self.kwargs.get('pk'))
+        return offer
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        offer = self.get_object()
+        application = Application.objects.filter(serviceID=offer).filter(requesterID=self.request.user)
+
+        context['applications'] = application
+
+        
+        return context
+
 
 class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
     form_class = OfferSearchForm
