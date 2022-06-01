@@ -125,6 +125,9 @@
                 <p class="dropdown-item text-primary"> Credits:
                     {{ user.profile.creditAmount|add:user.profile.creditInprocess }} Ch </p>
                 <hr>
+                {% if request.user.username == 'admin' %}
+                    <a class="dropdown-item" href="admin/">Admin Page</a>
+                {% endif %}
                 <a class="dropdown-item" href="{% url 'profile' request.user %}">Profile</a>
                 <a class="dropdown-item" href="{% url 'listmyofferings' %}">My Offers</a>
                 <a class="dropdown-item" href="{% url 'handshake' %}">Handshaking</a>

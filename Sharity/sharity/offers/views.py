@@ -6,7 +6,7 @@ from django.views.generic.edit import FormMixin
 from .models import Offer
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
-from .forms import OfferCreateForm, OfferSearchForm
+from .forms import OfferCreateForm, OfferForm, OfferSearchForm
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from tags.services import TagService
@@ -20,6 +20,8 @@ import operator
 from badges.signals import offer_detail, timeline
 from badges.models import *
 from django.utils import timezone
+from datetime import datetime
+
 
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
@@ -55,22 +57,6 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-
-class OfferUpdateView(LoginRequiredMixin, UpdateView):
-    model = Offer
-    form_class = OfferCreateForm
-    template_name = 'offers/update_offer.html'
-    def form_invalid(self, form):
-        print(form.errors)
-
-    def get_object(self, *args, **kwargs):
-        offer = Offer.objects.get(uuid=self.kwargs['sID'])
-        return offer
-
-    @method_decorator(csrf_protect)
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
-        
 
 # @method_decorator(never_cache, name='dispatch')
 # @method_decorator(csrf_exempt, name='dispatch')
@@ -231,4 +217,32 @@ def deleteOffer(request, sID):
     return render(request, 'offers/delete.html', {'obj':offer})
 
 
+def updateOffer(request, sID):
+
+    # Information for requested service is retreived from database, and added to Form
+    offer = Offer.objects.get(uuid=sID)
+    form = OfferForm(instance=offer)    
+
+    if request.user != offer.owner:
+        return HttpResponse('You are not allowed to update this offer')
+
+    # When user posts information from Form, relevant fields are matched with object, and service is saved.
+    if request.method == 'POST':
+
+        offer.title = request.POST.get('title')
+        offer.location = request.POST.get('location-json')
+        offer.tags = request.POST.get('tags-json')
+        offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d %H:%M')
+        offer.duration = int(request.POST.get('duration'))
+        offer.end_date = request.POST.get('end_date')
+        offer.participant_limit = request.POST.get('participant_limit')
+        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M') 
+        offer.type = request.POST.get('type')
+        if request.FILES.get('photo') is not None:
+            offer.picture = request.FILES.get('photo')
+        offer.save()
+        return redirect('home')
+        
+    context = {'form':form, 'offer':offer}
+    return render(request, 'offers/update_offer.html', context)
 
