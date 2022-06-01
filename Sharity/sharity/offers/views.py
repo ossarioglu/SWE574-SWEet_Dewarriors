@@ -183,7 +183,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 if 'location_query' not in context.keys():
                     context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
 
-            context['result_list'] = order_offers(qs)
+            context['result_list'] = order_offers(qs, self.request.user)
             context['filter_flag'] = filter_flag
 
             owners = [offer.owner.pk for offer in qs]
@@ -208,7 +208,7 @@ class OfferListView(LoginRequiredMixin, ListView):
             result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
         else:
             result = Offer.objects.all().exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
-        return order_offers(result)
+        return order_offers(result, self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
