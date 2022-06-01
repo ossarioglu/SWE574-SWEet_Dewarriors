@@ -7203,7 +7203,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Location</label>
-                        {{ form.location }}
+                        <input type="text" class="form-control" id="location" name="location" value="{{ object.get_formatted_address }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.location.errors.0|escape }}
@@ -7213,7 +7213,8 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Start Date</label>
-                        {{ form.start_date }}
+                        <input type="text" class="form-control" id="start_date" name="start_date" value="{{ form.start_date.value }}">
+
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.start_date.errors.0|escape }}
@@ -7231,7 +7232,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Amendment Deadline</label>
-                        {{ form.amendment_deadline }}
+                        <input type="text" class="form-control" id="amendment_deadline" name="amendment_deadline" value="{{ form.amendment_deadline.value }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.amendment_deadline.errors.0|escape }}
@@ -7240,7 +7241,8 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Tags</label>
-                        {{ form.tags }}
+                        <input type="text" class="form-control" id="tags" name="tags" value="{{ object.get_tag_labels }}">
+
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.tags.errors.0|escape }}

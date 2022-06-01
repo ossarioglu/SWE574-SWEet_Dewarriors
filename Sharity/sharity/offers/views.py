@@ -70,7 +70,7 @@ class OfferUpdateView(LoginRequiredMixin, UpdateView):
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
-
+        
 
 # @method_decorator(never_cache, name='dispatch')
 # @method_decorator(csrf_exempt, name='dispatch')
