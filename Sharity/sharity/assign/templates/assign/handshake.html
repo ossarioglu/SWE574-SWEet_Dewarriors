@@ -62,7 +62,7 @@
                                     <h7>at</h7>
                                     <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
                                     <h7>to</h7>
-                                    <h5> @{{ myAssign.requestID.requesterID }} </h5>
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' myAssign.requestID.requesterID %}">@{{ myAssign.requestID.requesterID }}</a></h5>
                                 </div>
                                 <div>
                                     <h5> {{ myAssign.requestID.serviceID.duration }} hour(s) {{ myAssign.requestID.serviceID.get_type }} </h5>
@@ -123,7 +123,7 @@
                                     <h7>at</h7>
                                     <h5> {{ myAssign.requestID.serviceID.get_formatted_address }} </h5>
                                     <h7>to</h7>
-                                    <h5> @{{ myAssign.requestID.requesterID }} </h5>
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' myAssign.requestID.requesterID %}">@{{ myAssign.requestID.requesterID }}</a></h5>
                                 </div>
                                 <div>
                                     <h5> {{ myAssign.requestID.serviceID.duration }} hour(s) {{ myAssign.requestID.serviceID.get_type }}</h5>
