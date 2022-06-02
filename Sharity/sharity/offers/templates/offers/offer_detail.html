@@ -50,6 +50,8 @@
                             </h5>
                             <h7>at</h7>
                             <h5> {{ object.get_formatted_address }} </h5>
+                            <h7>labels</h7>
+                            <h5> {{ object.get_tag_labels|join:', ' }} </h5>
                             <h7>created on</h7>
                             <h5> {{ object.created_at|date:"F d, Y" }} </h5>
                         </div>
