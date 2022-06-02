@@ -43,7 +43,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
         if 'entities' in wb_get_entities_response:
             for entity_id in wb_get_entities_response['entities']:
                 for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                    if claim_id in ['P31', 'P279']:
+                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495', 'P1424', 'P1441']:
                         for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
                             claims.append(claim['mainsnak']['datavalue']['value']['id'])
                 claims.append(entity_id)
