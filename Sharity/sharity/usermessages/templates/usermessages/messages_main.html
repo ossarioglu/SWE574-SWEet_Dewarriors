@@ -1,0 +1,282 @@
+{% extends 'offers/base.html' %}
+
+{% block js %}
+    <script>
+        function update_num_of_unread_mails() {
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'usermessages.unread' %}",
+                success: function(response) {
+                    if (response.num_of_unread === 1) {
+                        $("#id-unread-mails").html(response.num_of_unread + " Unread Message");
+                    } else {
+                        $("#id-unread-mails").html(response.num_of_unread + " Unread Messages");
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("id-message-modal");
+
+        // Get the buttons that open the modal
+        var send_btn = document.getElementById("id-send");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        send_btn.onclick = function() {
+            modal.style.display = "block";
+            $.ajax({
+                type: 'GET',
+                url: $(this).attr("send-message-url"),
+                success: function(data) {
+                    $("#id-send-message-form").html(data);
+                }
+            });
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                $("#id-send-message-form").html("");
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(".nav-link").click(function(e) {
+                $("#id-spinner").show();
+                e.preventDefault();
+                $(".nav-link").removeClass("active");
+                $(this).addClass("active");
+                $("#id-messages-detail").html("");
+                $.ajax({
+                    type: 'GET',
+                    url: $(this).attr("href"),
+                    data: {
+                        'page': 1
+                    },
+                    success: function(response) {
+                        $("#id-spinner").hide();
+                        $(".content").html(response);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(window).on("load", function() {
+            update_num_of_unread_mails();
+            $.ajax({
+                type: 'GET',
+                url: $("#id-inbox").attr("href"),
+                data: {
+                    'page': 1
+                },
+                success: function(response) {
+                    $("#id-spinner").hide();
+                    $(".content").html(response);
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', '#id-delete', function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+            $.ajax({
+                type: 'GET',
+                url: $(this).attr("href"),
+                data: {
+                    'id': $(".card").attr("data-id")
+                },
+                success: function(data) {
+                    $("#id-send-message-form").html(data);
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', "#id-reply", function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+            var sender = $("#id-message-from").text().trim();
+            var subject = $("#id-message-subject").text().trim();
+            $.ajax({
+                type: 'GET',
+                url: $("#id-send").attr("send-message-url"),
+                data: {
+                    'child_id': $("#id-main-card").attr("data-id")
+                },
+                success: function(data) {
+                    $("#id-send-message-form").html(data);
+                    $("#id-form-to").val(sender + '; ');
+                    if (subject.substring(0, 2) === "RE") {
+                        $("#id-form-subject").val(subject);
+                    } else {
+                        $("#id-form-subject").val("RE: " + subject);
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', "#id-reply-all", function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+            var receivers = $('*[id*=id-message-to]:visible').text().trim();
+            receivers = receivers.replace(/\s{2,}/g, ' ');
+            var receivers_trimmed = $.map(receivers.split(' '), $.trim);
+            var current_profile = $("#id-send").attr("session-id");
+            var filtered_receivers = receivers_trimmed.filter(function(e) { return e !== current_profile })
+            var sender = $("#id-message-from").text().trim();
+            if (sender != current_profile) {
+                filtered_receivers.push(sender);
+            }
+            var subject = $("#id-message-subject").text().trim();
+            $.ajax({
+                type: 'GET',
+                url: $("#id-send").attr("send-message-url"),
+                data: {
+                    'child_id': $("#id-main-card").attr("data-id")
+                },
+                success: function(data) {
+                    $("#id-send-message-form").html(data);
+                    var to = '';
+                    for (i = 0; i < filtered_receivers.length; i++) {
+                        to += filtered_receivers[i] + '; '
+                    }
+                    $("#id-form-to").val(to);
+                    if (subject.substring(0, 2) === "RE") {
+                        $("#id-form-subject").val(subject);
+                    } else {
+                        $("#id-form-subject").val("RE: " + subject);
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).on('click', "#id-restore", function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr("href"),
+                data: {
+                    'id': $("#id-main-card").attr("data-id")
+                },
+                success: function(response) {
+                    window.location.reload();
+                }
+            });
+        });
+    </script>
+    <script>
+        $(window).on("load", function() {
+            $('#id-unread-mails').click(function() {return false;});
+        });
+    </script>
+{% endblock js %}
+
+{% block content %}
+
+<button class="btn btn-primary" session-id="{{request.user.username}}" style="margin: 10px;" id="id-send" send-message-url="{% url 'usermessages.create' %}">Compose Message</button>
+
+<div class="main" style="display: flex; margin-left: 10px;">
+
+    <!-- The Modal -->
+    <div id="id-message-modal" class="send-message-modal">
+        <!-- Modal content -->
+        <div class="send-message-modal-content">
+            <span class="close">&times;</span>
+            <p id="id-send-message-form"> </p>
+        </div>
+    </div>
+
+    <div class="list-group" id="id-messages" style="width: 40%;">
+        <div class="tabs">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" id="id-inbox" href="{% url 'usermessages.inbox' %}">Inbox</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="id-sent" href="{% url 'usermessages.sent' %}">Sent</a>
+                </li>
+                <li class"nav-item">
+                    <a class="nav-link" id="id-deleted" href="{% url 'usermessages.deleted' %}">Deleted</a>
+                </li>
+                <li class"nav-item">
+                    <a class="nav-link" style="pointer-events: none;" id="id-unread-mails"> </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+
+            <div id="id-spinner" class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="detail" id="id-messages-detail" style="margin-left: 10px;">
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block styles %}
+    <style>
+        .detail {
+            margin-top: 42px;
+            margin-right: 10px;
+            width: 100%;
+        }
+
+        .send-message-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .send-message-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            margin-top: 3%;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+{% endblock styles %}

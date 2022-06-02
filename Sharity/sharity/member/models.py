@@ -47,7 +47,7 @@ class Profile(models.Model):
         ("mentor", "mentor"),
     ]
 
-    # user has one-to-one relatiınship with User object
+    # user has one-to-one relationship with User object
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     userType = models.CharField(max_length=10, choices=USER_TYPES, default='user')
     # user rating is kept at this field
@@ -63,6 +63,7 @@ class Profile(models.Model):
     userPicture = models.ImageField(upload_to='static/images/Profiles', null=True, default="male.png")
     # credits are blocked at this field for applied services that are not concluded
     creditInprocess = models.IntegerField(default=0)
+    claims = models.TextField(null=True, default='[]')
 
     def __str__(self):
         return f'{self.user.username}'
@@ -85,10 +86,17 @@ class Profile(models.Model):
         payload = json.loads(str(self.userLocation).replace("\\'", '"'))
         return payload['formatted_address']
 
+    def get_latitude(self):
+        payload = json.loads(str(self.userLocation).replace("\\'", '"'))
+        return payload['geometry']['location']['lat']
+
+    def get_longitude(self):
+        payload = json.loads(str(self.userLocation).replace("\\'", '"'))
+        return payload['geometry']['location']['lng']
+
     def get_skills_labels(self):
         if len(str(self.userSkills).strip()) > 0:
             payload = json.loads(str(self.userSkills).replace("\\'", '"'))
-            print("Payload is", payload)
             return [tag['label'] for tag in payload]
 
         return '[]'

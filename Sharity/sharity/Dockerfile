@@ -2,6 +2,7 @@ FROM python:3.8.0-alpine
 ENV PYTHONUNBUFFERED = 1
 WORKDIR /usr/src/app
 COPY requirements.txt requirements.txt
+COPY .env /.env
 RUN python3 -m pip install --upgrade pip
 
 RUN apk update

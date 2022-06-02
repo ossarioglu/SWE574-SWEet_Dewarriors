@@ -10,44 +10,98 @@
 
         <div class="search-sidebar">
             <h2>Filter</h2>
-            <form action='.' id='search-form' autocomplete="off" method='GET'>
-                {{form.as_p}}
-                <input type='button' id="id_filter_button" class='btn btn-success' method="GET" value='Filter'/>
-                <button class='btn btn-success'> <a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a> </button>
+            <form id='search-form' get-offers-url="{% url 'ajax_load_results' %}" autocomplete="off"> {% csrf_token %}
+                {{ form.as_p }}
+                <div id="locationdiv">
+                    <div id="googleMap"
+                         style="width: 370px; height: 250px; margin-top: 20px; margin-bottom: 10px;"></div>
+                </div>
+                <input type='submit' id="id_filter_button" class='btn btn-success' value='Filter'/>
+                <input type="hidden" value="" name="location-json" id="location-json">
+                <input type="hidden" value="" name="map-json" id="map-json">
+                <input type="hidden" value="[]" name="tags-json" id="tags-json">
+                <button class='btn btn-success'><a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a>
+                </button>
             </form>
+
+            <ol class="list-group list-group-numbered" id="location-wrapper" style="
+            display: none;
+            width: 270px;
+            position: relative;
+            background-color: rgb(255, 255, 255);
+            margin-top: -1rem;
+            padding-left: calc(var(--bs-gutter-x) / 2);
+            margin-bottom: 1rem;">
+            </ol>
+            <ol class="list-group list-group-numbered" id="tags-wrapper" style="
+            display: none;
+            width: 270px;
+            position: relative;
+            background-color: rgb(255, 255, 255);
+            margin-top: -1rem;
+            padding-left: calc(var(--bs-gutter-x) / 2);
+            margin-bottom: 1rem;"></ol>
 
         </div>
 
         <div id="id_results" class="results">
-            <h2>All Offers</h2>
-            <p> {{object_list|length}} result(s) found </p>
+
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style="display: none;">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <div>
+                {% if title_query %}
+                    <div class="applied-filters">
+                        <h5 class="applied-filters-header"><u> Applied filters </u></h5>
+                        <b> Title: </b> {{ title_query }} <span> <svg id="id-remove-filter-title" class="remove-filter"
+                                                                      xmlns="http://www.w3.org/2000/svg"
+                                                                      viewBox="0 0 512 512">
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/></svg><br></span>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if title_query %}
+                <h2>Found Offers</h2>
+            {% else %}
+                <h2>All Offers</h2>
+            {% endif %}
+            <p> {{ object_list|length }} result(s) found </p>
             <div class="row">
                 {% for result in object_list %}
 
                     <div class="col-sm-6">
                         <div class="card">
+                            {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                             <div class="card-body">
-                                <h5 class="card-title"> {{result.title}} </h5>
-                                <p class="card-text"> Starts at {{result.start_date}} </p>
-                                <p class="card-text"> Duration: {{result.duration}} </p>
-                                <p class="card-text"> Type: {{result.get_type}} </p>
-                                <p class="card-text"> Tags: {{result.get_tag_labels|join:", "}} </p>
-                                <p class="card-text"> Location: {{result.get_formatted_address}} </p>
-                                <p class="card-text"> Owner: {{result.owner}} </p>
+                                <h5 class="card-title"> {{ result.title }} </h5>
+                                <p class="card-text"><b> Start date: </b> {{ result.start_date }} </p>
+                                <p class="card-text"><b> Duration: </b> {{ result.duration }} </p>
+                                <p class="card-text"><b> Type: </b> {{ result.get_type }} </p>
+                                <p class="card-text"><b> Tags: </b> {{ result.get_tag_labels|join:", "}} </p>
+                                <p class="card-text"><b> Location: </b> {{ result.get_formatted_address }} </p>
+                                <p class="card-text"><b> Owner: </b> <a class="text-decoration-none" href="{% url 'profile' result.owner %}">@{{ result.owner }}</a>
+                                    {% if result.owner.Nbadge.is_active %}<span class="badge rounded-pill bg-primary"
+                                                                                data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> {% endif %}
+                                    {% if result.owner.CBbadge.is_active %}
+                                        <span class="badge rounded-pill bg-info text-dark"
+                                              data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> {% endif %}
+                                    {% if result.owner.GSPbadge.is_active %}
+                                        <span class="badge rounded-pill bg-secondary"
+                                              data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> {% endif %}
+                                    {% if result.owner.MEObadge.is_active %}<span class="badge rounded-pill bg-success"
+                                                                                  data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
+                                </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
-                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
+                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to
+                                    Offer</a>
                             </div>
                         </div>
                     </div>
-              
-            {% comment %} ************************************
-                <p> <b> {{result.title}} </b> </p>
-                <p> Starts at {{result.start_date}} </p>
-                <p> Duration: {{result.duration}} hours </p>
-                <p> Type: {{result.type}} </p>
-                <p> Tag: {{result.tags}} </p>
-                <p> Location: {{result.location}} </p> {% endcomment %}
-                {% empty %}
+                    {% empty %}
                 {% endfor %}
             </div>
         </div>
@@ -56,24 +110,135 @@
 {% endblock content %}
 
 {% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#id_filter_button").click(function() {
+        $(".rounded-pill").hover(function () {
+            $(this).popover({
+                content: $(this).data('value')
+            }).popover('show');
+        }, function () {
+            $(this).popover('hide');
+        });
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKfrDnj_uke36gzh7N9aWel_FF3e_U9V0"></script>
+
+    <script>
+        {{ GOOGLE_API_KEY }}
+        $(document).ready(function () {
+
+            var marker;
+            const geocoder = new google.maps.Geocoder();
+
+            function getLocation() {
+              loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
+            }
+
+            function loadMap(position) {
+                var mapProp = {
+                    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                    zoom: 14,
+                };
+                var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                google.maps.event.addListener(map, 'click', function (event) {
+                    placeMarker(event.latLng, map);
+                });
+            }
+
+            function clearMarker() {
+                marker.setMap(null);
+                marker = null;
+            }
+
+            function placeMarker(location, map) {
+                if (marker == null) {
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                }
+                marker.setPosition(location);
+                var latlng = new google.maps.LatLng(location.lat(), location.lng());
+                geocoder.geocode(
+                    {'latLng': latlng},
+                    function (results, status) {
+                        $('#map-json').val(JSON.stringify(results[0]));
+                        //$('#location').val(results[0].formatted_address);
+                        //console.log(results)
+                    }
+                );
+            }
+
+            getLocation();
+
+            $(document).on("click", ".remove-filter", function (e) {
+                if ($(this).attr("id") === "id-remove-filter-location") {
+                    $("#location-json").val("");
+                    $("#map-json").val("");
+                    clearMarker();
+                } else if ($(this).attr("id") === "id-remove-filter-tags") {
+                    $("#tags-json").val("");
+                }
+                $(".spinner-border").show();
+                var attribute = $(this).attr("id").split("-")[3];
+                $("#search-" + attribute).val("");
                 $.ajax({
-                    url: '{% url 'ajax_load_results' %}',
-                    type: 'GET',
-                    data: {
-                        title_query: $("#search-title").val(),
-                        location_query: $("#search-location").val(),
-                        duration_query: $("#search-duration").val(),
-                        start_date_query: $("#search-start_date").val(),
-                        tags_query: $("#search-tags").val(),
-                        type_query: $("#search-type").val(),
-                        owner_query: $("#search-owner").val(),
+                    type: 'POST',
+                    url: $("#search-form").attr("get-offers-url"),
+                    data: $("#search-form").serialize(),
+                    success: function (response) {
+                        $(".spinner-border").hide();
+                        $("#id_results").html(response);
+                    }
+                });
+            });
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#search-distance').tooltip({
+                'trigger': 'hover',
+                'title': 'Distance represents kilometer distance from your selected location to the offer, if no location is selected, your profile location is taken.'
+            });
+            $("#search-form").submit(function (e) {
+                $(".alert").remove();
+                $(".spinner-border").show();
+                e.preventDefault();
+
+                // check if location input is clear, if it is, empty location-json hidden field as well
+                var data = $(this).serializeArray();
+                if (data[7]['value'] === '') {
+                    data[9]['value'] = '';
+                }
+
+                $.ajax({
+                    url: $(this).attr("get-offers-url"),
+                    type: 'POST',
+                    data: data,
+                    success: function (response) {
+                        $(".spinner-border").hide();
+                        $("#id_results").html(response);
                     },
-                    success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
+                    error: function (response) {
+                        $(".spinner-border").hide();
+                        $(".search-sidebar").append('<div class="alert alert-primary">' + response.responseJSON['__all__'][0] + '</div>');
+                    }
+                });
+            });
+
+            $(".remove-filter").click(function (e) {
+                $(".spinner-border").show();
+                var attribute = $(this).attr("id").split("-")[3];
+                $("#search-" + attribute).val("");
+                $.ajax({
+                    type: 'POST',
+                    url: $("#search-form").attr("get-offers-url"),
+                    data: $("#search-form").serialize(),
+                    success: function (response) {
+                        $(".spinner-border").hide();
+                        $("#id_results").html(response);
                     }
                 });
             });
@@ -84,12 +249,138 @@
                     $("#id_filter_button").click();
                 }
             });
+
+            let form = document.getElementById('search-form');
+            let previousQueryLength;
+            form.addEventListener('keyup', function (event) {
+                event.preventDefault()
+                let locationQuery = document.getElementById('search-location').value;
+                if (locationQuery.length >= 2 && locationQuery.length < 15 && previousQueryLength !== locationQuery.length) {
+                    let request = axios.get('/locations/search/?query=' + locationQuery)
+                        .then(function (response) {
+                            $('#location-wrapper .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.results.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
+
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start location');
+                                $(newLi).attr('id', 'location-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('background-image', 'url("' + response.data.response.results[x].icon + '")');
+                                $(newLi).css('background-repeat', 'no-repeat');
+                                $(newLi).css('background-position', '98% center');
+                                $(newLi).css('background-size', '5%');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.results[x].name);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.results[x].formatted_address);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#location-wrapper').css('display', 'flex');
+                                $('#location-wrapper').append(newLi);
+                            }
+
+                            $('.location').click(function () {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                $('#location-json').val(JSON.stringify(response.data.response.results[resultIndex]));
+                                $('#location').css('background-image', 'url("' + response.data.response.results[resultIndex].icon + '")');
+                                $('#location').css('background-repeat', 'no-repeat');
+                                $('#location').css('background-position', '98% center');
+                                $('#location').css('background-size', '5%');
+                                $('#search-location').val(response.data.response.results[resultIndex].formatted_address);
+                                $('#location-wrapper').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = locationQuery.length
+                        })
+                }
+            })
+
+            form.addEventListener('keyup', function (event) {
+                let tagsQuery = document.getElementById('search-tags').value.split(',').at(-1).trim();
+                if (tagsQuery.length >= 2 && tagsQuery.length < 15 && previousQueryLength !== tagsQuery.length) {
+                    let request = axios.get('/tags/search/?query=' + tagsQuery)
+                        .then(function (response) {
+                            $('#tags-wrapper .list-group-item').remove();
+                            for (let x = 0; x < response.data.response.search.length; x++) {
+                                let newLi = document.createElement('li');
+                                let newDiv1 = document.createElement('div');
+                                let newDiv2 = document.createElement('div');
+                                let newSpan = document.createElement('span');
+
+                                $(newLi).addClass('list-group-item d-flex justify-content-between align-items-start tags');
+                                $(newLi).attr('id', 'tags-' + x);
+                                $(newDiv1).addClass('ms-2 me-auto');
+                                $(newLi).css('cursor', 'pointer');
+                                $(newDiv2).addClass('fw-bold');
+                                $(newDiv2).html(response.data.response.search[x].label);
+                                $(newSpan).addClass('badge bg-primary rounded-pill');
+                                $(newDiv1).html(newDiv2.outerHTML + response.data.response.search[x].description);
+                                $(newLi).append(newDiv1);
+                                $(newLi).append(newSpan);
+                                $('#tags-wrapper').css('display', 'flex');
+                                $('#tags-wrapper').append(newLi);
+                            }
+
+                            $('.tags').click(function () {
+                                let resultIndex = $(this).attr('id').split('-')[1]
+                                let existingValue = JSON.parse($('#tags-json').val());
+                                existingValue.push(response.data.response.search[resultIndex]);
+                                console.log(existingValue);
+                                $('#tags-json').val(JSON.stringify(existingValue));
+                                var stringValue = '';
+                                existingValue.forEach(function (tag) {
+                                    stringValue += tag.label + ', ';
+                                });
+                                $('#search-tags').val(stringValue);
+                                $('#tags-wrapper').css('display', 'none');
+                            });
+                            request = null;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        }).then(function () {
+                            previousQueryLength = tagsQuery.length
+                        })
+                }
+            });
+
+            $(document).mouseup(function (e) {
+                let locationContainer = $('#location-wrapper');
+                let tagsContainer = $('#tags-wrapper');
+
+                if (!locationContainer.is(e.target) && locationContainer.has(e.target).length === 0) {
+                    locationContainer.hide();
+                }
+
+                if (!tagsContainer.is(e.target) && tagsContainer.has(e.target).length === 0) {
+                    tagsContainer.hide();
+                }
+            });
         });
     </script>
 {% endblock js %}
 
 {% block styles %}
     <style>
+        .small-dist {
+            font-size: 12px;
+        }
+
+        #search-form {
+            margin-bottom: 20px;
+            width: 270px;
+        }
+
         .search-container {
             display: flex;
             margin-left: 15px;
@@ -101,11 +392,12 @@
         }
 
         .results {
-            width: 80%;
+            width: 70%;
         }
 
         .search-sidebar {
-            margin-right: 50px;
+            margin-right: 10px;
+            width: 370px;
         }
 
         .clear-button {
@@ -125,6 +417,17 @@
 
         .applied-filters-header {
             font-size: 16px;
+        }
+
+        .remove-filter {
+            width: 15px;
+            height: 15px;
+            margin-bottom: 1px;
+        }
+
+        .remove-filter:hover {
+            width: 17px;
+            height: 17px;
         }
     </style>
 {% endblock styles %}

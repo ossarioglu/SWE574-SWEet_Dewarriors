@@ -18,11 +18,18 @@ from django.urls import path, include
 
 from offers.views import AjaxHandlerView
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
     path('tags/', include('tags.urls')),
     path('locations/', include('locations.urls')),
     path('offers/', include('offers.urls')),
-    path('ajax/load-results/', AjaxHandlerView.as_view(), name='ajax_load_results'),
+    path('mail/', include('usermessages.urls')),
+    path('activity/', include('actstream.urls')),
 ]
+
+# For pictures at Offering and Profile picture is address Media Urls below
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -37,14 +37,21 @@
                     <!-- Display details of service /-->
                     <div class="format-container">
                         <div>
-                            <img src="{{object.photo.url }}" width="150" height="150">
+                            {% if object.photo %} <img src="{{object.photo.url }}" width="150" height="150"> {% endif %}
                         </div>
                         <div>
                             <h3> {{ object.title }}</h3>
                             <h7>by</h7>
-                            <h5> @{{ object.owner }}</h5>
+                            <h5> <a class="text-decoration-none" href="{% url 'profile' object.owner %}">@{{ object.owner }}</a>  
+                                {% if object.owner.Nbadge.is_active %} <span class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> {% endif %}
+                                {% if object.owner.CBbadge.is_active %} <span class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> {% endif %}
+                                {% if object.owner.GSPbadge.is_active %} <span class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> {% endif %}
+                                {% if object.owner.MEObadge.is_active %} <span class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
+                            </h5>
                             <h7>at</h7>
                             <h5> {{ object.get_formatted_address }} </h5>
+                            <h7>labels</h7>
+                            <h5> {{ object.get_tag_labels|join:', ' }} </h5>
                             <h7>created on</h7>
                             <h5> {{ object.created_at|date:"F d, Y" }} </h5>
                         </div>
@@ -58,9 +65,9 @@
 
                                     <p class="text-danger">Service is over</>
                                         <h3>  </h3>
-                                    <a class="btn btn-success btn-sm disabled" href="url 'update-offer' object.uuid" role="button">Edit</a>
+                                    <a class="btn btn-success btn-sm disabled" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                    <a class="btn btn-danger btn-sm disabled" href="{url 'delete-offer' object.uuid" role="button">Delete</a>
+                                    <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
 
                                 {% else %}
 
@@ -68,20 +75,18 @@
                                         Assign button is still enabled/-->
                                     {% if object.amendment_deadline|timesince >= "1 min"  %}
                                         <p class="text-danger">Edit timehorizon is over </p>
-                                        <a class="btn btn-success btn-sm disabled" href="url 'update-offer' offers.serviceID" role="button">Edit</a>
+                                        <a class="btn btn-success btn-sm disabled" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                        <a class="btn btn-danger btn-sm disabled" href="url 'delete-offer' offers.serviceID}" role="button">Delete</a>
+                                        <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
                                     {% else %}
-                                        <a class="btn btn-success btn-sm" href="url 'update-offer' offers.serviceID " role="button">Edit</a>
+                                        <a class="btn btn-success btn-sm" href="{% url 'offers.update' object.uuid %}" role="button">Edit</a>
                                         <h3>  </h3>
-                                        <a class="btn btn-danger btn-sm" href="url 'delete-offer' offers.serviceID " role="button">Delete</a>
+                                        <a class="btn btn-danger btn-sm" href="{% url 'offers.delete' object.uuid %}" role="button">Delete</a>
                                     {% endif %}
 
                                   {% endif %}
 
                             {% else %}
-
-                                <a class="btn btn-primary btn-sm" href="{% url 'offers.apply' object.uuid %}" role="button">Apply</a>
 
                                 <!-- If user is someone looking for applying the service, then first it's checked that
                                     user has already applied or not/-->
@@ -110,12 +115,12 @@
                                     /-->
                                     {% for a in applications %}
                                         {% if request.user == a.requesterID %}
-                                            <h7> Already applied </h7>
+                                            <h7> You've already applied this service </h7>
                                             {% if object.amendment_deadline|timesince >= "1 min"  %}
                                                 <p class="text-danger">Edit timehorizon is over</p>
-                                                <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel</a>
+                                                <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
                                             {% else %}
-                                                <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel</a>
+                                                <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
                                             {% endif %}
                                         <!-- If user didn't apply for the service yet,
                                             -if service has started, Apply button is disabled
@@ -144,7 +149,7 @@
                 <h6> with </h6> <h5>{{ object.participant_limit }} capacity </h5>
                 <hr>
                 <h6> Amendment deadline: {{ object.amendment_deadline }}</h6>
-                <h6> {{ object.get_type }} at {{ object.get_tag_label }} category</h6>
+                <h6> {{ object.get_type }} at {{ object.get_tag_labels }} category</h6>
 
 
 
@@ -157,7 +162,15 @@
     </div>
 
 
-
+    <script>
+        $(".rounded-pill").hover(function () {
+            $(this).popover({
+                content: $(this).data('value')
+            }).popover('show');
+        }, function () {
+            $(this).popover('hide');
+        });
+    </script>
 
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>

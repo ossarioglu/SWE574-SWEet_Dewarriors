@@ -2,6 +2,7 @@ import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from apply.models import Application
+from notification.models import Notification
 
 from offers.models import Offer
 
@@ -16,9 +17,8 @@ def requestOffer(request, sID):
     # This variable is used for blocking or deducting credits of users
     # As default it's set as 0 for Events, and if service is an Offering then, it's updates as the duration of activity
     creditNeeded = 0
-    if offer.Type == 1:
+    if offer.get_type() == 'Service':
         creditNeeded = offer.duration
-
     # User can apply a service only if there is enough credit
     # Since user's credits are blocked at creditInprocess for ongoing services (Open requests, accepted application)
     # available credit is calculated by summing current creditAmount and creditInprocess
@@ -43,19 +43,19 @@ def requestOffer(request, sID):
                 request.user.profile.save()
 
                 # A notification is created for service provider to inform that user is applied to this service
-    #            newnote = Notification.objects.create(
-    #                serviceID=offer, 
-    #                receiverID=offer.providerID, 
-    #                noteContent=request.user.username+' applied for ' 
-    #                            + offer.keywords,
-    #                            status='Unread'
-    #                )
+                newnote = Notification.objects.create(
+                    serviceID=offer, 
+                    receiverID=offer.owner, 
+                    noteContent=request.user.username+' applied for ' 
+                                 + offer.title,
+                                 status='Unread'
+                    )
 
                 # After notification is created, user is sent back to services information page
-     #           if newnote:
-                application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-                context = {'object':Offer.objects.get(uuid=sID), "applications":application}
-                return render(request, 'offers/offer_detail.html', context)
+                if newnote:
+                    application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
+                    context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+                    return render(request, 'offers/offer_detail.html', context)
             else:
                 return HttpResponse("A problem occured. Please try again later")
         else:
@@ -85,10 +85,8 @@ def deleteRequest(request, rID):
     
     #Credit calculation is done, Events: 0, Offerings:Duration
     creditNeeded = 0
-    if offer.Type == 1:
+    if offer.get_type() == 'Service':
         creditNeeded = offer.duration
-    blkQnt= creditNeeded
-
     requestingUser = request.user
     
     
