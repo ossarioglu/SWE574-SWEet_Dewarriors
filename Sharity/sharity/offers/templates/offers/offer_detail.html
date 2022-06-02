@@ -50,6 +50,8 @@
                             </h5>
                             <h7>at</h7>
                             <h5> {{ object.get_formatted_address }} </h5>
+                            <h7>labels</h7>
+                            <h5> {{ object.get_tag_labels|join:', ' }} </h5>
                             <h7>created on</h7>
                             <h5> {{ object.created_at|date:"F d, Y" }} </h5>
                         </div>
@@ -86,8 +88,6 @@
 
                             {% else %}
 
-                                <a class="btn btn-primary btn-sm" href="{% url 'offers.apply' object.uuid %}" role="button">Apply</a>
-
                                 <!-- If user is someone looking for applying the service, then first it's checked that
                                     user has already applied or not/-->
                                 {% if applications.count ==  0 %}
@@ -115,12 +115,12 @@
                                     /-->
                                     {% for a in applications %}
                                         {% if request.user == a.requesterID %}
-                                            <h7> Already applied </h7>
+                                            <h7> You've already applied this service </h7>
                                             {% if object.amendment_deadline|timesince >= "1 min"  %}
                                                 <p class="text-danger">Edit timehorizon is over</p>
-                                                <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel</a>
+                                                <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
                                             {% else %}
-                                                <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel</a>
+                                                <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
                                             {% endif %}
                                         <!-- If user didn't apply for the service yet,
                                             -if service has started, Apply button is disabled
@@ -149,7 +149,7 @@
                 <h6> with </h6> <h5>{{ object.participant_limit }} capacity </h5>
                 <hr>
                 <h6> Amendment deadline: {{ object.amendment_deadline }}</h6>
-                <h6> {{ object.get_type }} at {{ object.get_tag_label }} category</h6>
+                <h6> {{ object.get_type }} at {{ object.get_tag_labels }} category</h6>
 
 
 

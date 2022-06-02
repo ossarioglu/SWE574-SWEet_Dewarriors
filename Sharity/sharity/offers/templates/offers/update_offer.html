@@ -7194,7 +7194,7 @@
                 <div class="col-lg-6 mb-3">
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Title</label>
-                        {{ form.title }}
+                        <input type="text" class="form-control" id="title" name="title" value="{{ offer.title }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.title.errors.0|escape }}
@@ -7203,17 +7203,17 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Location</label>
-                        {{ form.location }}
+                        <input type="text" class="form-control" id="location" name="location" value="{{ offer.get_formatted_address }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.location.errors.0|escape }}
                             </div>
                         {% endif %}
-                        <input type="hidden" value="" name="location-json" id="location-json">
+                        <input type="hidden" value="{{ offer.location }}" name="location-json" id="location-json">
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Start Date</label>
-                        {{ form.start_date }}
+                        <input type="text" class="form-control" id="start_date" name="start_date" value="{{ offer.start_date|date:'Y-m-d H:i' }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.start_date.errors.0|escape }}
@@ -7222,7 +7222,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Duration</label>
-                        {{ form.duration }}
+                        <input type="text" class="form-control" id="duration" name="duration" value="{{ offer.duration }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.duration.errors.0|escape }}
@@ -7231,7 +7231,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Amendment Deadline</label>
-                        {{ form.amendment_deadline }}
+                        <input type="text" class="form-control" id="amendment_deadline" name="amendment_deadline" value="{{ form.amendment_deadline.value|date:'Y-m-d H:i' }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.amendment_deadline.errors.0|escape }}
@@ -7240,14 +7240,13 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Tags</label>
-                        {{ form.tags }}
+                        <input type="text" class="form-control" id="tags" name="tags" value="{{ offer.get_tag_labels }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.tags.errors.0|escape }}
                             </div>
                         {% endif %}
-                        <input type="hidden" value="[]" name="tags-json" id="tags-json">
-                        {{ form.claims }}
+                        <input type="hidden" value="{{ offer.tags }}" name="tags-json" id="tags-json">
                         <ol class="list-group list-group-numbered" id="tags-wrapper" style="
 						display: none;
 						position: relative;
@@ -7257,7 +7256,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Participant Limit</label>
-                        {{ form.participant_limit }}
+                        <input type="text" class="form-control" id="participant_limit" name="participant_limit" value="{{ offer.participant_limit }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.participant_limit.errors.0|escape }}
@@ -7266,7 +7265,10 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Type</label>
-                        {{ form.type }}
+                        <select class="form-select" id="type" name="type" value="{{offer.get_type}}" aria-describedby="inputGroupPrepend" required>
+                            <option value="1">Service</option>
+                            <option value="2">Event</option>
+                        </select>
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.type.errors.0|escape }}
@@ -7275,7 +7277,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Photo</label>
-                        {{ form.photo }}
+                        <input type="file" class="form-control-file" id="photo" name="photo"  aria-describedby="inputGroupPrepend" required value="{{form.photo.value}}" >
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.photo.errors.0|escape }}

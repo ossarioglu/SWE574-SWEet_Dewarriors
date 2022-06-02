@@ -145,3 +145,11 @@ class OfferSearchForm(forms.ModelForm):
             cleaned_data['location-json'] = ''
 
         return cleaned_data
+
+
+class OfferForm(forms.ModelForm):
+
+    # Information is shown for all fields other than 'providerID' 
+    class Meta:
+        model = Offer
+        fields = '__all__'

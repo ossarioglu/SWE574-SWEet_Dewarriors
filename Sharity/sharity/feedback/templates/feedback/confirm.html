@@ -51,10 +51,12 @@
                                 <h7>by</h7>
                                 <h5> <a class="text-decoration-none" href="{% url 'profile' myAssignment.requestID.serviceID.owner %}">@{{ myAssignment.requestID.serviceID.owner }}</a></h5>
                                 <h7>to</h7>
-                                {% if myAssignment.requestID.serviceID.providerID == request.user %}
-                                    <h5> @{{ myAssignment.requestID.requesterID }}</h5>
+                                {% if myAssignment.requestID.serviceID.owner == request.user %}
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' myAssignment.requestID.requesterID %}">@{{ myAssignment.requestID.requesterID }}</a></h5>
+                                    </h5>
                                 {% else %}
-                                    <h5> @{{ request.user }}</h5>
+                                    <h5><a class="text-decoration-none" href="{% url 'profile' request.user %}">@{{ request.user }}</a></h5>
+                                     </h5>
                                 {% endif%}
                             </div>
                             <div>
