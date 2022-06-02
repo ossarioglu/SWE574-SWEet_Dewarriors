@@ -26,7 +26,7 @@
         // remove whitespaces at the start and end
         recipients = recipients.trim();
         // remove all characters that cannot be in usernames
-        recipients = recipients.replace(/[^a-zA-Z\s_\-\.]/g, '');
+        recipients = recipients.replace(/[^a-zA-Z0-9\s_\-\.]/g, '');
         // remove all excessive whitespaces in the middle
         recipients = recipients.replace(/\s{2,}/g, ' ');
         // get all usernames by splitting
