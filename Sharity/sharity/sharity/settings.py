@@ -104,7 +104,7 @@ JAZZMIN_SETTINGS = {
     # Top Menu #
     ############
 
-    # Links to put along the top menu
+    # Links to put along the top menu tra
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
