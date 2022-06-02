@@ -3,6 +3,7 @@ ENV PYTHONUNBUFFERED = 1
 WORKDIR /usr/src/app
 COPY requirements.txt requirements.txt
 COPY .env /.env
+COPY db.json db.json
 RUN python3 -m pip install --upgrade pip
 
 RUN apk update
