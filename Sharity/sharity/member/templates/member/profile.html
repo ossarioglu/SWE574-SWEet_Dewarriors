@@ -3808,12 +3808,12 @@
                 </span>
 
             </div>
-            <ul style="margin-top: 20px;margin-left: 5px;">
-                {% if user.Nbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> </li> {% endif %}
- 				{% if user.CBbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> </li> {% endif %}
-                {% if user.GSPbadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> </li> {% endif %}
-                {% if user.MEObadge.is_active %}  <span id="id-badge" class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> </li> {% endif %}
-            </ul>
+            <div style="margin-top: 20px; margin-left: 5px;">
+                {% if user.Nbadge.is_active %} <span class="badge rounded-pill bg-primary" data-value="This badge belongs to users who haven’t finished their one month in the community">Newcomer</span> {% endif %}
+                {% if user.CBbadge.is_active %} <span class="badge rounded-pill bg-info text-dark" data-value="This badge belongs to users who take at least 5 offers from newcomers in a month">Community Builder</span> {% endif %}
+                {% if user.GSPbadge.is_active %} <span class="badge rounded-pill bg-secondary" data-value="This badge belongs to users who have offered 10 or more services in a month while having 4+ ratings">Great Service Provider</span> {% endif %}
+                {% if user.MEObadge.is_active %} <span class="badge rounded-pill bg-success" data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
+            </div>
         </div>
 
         <div id="FormForm_GroupHelperDefault_by" class="Form_Form_Group_Helper_Default">
@@ -3859,7 +3859,7 @@
 
 
 <script>
-    $("#id-badge").hover(function () {
+    $(".rounded-pill").hover(function () {
         $(this).popover({
             content: $(this).data('value')
         }).popover('show');
