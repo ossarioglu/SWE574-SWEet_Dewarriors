@@ -10,13 +10,16 @@ class SharityOfferRecommender:
 
     @staticmethod
     def recommend(offers, user, limit=None):
-        offers_ordered_by_distance = SharityOfferRecommender.__order_by_coordinates(offers, user)
-        relevance_score_dataset = SharityOfferRecommender.__calculate_relevance_scores(
-            offers_ordered_by_distance,
-            user
-        )
+        if len(offers) > 0:
+            offers_ordered_by_distance = SharityOfferRecommender.__order_by_coordinates(offers, user)
+            relevance_score_dataset = SharityOfferRecommender.__calculate_relevance_scores(
+                offers_ordered_by_distance,
+                user
+            )
 
-        return SharityOfferRecommender.__order_offers_by_relevance_scores(relevance_score_dataset, offers, limit)
+            return SharityOfferRecommender.__order_offers_by_relevance_scores(relevance_score_dataset, offers, limit)
+
+        return list(offers)
 
     @staticmethod
     def __order_by_coordinates(offers, user: User):
