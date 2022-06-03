@@ -10,13 +10,16 @@ class SharityOfferRecommender:
 
     @staticmethod
     def recommend(offers, user, limit=None):
-        offers_ordered_by_distance = SharityOfferRecommender.__order_by_coordinates(offers, user)
-        relevance_score_dataset = SharityOfferRecommender.__calculate_relevance_scores(
-            offers_ordered_by_distance,
-            user
-        )
+        if len(offers) > 0:
+            offers_ordered_by_distance = SharityOfferRecommender.__order_by_coordinates(offers, user)
+            relevance_score_dataset = SharityOfferRecommender.__calculate_relevance_scores(
+                offers_ordered_by_distance,
+                user
+            )
 
-        return SharityOfferRecommender.__order_offers_by_relevance_scores(relevance_score_dataset, offers, limit)
+            return SharityOfferRecommender.__order_offers_by_relevance_scores(relevance_score_dataset, offers, limit)
+
+        return list(offers)
 
     @staticmethod
     def __order_by_coordinates(offers, user: User):
@@ -45,20 +48,24 @@ class SharityOfferRecommender:
         scores = {}
         location_score = 1
         unit_location_score = location_score / len(offers_ordered_by_distance_dataset)
-        for key, offer in enumerate(offers_ordered_by_distance_dataset):
-            member_claims_list = json.loads(user.profile.claims)
-            offer_claims_list = json.loads(offer.claims)
-            if len(member_claims_list) > len(offer_claims_list):
-                member_and_offer_relevance_rate = len(offer_claims_list) / len(member_claims_list)
-            else:
-                member_and_offer_relevance_rate = len(member_claims_list) / len(offer_claims_list)
+        member_claims_list = json.loads(user.profile.claims)
 
-            unit_member_relevance_score = float(100 / len(member_claims_list)) if len(member_claims_list) > 0 else 0
-            unit_relevance_score = unit_member_relevance_score * member_and_offer_relevance_rate
-            scores[str(offer.uuid)] = location_score - (key * unit_location_score)
-            for user_claim in json.loads(user.profile.claims):
-                if user_claim in offer_claims_list:
-                    scores[str(offer.uuid)] += unit_relevance_score
+        if len(member_claims_list) > 0:
+            for key, offer in enumerate(offers_ordered_by_distance_dataset):
+                offer_claims_list = json.loads(offer.claims)
+
+                if len(offer_claims_list) > 0:
+                    if len(member_claims_list) > len(offer_claims_list):
+                        member_and_offer_relevance_rate = len(offer_claims_list) / len(member_claims_list)
+                    else:
+                        member_and_offer_relevance_rate = len(member_claims_list) / len(offer_claims_list)
+
+                    unit_member_relevance_score = float(100 / len(member_claims_list)) if len(member_claims_list) > 0 else 0
+                    unit_relevance_score = unit_member_relevance_score * member_and_offer_relevance_rate
+                    scores[str(offer.uuid)] = location_score - (key * unit_location_score)
+                    for user_claim in json.loads(user.profile.claims):
+                        if user_claim in offer_claims_list:
+                            scores[str(offer.uuid)] += unit_relevance_score
 
         return dict(
             sorted(

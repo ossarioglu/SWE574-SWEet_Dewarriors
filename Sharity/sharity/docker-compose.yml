@@ -12,12 +12,11 @@ services:
             - POSTGRES_PASSWORD=postgres
         volumes:
             - pgdata:/var/lib/postgresql/data/
-            - ./sharity.sql:/docker-entrypoint-initdb.d/sharity.sql
     sharity:
         image: sbrkrkmz/sharity:latest
-        container_name: sharity
         restart: always
-        command:  /bin/sh  -c "python manage.py migrate && pyhton manage.py loaddata db.json && python manage.py runserver 0.0.0.0:80"
+        container_name: sharity
+        command:  /bin/sh  -c "python manage.py migrate && python manage.py loaddata db.json &&  python manage.py runserver 0.0.0.0:80 "
         ports:
             - "80:80"
         links:

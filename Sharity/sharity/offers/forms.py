@@ -90,7 +90,7 @@ class OfferSearchForm(forms.ModelForm):
         self.fields['title'].widget.attrs.update({
             'id': 'search-title',
             'class': 'search-form-title',
-            'placeholder': 'Seach by offer title'
+            'placeholder': 'Search by offer title'
         })
         self.fields['location'].widget = forms.TextInput(attrs={
             'id': 'search-location',
@@ -105,12 +105,12 @@ class OfferSearchForm(forms.ModelForm):
         self.fields['duration'].widget.attrs.update({
             'id': 'search-duration',
             'class': 'search-form-duration',
-            'placeholder': 'Seach by offer duration'
+            'placeholder': 'Search by offer duration'
         })
         self.fields['tags'].widget = forms.TextInput(attrs={
             'id': 'search-tags',
             'class': 'search-form-tags',
-            'placeholder': 'Seach by offer tag'
+            'placeholder': 'Search by offer tag'
         })
         self.fields['type'].widget.attrs.update({
             'id': 'search-type',
