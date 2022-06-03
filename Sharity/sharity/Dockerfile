@@ -4,6 +4,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt requirements.txt
 COPY .env /.env
 COPY db.json db.json
+ADD static static
 RUN python3 -m pip install --upgrade pip
 
 RUN apk update
