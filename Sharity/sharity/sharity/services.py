@@ -55,7 +55,7 @@ class SharityOfferRecommender:
             offer_claims_list = json.loads(offer.claims)
 
             # if len(offer_claims_list) > 0:
-            if len(member_claims_list != 0) and len(member_claims_list) > len(offer_claims_list):
+            if len(member_claims_list) != 0 and len(member_claims_list) > len(offer_claims_list):
                 member_and_offer_relevance_rate = len(offer_claims_list) / len(member_claims_list)
             elif len(offer_claims_list) != 0 and len(offer_claims_list) > len(member_claims_list):
                 member_and_offer_relevance_rate = len(member_claims_list) / len(offer_claims_list)
