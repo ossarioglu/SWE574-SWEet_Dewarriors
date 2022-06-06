@@ -21,8 +21,8 @@ class Notification(models.Model):
     serviceID = models.ForeignKey(Offer, on_delete=models.CASCADE, null=True)
     # receiverID has a One-to-Many relation with User object: a notificiation is received by one user from many Users
     receiverID = models.ForeignKey(User, related_name='receiverID', on_delete=models.CASCADE)
-    noteContent = models.CharField()
-    status = models.CharField(choices=NOTE_STATUS,default='Unread')
+    noteContent = models.CharField(max_length=1000)
+    status = models.CharField(max_length=1000,choices=NOTE_STATUS,default='Unread')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
