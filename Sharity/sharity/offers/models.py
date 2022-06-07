@@ -30,6 +30,7 @@ class Offer(models.Model):
     )
 
     title = models.CharField(verbose_name=_('Title'), max_length=500)
+    description = models.TextField(null=True)
     latitude = models.CharField(verbose_name=_('Latitude'), max_length=500, null=True)
     longitude = models.CharField(verbose_name=_('Longitude'), max_length=500, null=True)
     location = models.TextField()

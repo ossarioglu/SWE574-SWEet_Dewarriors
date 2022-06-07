@@ -7,6 +7,10 @@ class OfferCreateForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
     }))
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'rows': '3',
+    }))
     location = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'location',
@@ -15,7 +19,7 @@ class OfferCreateForm(forms.ModelForm):
     start_date = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'datepicker',
-        "type" : "datetime-local"
+        'type' : 'datetime-local',
     }))
     amendment_deadline = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -41,7 +45,7 @@ class OfferCreateForm(forms.ModelForm):
         'value': '[]',
     }))
     type = forms.ChoiceField(choices=Offer.Type.choices, widget=forms.Select(attrs={
-        'class': 'form-control',
+        'class': 'form-select',
     }))
 
     class Meta:

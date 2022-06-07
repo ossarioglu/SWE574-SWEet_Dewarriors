@@ -26,34 +26,43 @@ from datetime import datetime
 
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
+
+
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
+
     def form_invalid(self, form):
-        print(form.errors)
+        print(len(form.errors), "------ THESE ARE ERRORS ----")
+
+        return super().form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        try:
+            form.instance.owner = self.request.user
 
-        if form.instance.owner != self.request.user:
+            if form.instance.owner != self.request.user:
+                return super(OfferCreateView, self).form_invalid(form)
+
+            wb_get_entities_response = TagService.find_by_ids(form.tag_ids)
+            claims = []
+
+            if 'entities' in wb_get_entities_response:
+                for entity_id in wb_get_entities_response['entities']:
+                    for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495', 'P1424', 'P1441']:
+                            for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                                claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                    claims.append(entity_id)
+
+            form.instance.claims = json.dumps(claims, separators=(',', ':'))
+
+            return super().form_valid(form)
+        except AttributeError:
+            print("This is an attribute erroooooooor!!!")
             return super(OfferCreateView, self).form_invalid(form)
-
-        wb_get_entities_response = TagService.find_by_ids(form.tag_ids)
-        claims = []
-
-        if 'entities' in wb_get_entities_response:
-            for entity_id in wb_get_entities_response['entities']:
-                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495', 'P1424', 'P1441']:
-                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
-                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
-                claims.append(entity_id)
-
-        form.instance.claims = json.dumps(claims, separators=(',', ':'))
-
-        return super().form_valid(form)
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
