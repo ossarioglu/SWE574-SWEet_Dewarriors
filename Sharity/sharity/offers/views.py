@@ -246,15 +246,15 @@ def updateOffer(request, sID):
 
     # Information for requested service is retreived from database, and added to Form
     offer = Offer.objects.get(uuid=sID)
-    form = OfferForm(instance=offer)    
 
     if request.user != offer.owner:
         return HttpResponse('You are not allowed to update this offer')
 
     # When user posts information from Form, relevant fields are matched with object, and service is saved.
     if request.method == 'POST':
-
+        form = OfferForm(request.POST)    
         offer.title = request.POST.get('title')
+        offer.description = request.POST.get('description')
         offer.location = request.POST.get('location-json')
         offer.tags = request.POST.get('tags-json')
         offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d %H:%M')
@@ -267,7 +267,10 @@ def updateOffer(request, sID):
             offer.picture = request.FILES.get('photo')
         offer.save()
         return redirect('home')
-        
+
+    else:
+        form = OfferForm(instance=offer)    
+
     context = {'form':form, 'offer':offer}
     return render(request, 'offers/update_offer.html', context)
 

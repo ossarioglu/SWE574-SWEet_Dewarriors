@@ -17,7 +17,7 @@
         <style>
             .offering-container{
                 display: grid;
-                grid-template-columns: 2fr 6fr 4fr;
+                grid-template-columns: 2fr 7fr 3fr;
             }
             .format-container{
                 display: grid;
@@ -37,7 +37,7 @@
                     <!-- Display details of service /-->
                     <div class="format-container">
                         <div>
-                            {% if object.photo %} <img src="{{object.photo.url }}" width="150" height="150"> {% endif %}
+                            {% if object.photo %} <img src="{{object.photo.url }}" width="200" height="200"> {% endif %}
                         </div>
                         <div>
                             <h3> {{ object.title }}</h3>
@@ -54,6 +54,8 @@
                             <h5> {{ object.get_tag_labels|join:', ' }} </h5>
                             <h7>created on</h7>
                             <h5> {{ object.created_at|date:"F d, Y" }} </h5>
+                            <h7 class="text-danger">Description</h7>
+                            <h5> {{ object.description}} </h5>
                         </div>
                         <div>
 
