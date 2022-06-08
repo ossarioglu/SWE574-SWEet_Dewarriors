@@ -252,19 +252,24 @@ def listofferings(request):
     myOffer = Offer.objects.filter(owner=myuser)
     myApplication = Application.objects.filter(requesterID=request.user)
     allApplication = Application.objects.filter(serviceID__in=myOffer)
+    closedAssignment = Assignment.objects.filter(approverID=request.user).filter(status="Closed")
     
     offerswithapplications =[]
 
     for offer in myOffer:
         sub = []
+        offerStatus = "open"
         itsApp = allApplication.filter(serviceID=offer)
+        acceptedApp = allApplication.filter(serviceID=offer).filter(status="Accepted")
         sub.append(offer)
         sub.append(itsApp)
+        sub.append(acceptedApp)
+        for assignment in closedAssignment:
+            if offer == assignment.requestID.serviceID:
+                offerStatus = "closed"
+        sub.append(offerStatus)
         offerswithapplications.append(sub)
 
-    print(offerswithapplications[0][1])
-
-    providedAssignment = Assignment.objects.filter(approverID=request.user)
     receivedAssignment = Assignment.objects.filter(requesterID=request.user)
 
     # Serve information, and application info is sent to front-end
