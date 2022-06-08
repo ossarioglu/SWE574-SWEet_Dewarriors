@@ -69,7 +69,7 @@
                     <div class="card">
                         {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                         <div class="card-body">
-                            <h5 class="card-title"> {{result.title}} </h5>
+                            <h5 id="id-card-title-{{result.pk}}" class="card-title"> {{result.title}} </h5>
                             <p class="card-text"> <b> Start date: </b> {{result.start_date}} </p>
                             <p class="card-text"> <b> Duration: </b> {{result.duration}} </p>
                             <p class="card-text"> <b> Type: </b> {{result.get_type}} </p>
@@ -83,6 +83,7 @@
                             </p>
                             <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
                             <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
+                            <a id="id_send_message_from_explore_{{result.pk}}" href="{% url 'usermessages.create' %}" class="btn btn-primary">Send a Message to {{result.owner}}</a>
                         </div>
                     </div>
                 </div>
