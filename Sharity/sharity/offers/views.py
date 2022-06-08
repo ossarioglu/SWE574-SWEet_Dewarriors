@@ -112,11 +112,11 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             context = {}
             filters = {}
             tag_args = Q()
-            title_args = Q()
+            keyword_args = Q()
             location_args = Q()
             filter_flag = False
             filter_words = {
-                'title': '__icontains',
+                'keyword': '__icontains',
                 'location': '__icontains',
                 'start_date': '__gte',
                 'duration': '__lte',
@@ -138,14 +138,15 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                         context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
                         for tag in [i.strip() for i in value.split(',') if i.strip() != '']:
                             tag_args |= Q(**{key + filter_words[key]: tag})
-                    elif key == 'title':
+                    elif key == 'keyword':
                         context[key + '_query'] = value
-                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
-                            title_args |= Q(**{key + filter_words[key]: tag})
+                        for word in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            keyword_args |= Q(**{'title' + filter_words[key]: word})
+                            keyword_args |= Q(**{'description' + filter_words[key]: word})
                     elif key == 'location':
                         context[key + '_query'] = value
-                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
-                            location_args |= Q(**{key + filter_words[key]: tag})
+                        for loc in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            location_args |= Q(**{key + filter_words[key]: loc})
                     else:
                         if key == 'type':
                             context[key + '_query'] = 'Service' if value == 1 else 'Event'
@@ -155,9 +156,10 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
 
             # if only location
             if ljson == '' and d is None:
-                arguments = tag_args & title_args & location_args
+                arguments = tag_args & keyword_args & location_args
             else:
-                arguments = (tag_args & title_args) | location_args
+                arguments = (tag_args & keyword_args) | location_args
+            print(arguments)
 
             qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
 

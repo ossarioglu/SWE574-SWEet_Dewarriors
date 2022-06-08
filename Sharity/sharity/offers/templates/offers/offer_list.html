@@ -78,6 +78,7 @@
                             {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                             <div class="card-body">
                                 <h5 id="id-card-title-{{result.pk}}" class="card-title"> {{ result.title }} </h5>
+                                {% if result.description %} <p class="card-text"><b> Description: </b> {{ result.description|truncatewords_html:6 }} </p> {% endif %}
                                 <p class="card-text"><b> Start date: </b> {{ result.start_date }} </p>
                                 <p class="card-text"><b> Duration: </b> {{ result.duration }} </p>
                                 <p class="card-text"><b> Type: </b> {{ result.get_type }} </p>
