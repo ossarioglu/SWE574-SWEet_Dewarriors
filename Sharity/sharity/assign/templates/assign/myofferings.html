@@ -25,7 +25,7 @@
             }
             .applications-container{
                 display: grid;
-                grid-template-columns: 3fr 7fr 4fr 6fr; 
+                grid-template-columns: 3fr 6fr 4fr 7fr; 
             }
         </style>
 
@@ -37,35 +37,85 @@
 
                 <div>
 
-                        {% for myOffers in offerings %}
+                </span> 
+                    <hr>
+                    <h4> Active Offered Services </h4>
+                    <hr>
+                <span>
+                        {% for myOffers in offandapp %}
+
                             <span>
                             <div class="applications-container">
                                 <div>
-                                    <img src="{{myOffers.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                                    <img src="{{myOffers.0.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
                                 </div>
                                 <div>
-                                    <h5> <span class="align-middle">{{ myOffers.title }} </span>
+                                    <h5> <span class="align-middle">{{ myOffers.0.title }} </span>
                                     </h5>
                                 </div>
                                 <div>
-                                    <h5> <span class="align-middle">{{ myOffers.start_date }}</span>
+                                    <h5> <span class="align-middle">on {{ myOffers.0.start_date }}</span>
                                     </h5>
                                 </div>
                                 <div>
-                                    <a class="btn btn-primary btn-sm align-middle" href="{% url 'offers.listassign' myOffers.uuid %}" role="button">Assign</a>
-                                    <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myOffers.uuid %}" >Go to Offer</a>
-                                    <a class="btn btn-success btn-sm align-middle" role="button" data-toggle="popover" data-trigger="focus" title="<div>Applications</div>"
+                                    <a class="btn btn-primary btn-sm align-middle" href="{% url 'offers.listassign' myOffers.0.uuid %}" role="button">Assign</a>
+                                    <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myOffers.0.uuid %}" >Go to Offer</a>
+                                
+                                {% if myOffers.1.count > 0 %}
+                                    <a class="btn btn-success btn-sm align-middle" id="popover{{forloop.counter}}" role="button" data-toggle="popover" data-trigger="focus" title="<div>Applications</div>"
                                         data-value="
-                                        {% for applied in appliedtomine %}
-                                            <div><a class='text-decoration-none' href='{% url 'profile' applied.requesterID %}''>@{{ applied.requesterID }}</a>  - {{applied.status}} </div>
+                                        {% for applied in myOffers.1 %}
+                                            {% if myOffers.0.uuid == applied.serviceID.uuid %}
+                                                <div><a class='text-decoration-none' href='{% url 'profile' applied.requesterID %}''>@{{ applied.requesterID }}</a>  - {{applied.status}} </div>
+                                            {% endif %}
                                         {% endfor %}
-                                        "> {{appliedtomine.count}} Applications</a>
+                                        "> {{myOffers.1.count }} Applicants </a>
+                                {% else %}
+                                    <a class="btn btn-success btn-sm align-middle" href="" role="button">No Application</a>
+                                {% endif %}
+
+
                                 </div>
                             </div>
                             </span>
                             <br>
                         {% endfor %}
 
+
+                    </span> 
+                        <hr>
+                        <h4> Applied Services </h4>
+                        <hr>
+                    <span>
+
+                    {% for myApp in applications %}
+
+                        <span>
+                        <div class="applications-container">
+                            <div>
+                                <img src="{{myApp.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                            </div>
+                            <div>
+                                <h5> <span class="align-middle">{{ myApp.serviceID.title }} </span>
+                                </h5>
+                                <br>
+                                <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.serviceID.owner %}">@{{ myApp.serviceID.owner }}</a> </span>
+                                </h6>
+                                <h6> <span class="align-middle">  {{ myApp.serviceID.duration }} hours {{ myApp.serviceID.get_type }} </span>
+                                </h6>
+                            </div>
+                            <div>
+                                <h5> <span class="align-middle">on {{ myApp.serviceID.start_date }}</span>
+                                </h5>
+                            </div>
+                            <div>
+                                <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.serviceID.uuid %}" >Go to Offer</a>
+                                <div class="text-primary"> Status: {{ myApp.status }} </div> 
+                            </div>
+                        </div>
+                        </span>
+                        <br>
+                    {% endfor %}
 
                 </div>
 
@@ -79,10 +129,16 @@
 
         <script>
             $(document).ready(function(){
-                $('[data-toggle="popover"]').popover({
-                    html:true,
-                    content: $('[data-toggle="popover"]').data('value')
-                });   
+                let popOverItems = $('[data-toggle="popover"]');
+
+                for (let i = 0; i < popOverItems.length; i++) {
+                    let popOverItem = popOverItems.get(i);
+
+                    $(popOverItem).popover({
+                        html:true,
+                        content: $(popOverItem).data('value')
+                    });
+                }  
             });
         </script>
 

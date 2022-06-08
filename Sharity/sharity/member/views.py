@@ -253,7 +253,20 @@ def listofferings(request):
     myApplication = Application.objects.filter(requesterID=request.user)
     allApplication = Application.objects.filter(serviceID__in=myOffer)
     
+    offerswithapplications =[]
+
+    for offer in myOffer:
+        sub = []
+        itsApp = allApplication.filter(serviceID=offer)
+        sub.append(offer)
+        sub.append(itsApp)
+        offerswithapplications.append(sub)
+
+    print(offerswithapplications[0][1])
+
+    providedAssignment = Assignment.objects.filter(approverID=request.user)
+    receivedAssignment = Assignment.objects.filter(requesterID=request.user)
 
     # Serve information, and application info is sent to front-end
-    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication}
+    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication, 'offandapp':offerswithapplications }
     return render(request, 'assign/myofferings.html', context)
