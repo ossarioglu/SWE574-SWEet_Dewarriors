@@ -117,7 +117,7 @@
                                     /-->
                                     {% for a in applications %}
                                         {% if request.user == a.requesterID %}
-                                            <h7> You've already applied this service </h7>
+                                            <h7> You've applied this service </h7>
                                             {% if object.amendment_deadline|timesince >= "1 min"  %}
                                                 <p class="text-danger">Edit timehorizon is over</p>
                                                 <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>

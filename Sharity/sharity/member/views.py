@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 from offers.models import Offer
 from assign.models import Assignment
+from apply.models import Application
 from .forms import MyRegisterForm
 from actstream.actions import follow, unfollow
 # Models and Formed used in this app
@@ -248,8 +249,11 @@ def home(request):
 def listofferings(request):
     myuser = request.user
     # Queried service is retreived from all services
-    offer = Offer.objects.filter(owner=myuser)
+    myOffer = Offer.objects.filter(owner=myuser)
+    myApplication = Application.objects.filter(requesterID=request.user)
+    allApplication = Application.objects.filter(serviceID__in=myOffer)
+    
 
     # Serve information, and application info is sent to front-end
-    context = {'offerings': offer}
+    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication}
     return render(request, 'assign/myofferings.html', context)
