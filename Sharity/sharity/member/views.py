@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import JsonResponse
 from offers.models import Offer
 from assign.models import Assignment
+from apply.models import Application
 from .forms import MyRegisterForm
 from actstream.actions import follow, unfollow
 # Models and Formed used in this app
@@ -248,8 +249,29 @@ def home(request):
 def listofferings(request):
     myuser = request.user
     # Queried service is retreived from all services
-    offer = Offer.objects.filter(owner=myuser)
+    myOffer = Offer.objects.filter(owner=myuser)
+    myApplication = Application.objects.filter(requesterID=request.user)
+    allApplication = Application.objects.filter(serviceID__in=myOffer)
+    closedAssignment = Assignment.objects.filter(approverID=request.user).filter(status="Closed")
+    receivedAssignment = Assignment.objects.filter(requesterID=request.user).filter(status="Closed")
+
+    offerswithapplications =[]
+
+    for offer in myOffer:
+        sub = []
+        offerStatus = "open"
+        itsApp = allApplication.filter(serviceID=offer)
+        acceptedApp = allApplication.filter(serviceID=offer).filter(status="Accepted")
+        sub.append(offer)
+        sub.append(itsApp)
+        sub.append(acceptedApp)
+        for assignment in closedAssignment:
+            if offer == assignment.requestID.serviceID:
+                offerStatus = "closed"
+        sub.append(offerStatus)
+        offerswithapplications.append(sub)
+
 
     # Serve information, and application info is sent to front-end
-    context = {'offerings': offer}
+    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication, 'offandapp':offerswithapplications, 'receivedoffers':receivedAssignment }
     return render(request, 'assign/myofferings.html', context)

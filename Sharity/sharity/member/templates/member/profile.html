@@ -3735,9 +3735,10 @@
         </svg>
 
         <div id="creditdiv">
-            <span>Credit: {{ user.profile.creditAmount }} hours</span>
-            <div>   ( {{ user.profile.creditInprocess }} blocked)</div>
-
+            {% if user == request.user %} 
+                <span>Credit: {{ user.profile.creditAmount }} hours</span>
+                <div>   ( {{ user.profile.creditInprocess }} blocked)</div>
+            {% endif %}
         </div>
 
         <div id="followbuttondiv">

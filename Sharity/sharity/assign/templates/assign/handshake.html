@@ -43,7 +43,7 @@
             <span>
 
             {% for myAssign in providedAssignments %}
-
+                {% if myAssign.status == "Confirmed by receiver" or myAssign.status == "Open"  %}
                 <!-- For each assignment, related service information is displayed to user /-->
                 <div class="offerings-container">
                     <div>
@@ -91,6 +91,8 @@
 
                     </div>
                 </div>
+                {% endif %}
+
             {% endfor %}
         {% endif %}
 
@@ -104,7 +106,7 @@
             <span>
 
             {% for myAssign in receivedAssignments %}
-                
+                {% if myAssign.status == "Confirmed by provider" or myAssign.status == "Open"  %}
                 <!-- For each assignment, related service information is displayed to user /-->
                 <div class="offerings-container">
                     <div>
@@ -151,6 +153,7 @@
                     <div>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
         {% endif %}
 
