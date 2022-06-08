@@ -25,6 +25,7 @@ class Notification(models.Model):
     status = models.CharField(max_length=1000,choices=NOTE_STATUS,default='Unread')
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    # user_has_seen = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.noteID}'
