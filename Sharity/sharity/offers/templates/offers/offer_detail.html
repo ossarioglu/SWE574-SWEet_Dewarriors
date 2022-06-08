@@ -152,9 +152,48 @@
                 <hr>
                 <h6> Amendment deadline: {{ object.amendment_deadline }}</h6>
                 <h6> {{ object.get_type }} at {{ object.get_tag_labels }} category</h6>
+                <hr>
+                <h4 class="text-danger"> <u> Participants / Requesters: </u> </h4>
+                
+                {% if request.user == object.owner %}
+                    {% for a in allapplications %}
+                    <h6> <a class="text-decoration-none" href="{% url 'profile' a.requesterID %}">@{{ a.requesterID }}</a> - {{ a.status }} </h6>
+                    {% endfor %}
+
+                {% else %}
+                    <h6> {{allapplications.count}} applications for this offering </h6>
+                {% endif %}
+
+                {% if request.user == object.owner %}
+                            
+                    <hr>
+                    <h4 class="text-success"> <u> Feedback regarding this offering </u> </h4>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Rating</th>
+                        </tr>
+                        </thead>
+                        <tbody>               
+                    {% for feed in feedback %}
+                          <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td><a class="text-decoration-none" href="{% url 'profile' feed.giverID %}">@{{ feed.giverID  }}</a></td>
+                            <td><a class="text-decoration-none" href="{% url 'profile' feed.takerID %}">@{{ feed.takerID  }}</a></td>
+                            <td>{{ feed.comment  }} </td>
+                            <td>{{ feed.rating  }} </td>
+                          </tr>
+                    {% endfor %}
+
+                        </tbody>
+                      </table>
 
 
-
+                {% endif %}
 
             </div>
 

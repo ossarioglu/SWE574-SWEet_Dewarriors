@@ -5,6 +5,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from django.views.generic.edit import FormMixin
 from .models import Offer
 from apply.models import Application
+from feedback.models import Feedback
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
 from .forms import OfferCreateForm, OfferForm, OfferSearchForm
@@ -86,8 +87,12 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         offer = self.get_object()
         application = Application.objects.filter(serviceID=offer).filter(requesterID=self.request.user)
+        allapplications = Application.objects.filter(serviceID=offer)
+        feedback = Feedback.objects.filter(serviceID=offer)
 
         context['applications'] = application
+        context['allapplications'] = allapplications
+        context['feedback'] = feedback
 
         
         return context
