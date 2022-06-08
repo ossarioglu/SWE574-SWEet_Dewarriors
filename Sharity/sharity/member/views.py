@@ -253,7 +253,8 @@ def listofferings(request):
     myApplication = Application.objects.filter(requesterID=request.user)
     allApplication = Application.objects.filter(serviceID__in=myOffer)
     closedAssignment = Assignment.objects.filter(approverID=request.user).filter(status="Closed")
-    
+    receivedAssignment = Assignment.objects.filter(requesterID=request.user).filter(status="Closed")
+
     offerswithapplications =[]
 
     for offer in myOffer:
@@ -270,8 +271,7 @@ def listofferings(request):
         sub.append(offerStatus)
         offerswithapplications.append(sub)
 
-    receivedAssignment = Assignment.objects.filter(requesterID=request.user)
 
     # Serve information, and application info is sent to front-end
-    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication, 'offandapp':offerswithapplications }
+    context = {'offerings': myOffer, 'applications': myApplication, 'appliedtomine':allApplication, 'offandapp':offerswithapplications, 'receivedoffers':receivedAssignment }
     return render(request, 'assign/myofferings.html', context)

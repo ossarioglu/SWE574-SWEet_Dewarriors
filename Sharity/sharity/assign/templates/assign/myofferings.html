@@ -39,7 +39,7 @@
 
                 </span> 
                     <hr>
-                    <h4> Active Offers </h4>
+                    <h4> Active Served Offers </h4>
                     <hr>
                 <span>
                         {% for myOffers in offandapp %}
@@ -86,12 +86,12 @@
 
                     </span> 
                         <hr>
-                        <h4> Applied Services </h4>
+                        <h4> Active Applied Offers </h4>
                         <hr>
                     <span>
 
                     {% for myApp in applications %}
-
+                        {% if myApp.status != "Rejected" %}
                         <span>
                         <div class="applications-container">
                             <div>
@@ -117,11 +117,12 @@
                         </div>
                         </span>
                         <br>
+                        {% endif %}
                     {% endfor %}
                 
                 </span> 
                     <hr>
-                    <h4> Served Offer History </h4>
+                    <h4> Served Offers History </h4>
                     <hr>
                 <span>
                     {% for myOffers in offandapp %}
@@ -150,7 +151,7 @@
                                 </h5>
                             </div>
                             <div>
-                                <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myOffers.0.uuid %}" >Offer Details</a>
+                                <a class="btn btn-success btn-sm align-middle" href="{% url 'offers.detail' pk=myOffers.0.uuid %}" >Offer Details</a>
                             </div>
                         </div>
                         </span>
@@ -158,9 +159,72 @@
                         {% endif %}
                     {% endfor %}
 
+                </span> 
+                    <hr>
+                    <h4> Applied Offers History </h4>
+                    <hr>
+                <span>
+
+                {% for myApp in applications %}
+                    {% if myApp.status == "Rejected" %}
+                    <span>
+                    <div class="applications-container">
+                        <div>
+                            <img src="{{myApp.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                        </div>
+                        <div>
+                            <h5> <span class="align-middle">{{ myApp.serviceID.title }} </span>
+                            </h5>
+                            <br>
+                            <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.serviceID.owner %}">@{{ myApp.serviceID.owner }}</a> </span>
+                            </h6>
+                            <h6> <span class="align-middle">  {{ myApp.serviceID.duration }} hours {{ myApp.serviceID.get_type }} </span>
+                            </h6>
+                        </div>
+                        <div>
+                            <h5> <span class="align-middle">on {{ myApp.serviceID.start_date }}</span>
+                            </h5>
+                        </div>
+                        <div>
+                            <a class="btn btn-success btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.serviceID.uuid %}" >Offer Details</a>
+                            <div class="text-primary"> Status: {{ myApp.status }} </div> 
+                        </div>
+                    </div>
+                    </span>
+                    <br>
+                    {% endif %}
+                {% endfor %}
+
+                {% for myApp in receivedoffers %}
+                    <span>
+                    <div class="applications-container">
+                        <div>
+                            <img src="{{myApp.requestID.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                        </div>
+                        <div>
+                            <h5> <span class="align-middle">{{ myApp.requestID.serviceID.title }} </span>
+                            </h5>
+                            <br>
+                            <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.requestID.serviceID.owner %}">@{{ myApp.requestID.serviceID.owner }}</a> </span>
+                            </h6>
+                            <h6> <span class="align-middle">  {{ myApp.requestID.serviceID.duration }} hours {{ myApp.requestID.serviceID.get_type }} </span>
+                            </h6>
+                        </div>
+                        <div>
+                            <h5> <span class="align-middle">on {{ myApp.requestID.serviceID.start_date }}</span>
+                            </h5>
+                        </div>
+                        <div>
+                            <a class="btn btn-success btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.requestID.serviceID.uuid %}" >Offer Details</a>
+                            <div class="text-primary"> Status: Service Taken </div> 
+                        </div>
+                    </div>
+                    </span>
+                    <br>
+                {% endfor %}
                 </div>
 
-
+                
 
 
                 <div>
