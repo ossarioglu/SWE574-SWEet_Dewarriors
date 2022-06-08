@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["localhost","ec2-52-214-80-212.eu-west-1.compute.amazonaws.com"]
 
+LOGIN_URL = '/login/'
 
 # Application definition
 ACTSTREAM_SETTINGS = {

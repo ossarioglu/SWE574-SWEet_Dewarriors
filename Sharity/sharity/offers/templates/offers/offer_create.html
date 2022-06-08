@@ -70,6 +70,13 @@
                                 $('#location').css('background-size', '5%');
                                 $('#location').val(response.data.response.results[resultIndex].formatted_address);
                                 $('#location-wrapper').css('display', 'none');
+
+                                let locationVal = $('#location').val();
+                                let locationJsonVal = $('#location-json').val();
+
+                                if (locationVal !== '' && locationJsonVal !== '') {
+                                    $('#location ~ .invalid-feedback').hide();
+                                }
                             });
                             request = null;
                         })
@@ -120,6 +127,12 @@
                                 });
                                 $('#tags').val(stringValue);
                                 $('#tags-wrapper').css('display', 'none');
+                                let tagsVal =  $('#tags').val();
+                                let tagsJsonVal = $('#tags-json').val();
+
+                                if (tagsVal !== '' && tagsJsonVal !== '[]') {
+                                    $('#tags ~ .invalid-feedback').hide();
+                                }
                             });
                             request = null;
                         })
@@ -132,11 +145,201 @@
                 }
             });
 
+            $("#id_title").blur(function () {
+                let titleValue = $("#id_title").val();
+                if (titleValue !== '') {
+                    $("#id_title ~ .invalid-feedback").hide();
+                }
+            });
+
+            $('input[name="start_date"]').blur(function () {
+                let startDateValue = $('input[name="start_date"]').val();
+                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                if (
+                    isNaN(amendmentAndStartDateDifference)
+                    ||
+                    (startDateValue !== '' && !isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference >= 1)
+                ) {
+                    $('input[name="start_date"] ~ .invalid-feedback').hide();
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                } else {
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+
+                }
+            });
+
+            $("#id_duration").blur(function () {
+                let durationValue = $("#id_duration").val();
+
+                if (durationValue !== '' && parseInt(durationValue) >= 1) {
+                    $("#id_duration ~ .invalid-feedback").hide();
+                }
+            });
+
+            $('input[name="amendment_deadline"]').blur(function () {
+                let startDateValue = $('input[name="start_date"]').val();
+                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                if (
+                    isNaN(amendmentAndStartDateDifference)
+                    ||
+                    (startDateValue !== '' && !isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference >= 1)
+                ) {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    $('input[name="start_date"] ~ .invalid-feedback').hide();
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                } else {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                }
+            });
+
+            $('#id_participant_limit').blur(function () {
+                let participantLimitValue = $('#id_participant_limit').val();
+
+                if (participantLimitValue !== '' && parseInt(participantLimitValue) >= 1) {
+                    $('#id_participant_limit ~ .invalid-feedback').hide();
+                }
+            });
+
+            $('#id_description').blur(function () {
+                let descriptionValue = $('#id_description').val();
+
+                if (descriptionValue !== '') {
+                    $('#id_description ~ .invalid-feedback').hide();
+                }
+            });
+
+            $('#id_type').blur(function () {
+                let typeValue = $('#id_type').val();
+
+                if (typeValue !== '' && parseInt(typeValue) > 0) {
+                    $('#id_type ~ .invalid-feedback').hide();
+                }
+            });
+
+            $('#formFile').change(function () {
+                let photoValue = $('#formFile').get(0).files.length;
+
+                if (photoValue > 0) {
+                    $('#formFile ~ .invalid-feedback').hide();
+                }
+            });
+
             $('#submit-button').click(function (event) {
                 event.preventDefault();
-                $('#location').val($('#location-json').val());
-                $('#tags').val($('#tags-json').val());
-                $('#service-form').submit();
+                $('.invalid-feedback').hide();
+                let titleValue = $("#id_title").val();
+                let descriptionValue = $("#id_description").val();
+                let startDateValue = $('input[name="start_date"]').val();
+                let durationValue = $("#id_duration").val();
+                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                let locationVal = $('#location').val();
+                let tagsVal =  $('#tags').val();
+                let locationJsonVal = $('#location-json').val();
+                let tagsJsonVal = $('#tags-json').val();
+                let participantLimitValue = $('#id_participant_limit').val();
+                let typeValue = $('#id_type').val();
+                let photoValue = $('#formFile').get(0).files.length;
+                let hasValidationErrors = false;
+                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                if (titleValue === '') {
+                    $("#id_title ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#id_title ~ .invalid-feedback").hide();
+                }
+
+                if (descriptionValue === '') {
+                    $("#id_description ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#id_description ~ .invalid-feedback").hide();
+                }
+
+                if (startDateValue === '') {
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else if (!isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference < 1) {
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('input[name="start_date"] ~ .invalid-feedback').hide();
+                }
+
+                if (durationValue === '' || parseInt(durationValue) < 1) {
+                    $("#id_duration ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#id_duration ~ .invalid-feedback").hide();
+                }
+
+                if (amendmentDeadlineValue === '') {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    hasValidationErrors  = true
+                } else if (!isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference < 1) {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    hasValidationErrors  = true
+                } else {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                }
+
+                if (locationVal === '' || locationJsonVal === '') {
+                    $('#location ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#location ~ .invalid-feedback').hide();
+                }
+
+                if (tagsVal === '' || tagsJsonVal === '[]') {
+                    $('#tags ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#tags ~ .invalid-feedback').hide();
+                }
+
+                if (participantLimitValue === '' || parseInt(participantLimitValue) < 1) {
+                    $('#id_participant_limit ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#id_participant_limit ~ .invalid-feedback').hide();
+                }
+
+                if (typeValue === '' || parseInt(typeValue) === 0) {
+                    $('#id_type ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#id_type ~ .invalid-feedback').hide();
+                }
+
+                if (photoValue === 0) {
+                    $('#formFile ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#formFile ~ .invalid-feedback').hide();
+                }
+
+                if (! hasValidationErrors) {
+                    $('#location').val($('#location-json').val());
+                    $('#tags').val($('#tags-json').val());
+                    $('#service-form').submit();
+                }
             });
 
             $(document).mouseup(function (e) {
@@ -7187,6 +7390,11 @@
 <div id="Create_OfferEvent_Page">
 
     <div class="row" style="width: 50%; display: block; margin: 12% auto;">
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                An illegal post request!
+            </div>
+        {% endif %}
         <h1>Create Offer</h1>
         <form method="post" id="service-form" enctype="multipart/form-data">
             {% csrf_token %}
@@ -7195,103 +7403,88 @@
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Title</label>
                         {{ form.title }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.title.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a title.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Location</label>
                         {{ form.location }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.location.errors.0|escape }}
-                            </div>
-                        {% endif %}
-                        <input type="hidden" value="" name="location-json" id="location-json">
+                        <div class="invalid-feedback">
+                            Please select a location.
+                        </div>
+                        <input type="hidden" value="" name="location-json" id="location-json" required>
+                        <ol class="list-group list-group-numbered" id="location-wrapper" style="
+						display: none;
+						position: relative;
+						background-color: rgb(255, 255, 255);
+						margin-top: 0;
+						"></ol>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Start Date</label>
                         {{ form.start_date }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.start_date.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select a start date.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Duration</label>
                         {{ form.duration }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.duration.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a duration.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Amendment Deadline</label>
                         {{ form.amendment_deadline }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.amendment_deadline.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select an amendment deadline.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Tags</label>
                         {{ form.tags }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.tags.errors.0|escape }}
-                            </div>
-                        {% endif %}
-                        <input type="hidden" value="[]" name="tags-json" id="tags-json">
+                        <div class="invalid-feedback">
+                            Please select at least one tag.
+                        </div>
+                        <input type="hidden" value="[]" name="tags-json" id="tags-json" required>
                         {{ form.claims }}
                         <ol class="list-group list-group-numbered" id="tags-wrapper" style="
 						display: none;
 						position: relative;
-						background-color: rgb(255, 255, 255);
-						padding-left: calc(var(--bs-gutter-x) / 2);
-						margin-bottom: 1rem;"></ol>
+						background-color: rgb(255, 255, 255);"></ol>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Participant Limit</label>
                         {{ form.participant_limit }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.participant_limit.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a participant limit.
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="mont-font fw-600 font-xsss">Description</label>
+                        {{ form.description }}
+                        <div class="invalid-feedback">
+                            Please enter a description.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Type</label>
                         {{ form.type }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.type.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select an offer type.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Photo</label>
                         {{ form.photo }}
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.photo.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please upload a photo.
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <ol class="list-group list-group-numbered" id="location-wrapper" style="
-						display: none;
-						position: relative;
-						background-color: rgb(255, 255, 255);
-						margin-top: -1rem;
-						padding-left: calc(var(--bs-gutter-x) / 2);
-						"></ol>
-
                     <div id="googleMap" style="width:100%;height:400px;"></div>
                 </div>
 
@@ -7337,7 +7530,7 @@
                                 function (results, status) {
                                     $('#location-json').val(JSON.stringify(results[0]));
                                     $('#location').val(results[0].formatted_address);
-                                    console.log(results)
+                                    $('#location ~ .invalid-feedback').hide();
                                 }
                             );
                         }
