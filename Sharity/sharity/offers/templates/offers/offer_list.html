@@ -77,7 +77,7 @@
                         <div class="card">
                             {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                             <div class="card-body">
-                                <h5 class="card-title"> {{ result.title }} </h5>
+                                <h5 id="id-card-title-{{result.pk}}" class="card-title"> {{ result.title }} </h5>
                                 <p class="card-text"><b> Start date: </b> {{ result.start_date }} </p>
                                 <p class="card-text"><b> Duration: </b> {{ result.duration }} </p>
                                 <p class="card-text"><b> Type: </b> {{ result.get_type }} </p>
@@ -96,8 +96,8 @@
                                                                                   data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
                                 </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
-                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to
-                                    Offer</a>
+                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
+                                <a id="id_send_message_from_explore_{{result.pk}}" href="{% url 'usermessages.create' %}" class="btn btn-primary">Send a Message to {{result.owner}}</a>
                             </div>
                         </div>
                     </div>
@@ -107,9 +107,63 @@
         </div>
     </div>
 
+    <!-- The Modal -->
+    <div id="id-message-modal-from-explore" class="send-message-modal">
+        <!-- Modal content -->
+        <div class="send-message-modal-content">
+            <span class="close" style="cursor: pointer;">&times;</span>
+            <p id="id-send-message-form-from-explore"> </p>
+        </div>
+    </div>
+
 {% endblock content %}
 
 {% block js %}
+<script type="text/javascript">
+    // Get the modal
+    var modal = document.getElementById("id-message-modal-from-explore");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    // send_btn.onclick = function(e)
+    $(document).on("click", "[id*=id_send_message_from_explore]", function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var pk = $(this).attr("id").split("_").pop();
+
+        var to = $(this).html().split(" ").map(item => item.trim()).pop() + ";";
+        var subject = "About Your Offer - " + $("#id-card-title-" + pk).html();
+
+        modal.style.display = "block";
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            success: function(data) {
+                $("#id-send-message-form-from-explore").html(data);
+                $("#id-form-to").val(to);
+                $("#id-form-subject").val(subject);
+                $("#id-form-body").focus();
+            }
+        });
+    });
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            $("#id-send-message-form-from-explore").html("");
+        }
+    }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(".rounded-pill").hover(function () {
@@ -372,6 +426,26 @@
 
 {% block styles %}
     <style>
+        .send-message-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .send-message-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            margin-top: 3%;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
         .small-dist {
             font-size: 12px;
         }
