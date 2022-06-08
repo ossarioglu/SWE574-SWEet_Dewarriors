@@ -77,10 +77,10 @@ class OfferSearchForm(forms.ModelForm):
         'placeholder': 'Search by owner name'
     }))
     distance = forms.IntegerField()
+    keyword = forms.CharField(max_length=250, required=False)
     class Meta:
         model = Offer
         fields = [
-            'title',
             'location',
             'start_date',
             'duration',
@@ -88,14 +88,14 @@ class OfferSearchForm(forms.ModelForm):
             'type',
         ]
 
-    field_order = ['title', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
+    field_order = ['keyword', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs.update({
-            'id': 'search-title',
-            'class': 'search-form-title',
-            'placeholder': 'Search by offer title'
+        self.fields['keyword'].widget.attrs.update({
+            'id': 'search-keyword',
+            'class': 'search-form-keyword',
+            'placeholder': 'Search by keyword'
         })
         self.fields['location'].widget = forms.TextInput(attrs={
             'id': 'search-location',
