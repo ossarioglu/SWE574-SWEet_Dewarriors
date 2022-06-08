@@ -17,6 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
+            var formSubmittedAndInvalid = false;
+
             $(document).on('change', '.input-file', function () {
                 let filesCount = $(this)[0].files.length;
                 let textbox = $(this).prev();
@@ -145,95 +147,134 @@
                 }
             });
 
+
             $("#id_title").blur(function () {
-                let titleValue = $("#id_title").val();
-                if (titleValue !== '') {
-                    $("#id_title ~ .invalid-feedback").hide();
+                if (formSubmittedAndInvalid) {
+                    let titleValue = $("#id_title").val();
+                    if (titleValue !== '' && titleValue.length <= 500) {
+                        $("#id_title ~ .invalid-feedback").hide();
+                    } else if (titleValue === '') {
+                        $("#id_title ~ .invalid-feedback").text('Please enter a title.');
+                        $("#id_title ~ .invalid-feedback").show();
+                    } else if (titleValue.length > 500) {
+                        $("#id_title ~ .invalid-feedback").text('Title length must be less than 500 characters.');
+                        $("#id_title ~ .invalid-feedback").show();
+                    }
                 }
             });
 
             $('input[name="start_date"]').blur(function () {
-                let startDateValue = $('input[name="start_date"]').val();
-                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
-                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+                if (formSubmittedAndInvalid) {
+                    let startDateValue = $('input[name="start_date"]').val();
+                    let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                    let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
 
-                if (
-                    isNaN(amendmentAndStartDateDifference)
-                    ||
-                    (startDateValue !== '' && !isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference >= 1)
-                ) {
-                    $('input[name="start_date"] ~ .invalid-feedback').hide();
-                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
-                } else {
-                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
-                    $('input[name="start_date"] ~ .invalid-feedback').show();
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    if (
+                        startDateValue !== ''
+                        &&
+                        !isNaN(amendmentAndStartDateDifference)
+                        &&
+                        amendmentAndStartDateDifference >= 1
+                    ) {
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    } else if (startDateValue === '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                    } else if (startDateValue !== '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    } else {
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
 
+                    }
                 }
             });
 
             $("#id_duration").blur(function () {
-                let durationValue = $("#id_duration").val();
+                if (formSubmittedAndInvalid) {
+                    let durationValue = $("#id_duration").val();
 
-                if (durationValue !== '' && parseInt(durationValue) >= 1) {
-                    $("#id_duration ~ .invalid-feedback").hide();
+                    if (durationValue !== '' && parseInt(durationValue) >= 1) {
+                        $("#id_duration ~ .invalid-feedback").hide();
+                    }
                 }
             });
 
             $('input[name="amendment_deadline"]').blur(function () {
-                let startDateValue = $('input[name="start_date"]').val();
-                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
-                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+                if (formSubmittedAndInvalid) {
+                    let startDateValue = $('input[name="start_date"]').val();
+                    let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                    let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
 
-                if (
-                    isNaN(amendmentAndStartDateDifference)
-                    ||
-                    (startDateValue !== '' && !isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference >= 1)
-                ) {
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
-                    $('input[name="start_date"] ~ .invalid-feedback').hide();
-                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
-                } else {
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
-                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
-                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
-                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    if (
+                        amendmentDeadlineValue !== ''
+                        &&
+                        !isNaN(amendmentAndStartDateDifference)
+                        &&
+                        amendmentAndStartDateDifference >= 1
+                    ) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    } else if (amendmentDeadlineValue === '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    } else if (amendmentDeadlineValue !== '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    } else {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                    }
                 }
             });
 
             $('#id_participant_limit').blur(function () {
-                let participantLimitValue = $('#id_participant_limit').val();
+                if (formSubmittedAndInvalid) {
+                    let participantLimitValue = $('#id_participant_limit').val();
 
-                if (participantLimitValue !== '' && parseInt(participantLimitValue) >= 1) {
-                    $('#id_participant_limit ~ .invalid-feedback').hide();
+                    if (participantLimitValue !== '' && parseInt(participantLimitValue) >= 1) {
+                        $('#id_participant_limit ~ .invalid-feedback').hide();
+                    }
                 }
             });
 
             $('#id_description').blur(function () {
-                let descriptionValue = $('#id_description').val();
+                if (formSubmittedAndInvalid) {
+                    let descriptionValue = $('#id_description').val();
 
-                if (descriptionValue !== '') {
-                    $('#id_description ~ .invalid-feedback').hide();
+                    if (descriptionValue !== '') {
+                        $('#id_description ~ .invalid-feedback').hide();
+                    }
                 }
             });
 
             $('#id_type').blur(function () {
-                let typeValue = $('#id_type').val();
+                if (formSubmittedAndInvalid) {
+                    let typeValue = $('#id_type').val();
 
-                if (typeValue !== '' && parseInt(typeValue) > 0) {
-                    $('#id_type ~ .invalid-feedback').hide();
+                    if (typeValue !== '' && parseInt(typeValue) > 0) {
+                        $('#id_type ~ .invalid-feedback').hide();
+                    }
                 }
             });
 
             $('#formFile').change(function () {
-                let photoValue = $('#formFile').get(0).files.length;
+                if (formSubmittedAndInvalid) {
+                    let photoValue = $('#formFile').get(0).files.length;
 
-                if (photoValue > 0) {
-                    $('#formFile ~ .invalid-feedback').hide();
+                    if (photoValue > 0) {
+                        $('#formFile ~ .invalid-feedback').hide();
+                    }
                 }
             });
 
@@ -256,6 +297,11 @@
                 let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
 
                 if (titleValue === '') {
+                    $("#id_title ~ .invalid-feedback").text('Please enter a title.');
+                    $("#id_title ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else if (titleValue.length > 500) {
+                    $("#id_title ~ .invalid-feedback").text('Title length must be less than 500 characters.');
                     $("#id_title ~ .invalid-feedback").show();
                     hasValidationErrors = true
                 } else {
@@ -339,6 +385,8 @@
                     $('#location').val($('#location-json').val());
                     $('#tags').val($('#tags-json').val());
                     $('#service-form').submit();
+                } else {
+                    formSubmittedAndInvalid = true;
                 }
             });
 
@@ -378,7 +426,7 @@
         #Create_OfferEvent_Page {
             position: absolute;
             width: 1920px;
-            height: 1080px;
+            min-height: 1080px;
             background-color: rgba(255, 255, 255, 1);
             overflow: hidden;
             --web-view-name: Create Offer/Event Page;

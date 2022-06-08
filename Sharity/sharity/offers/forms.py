@@ -52,6 +52,7 @@ class OfferCreateForm(forms.ModelForm):
         model = Offer
         fields = (
             'title',
+            'description',
             'location',
             'start_date',
             'amendment_deadline',
