@@ -15,6 +15,7 @@ from tags.services import TagService
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from decouple import config
+from actstream import action
 from django.shortcuts import render
 from functools import reduce
 import operator
@@ -22,7 +23,7 @@ import operator
 from badges.signals import offer_detail, timeline
 from badges.models import *
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
@@ -59,10 +60,11 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
                     claims.append(entity_id)
 
             form.instance.claims = json.dumps(claims, separators=(',', ':'))
+            form.instance.end_date = form.instance.start_date + timedelta(hours=form.instance.duration)
+            action.send(form.instance.owner, verb='created an offer', action_object=form.instance)
 
             return super().form_valid(form)
         except AttributeError:
-            print("This is an attribute erroooooooor!!!")
             return super(OfferCreateView, self).form_invalid(form)
 
     @method_decorator(csrf_protect)
@@ -163,7 +165,6 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 arguments = tag_args & keyword_args & location_args
             else:
                 arguments = (tag_args & keyword_args) | location_args
-            print(arguments)
 
             qs = Offer.objects.filter(*(arguments,), **filters).exclude(owner=self.request.user).exclude(
                 end_date__lt=timezone.now())
@@ -221,10 +222,11 @@ class OfferListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        if self.request.GET.get('title'):
+        if self.request.GET.get('keyword'):
             args = Q()
-            for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
-                args |= Q(**{'title__icontains': keyword})
+            for word in [i.strip() for i in self.request.GET.get('keyword').split(' ') if i.strip() != '']:
+                args |= Q(**{'title__icontains': word})
+                args |= Q(**{'description__icontains': word})
             result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(
                 end_date__lt=timezone.now())
         else:
@@ -235,8 +237,8 @@ class OfferListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
-        if self.request.GET.get('title'):
-            context['title_query'] = self.request.GET.get('title')
+        if self.request.GET.get('keyword'):
+            context['keyword_query'] = self.request.GET.get('keyword')
         return context
 
 
@@ -262,36 +264,41 @@ def updateOffer(request, sID):
 
     # When user posts information from Form, relevant fields are matched with object, and service is saved.
     if request.method == 'POST':
-        form = OfferForm(request.POST)
+        try:
+            form = OfferForm(request.POST)
 
-        tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
-        wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
-        claims = []
+            tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
+            wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
+            claims = []
 
-        if 'entities' in wb_get_entities_response:
-            for entity_id in wb_get_entities_response['entities']:
-                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
-                                    'P1424', 'P1441']:
-                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
-                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
-                claims.append(entity_id)
+            if 'entities' in wb_get_entities_response:
+                for entity_id in wb_get_entities_response['entities']:
+                    for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
+                                        'P1424', 'P1441']:
+                            for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                                claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                    claims.append(entity_id)
 
-        offer.title = request.POST.get('title')
-        offer.description = request.POST.get('description')
-        offer.location = request.POST.get('location-json')
-        offer.tags = request.POST.get('tags-json')
-        offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d %H:%M')
-        offer.duration = int(request.POST.get('duration'))
-        offer.end_date = request.POST.get('end_date')
-        offer.participant_limit = request.POST.get('participant_limit')
-        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M')
-        offer.type = request.POST.get('type')
-        offer.claims = json.dumps(claims, separators=(',', ':'))
-        if request.FILES.get('photo') is not None:
-            offer.picture = request.FILES.get('photo')
-        offer.save()
-        return redirect('home')
+            offer.title = request.POST.get('title')
+            offer.description = request.POST.get('description')
+            offer.location = request.POST.get('location-json')
+            offer.tags = request.POST.get('tags-json')
+            offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M')
+            offer.duration = int(request.POST.get('duration'))
+            offer.end_date = request.POST.get('end_date')
+            offer.participant_limit = request.POST.get('participant_limit')
+            offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%dT%H:%M')
+            offer.type = request.POST.get('type')
+            offer.claims = json.dumps(claims, separators=(',', ':'))
+            if request.FILES.get('photo') is not None:
+                offer.picture = request.FILES.get('photo')
+            offer.save()
+            return redirect('offers.detail', pk=offer.pk)
+        except:
+            form = OfferForm(instance=offer)
+            context = {'form': form, 'offer': offer, 'error': True}
+            return render(request, 'offers/update_offer.html', context)
 
     else:
         form = OfferForm(instance=offer)

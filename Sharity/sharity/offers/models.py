@@ -54,8 +54,6 @@ class Offer(models.Model):
 
     def save(self, *args, **kwargs):
         """Override end_date attribute"""
-        print(self.uuid)
-        action.send(self.owner, verb='created an offer', action_object=self)
         self.end_date = self.start_date + timedelta(hours=self.duration)
         super().save(*args, **kwargs)
 

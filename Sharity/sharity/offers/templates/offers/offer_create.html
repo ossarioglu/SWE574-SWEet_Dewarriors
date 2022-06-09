@@ -177,7 +177,6 @@
                                 let resultIndex = $(this).attr('id').split('-')[1]
                                 let existingValue = JSON.parse($('#tags-json').val());
                                 existingValue.push(response.data.response.search[resultIndex]);
-                                console.log(existingValue);
                                 $('#tags-json').val(JSON.stringify(existingValue));
                                 let stringValue = '';
                                 existingValue.forEach(function (tag) {
