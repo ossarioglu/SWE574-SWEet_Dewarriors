@@ -51,8 +51,6 @@
 
         function getLocation() {
                  var currentLocation ={{ offer.location|safe }}
-                     console.log(currentLocation.geometry.location.lat)
-                     console.log(currentLocation.geometry.location.lng)
                 loadMap({coords: {longitude: currentLocation.geometry.location.lng, latitude: currentLocation.geometry.location.lat}})
         }
 

@@ -12,6 +12,54 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
+
+        <script>
+            var map;
+            var marker;
+            const geocoder = new google.maps.Geocoder();
+
+            function getLocation() {
+                loadMap({coords: {longitude: 29.1041687, latitude: 41.0246477}})
+            }
+
+
+            function loadMap(position) {
+                var mapProp = {
+                    center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                    zoom: 12,
+                };
+                var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                google.maps.event.addListener(map, 'click', function (event) {
+                    placeMarker(event.latLng, map);
+                });
+            }
+
+
+            function placeMarker(location, map) {
+                if (marker == null) {
+                    marker = new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                }
+                marker.setPosition(location);
+                var latlng = new google.maps.LatLng(location.lat(), location.lng());
+                geocoder.geocode(
+                    {'latLng': latlng},
+                    function (results, status) {
+                        $('#location-json').val(JSON.stringify(results[0]));
+                        $('#location').val(results[0].formatted_address);
+                        console.log(results)
+                    }
+                );
+            }
+
+            $(document).ready(function () {
+                getLocation()
+            })
+        </script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
             $(document).on('change', '.input-file', function () {
@@ -67,6 +115,17 @@
                                 $('#location').css('background-size', '5%');
                                 $('#location').val(response.data.response.results[resultIndex].formatted_address);
                                 $('#location-wrapper').css('display', 'none');
+
+                                var place = response.data.response.results[resultIndex].geometry
+
+                                map.setCenter(place.location)
+                                  if (marker == null) {
+                                    marker = new google.maps.Marker({
+                                        position: place.location,
+                                        map: map
+                                    });
+                                  }
+                                 marker.setPosition(place.location);
                             });
                             request = null;
                         })
@@ -3739,54 +3798,7 @@
                 <span>Location</span>
             </div>
         </div>
-        <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
 
-        <script>
-            $(document).ready(function () {
-                var marker;
-                const geocoder = new google.maps.Geocoder();
-
-                function getLocation() {
-                   loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
-                }
-
-
-
-                function loadMap(position) {
-                    var mapProp = {
-                        center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                        zoom: 12,
-                    };
-                    var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-                    google.maps.event.addListener(map, 'click', function (event) {
-                        placeMarker(event.latLng, map);
-                    });
-                }
-
-
-                function placeMarker(location, map) {
-                    if (marker == null) {
-                        marker = new google.maps.Marker({
-                            position: location,
-                            map: map
-                        });
-                    }
-                    marker.setPosition(location);
-                    var latlng = new google.maps.LatLng(location.lat(), location.lng());
-                    geocoder.geocode(
-                        {'latLng': latlng},
-                        function (results, status) {
-                            $('#location-json').val(JSON.stringify(results[0]));
-                            $('#location').val(results[0].formatted_address);
-                            console.log(results)
-                        }
-                    );
-                }
-
-                getLocation()
-            })
-        </script>
         <div id="ButtonDefaultPrimary" class="Button_Default_Primary" type="submit" id="submit-button">
             <svg class="Primary__007BFF" viewBox="0 0 451 39">
                 <path id="Primary__007BFF"

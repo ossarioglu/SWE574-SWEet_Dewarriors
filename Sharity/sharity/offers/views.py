@@ -61,6 +61,9 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
 
             form.instance.claims = json.dumps(claims, separators=(',', ':'))
             form.instance.end_date = form.instance.start_date + timedelta(hours=form.instance.duration)
+
+            print("print")
+            print(form.instance.uuid)
             action.send(form.instance.owner, verb='created an offer', action_object=form.instance)
 
             return super().form_valid(form)
