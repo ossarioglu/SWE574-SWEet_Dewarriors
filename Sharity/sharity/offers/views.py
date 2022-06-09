@@ -5,6 +5,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from django.views.generic.edit import FormMixin
 from .models import Offer
 from apply.models import Application
+from feedback.models import Feedback
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.decorators import method_decorator
 from .forms import OfferCreateForm, OfferForm, OfferSearchForm
@@ -14,6 +15,7 @@ from tags.services import TagService
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from decouple import config
+from actstream import action
 from django.shortcuts import render
 from functools import reduce
 import operator
@@ -21,43 +23,57 @@ import operator
 from badges.signals import offer_detail, timeline
 from badges.models import *
 from django.utils import timezone
-from datetime import datetime
-
+from datetime import datetime, timedelta
 
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
+
+
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class OfferCreateView(LoginRequiredMixin, CreateView):
     form_class = OfferCreateForm
     template_name = 'offers/offer_create.html'
+
     def form_invalid(self, form):
-        print(form.errors)
+        print(len(form.errors), "------ THESE ARE ERRORS ----")
+
+        return super().form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        try:
+            form.instance.owner = self.request.user
 
-        if form.instance.owner != self.request.user:
+            if form.instance.owner != self.request.user:
+                return super(OfferCreateView, self).form_invalid(form)
+
+            wb_get_entities_response = TagService.find_by_ids(form.tag_ids)
+            claims = []
+
+            if 'entities' in wb_get_entities_response:
+                for entity_id in wb_get_entities_response['entities']:
+                    for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61',
+                                        'P495', 'P1424', 'P1441']:
+                            for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                                claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                    claims.append(entity_id)
+
+            form.instance.claims = json.dumps(claims, separators=(',', ':'))
+            form.instance.end_date = form.instance.start_date + timedelta(hours=form.instance.duration)
+
+            print("print")
+            print(form.instance.uuid)
+            action.send(form.instance.owner, verb='created an offer', action_object=form.instance)
+
+            return super().form_valid(form)
+        except AttributeError:
             return super(OfferCreateView, self).form_invalid(form)
-
-        wb_get_entities_response = TagService.find_by_ids(form.tag_ids)
-        claims = []
-
-        if 'entities' in wb_get_entities_response:
-            for entity_id in wb_get_entities_response['entities']:
-                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495', 'P1424', 'P1441']:
-                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
-                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
-                claims.append(entity_id)
-
-        form.instance.claims = json.dumps(claims, separators=(',', ':'))
-
-        return super().form_valid(form)
 
     @method_decorator(csrf_protect)
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+
 
 # @method_decorator(never_cache, name='dispatch')
 # @method_decorator(csrf_exempt, name='dispatch')
@@ -68,7 +84,7 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         offer = self.get_object()
         offer_detail.send(sender=self.__class__, owner_pk=[offer.owner.pk])
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_object(self):
         offer = Offer.objects.get(uuid=self.kwargs.get('pk'))
         return offer
@@ -77,10 +93,13 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         offer = self.get_object()
         application = Application.objects.filter(serviceID=offer).filter(requesterID=self.request.user)
+        allapplications = Application.objects.filter(serviceID=offer)
+        feedback = Feedback.objects.filter(serviceID=offer)
 
         context['applications'] = application
-
-        
+        context['allapplications'] = allapplications
+        context['feedback'] = feedback
+        print(offer.location)
         return context
 
 
@@ -97,18 +116,18 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
     def form_invalid(self, form):
         if self.request.is_ajax():
             return JsonResponse(form.errors, status=400)
-    
+
     def form_valid(self, form):
         if self.request.is_ajax():
             context = {}
             filters = {}
             tag_args = Q()
-            title_args = Q()
+            keyword_args = Q()
             location_args = Q()
             filter_flag = False
             filter_words = {
-                'title': '__icontains',
-                'location': '__icontains',
+                'keyword': '__icontains',
+                # 'location': '__icontains',
                 'start_date': '__gte',
                 'duration': '__lte',
                 'tags': '__icontains',
@@ -121,7 +140,6 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             # get search parameter -> location
             ljson = form.cleaned_data.pop('location-json')
 
-
             for key, value in form.cleaned_data.items():
                 if value != '' and value != '[]' and value is not None:
                     filter_flag = True
@@ -129,28 +147,31 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                         context[key + '_query'] = [i.strip() for i in value.split(',') if i.strip() != '']
                         for tag in [i.strip() for i in value.split(',') if i.strip() != '']:
                             tag_args |= Q(**{key + filter_words[key]: tag})
-                    elif key == 'title':
+                    elif key == 'keyword':
                         context[key + '_query'] = value
-                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
-                            title_args |= Q(**{key + filter_words[key]: tag})
+                        for word in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                            keyword_args |= Q(**{'title' + filter_words[key]: word})
+                            keyword_args |= Q(**{'description' + filter_words[key]: word})
                     elif key == 'location':
-                        context[key + '_query'] = value
-                        for tag in [i.strip() for i in value.split(' ') if i.strip() != '']:
-                            location_args |= Q(**{key + filter_words[key]: tag})
+                        pass
+                    #     context[key + '_query'] = value
+                    #     for loc in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                    #         location_args |= Q(**{key + filter_words[key]: loc})
                     else:
                         if key == 'type':
                             context[key + '_query'] = 'Service' if value == 1 else 'Event'
                         else:
-                            context[key + '_query'] = value  
+                            context[key + '_query'] = value
                         filters[key + filter_words[key]] = value
 
             # if only location
             if ljson == '' and d is None:
-                arguments = tag_args & title_args & location_args
+                arguments = tag_args & keyword_args & location_args
             else:
-                arguments = (tag_args & title_args) | location_args
+                arguments = (tag_args & keyword_args) | location_args
 
-            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
+            qs = Offer.objects.filter(*(arguments,), **filters).exclude(owner=self.request.user).exclude(
+                end_date__lt=timezone.now())
 
             ### handle location-json and distance filters last ###
             # if location-json and distance queries are present
@@ -158,7 +179,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 filter_flag = True
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
-                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                qs = [i for i in qs if
+                      distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                 context['distance_query'] = d
                 if 'location_query' not in context.keys():
                     context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
@@ -169,7 +191,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 profile = Profile.objects.get(user=self.request.user)
                 try:
                     profile_loc = (profile.get_latitude(), profile.get_longitude())
-                    qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                    qs = [i for i in qs if
+                          distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                     context['distance_query'] = d
                 except json.JSONDecodeError:
                     form.add_error('__all__', 'Profile has no location.')
@@ -179,7 +202,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 filter_flag = True
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
-                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
+                qs = [i for i in qs if
+                      distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
                 if 'location_query' not in context.keys():
                     context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
 
@@ -191,6 +215,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
 
             return render(self.request, 'offers/ajax_offer_results.html', context)
 
+
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
     template_name = 'offers/offer_list.html'
@@ -201,11 +226,13 @@ class OfferListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        if self.request.GET.get('title'):
+        if self.request.GET.get('keyword'):
             args = Q()
-            for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
-                args |= Q(**{'title__icontains': keyword})
-            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
+            for word in [i.strip() for i in self.request.GET.get('keyword').split(' ') if i.strip() != '']:
+                args |= Q(**{'title__icontains': word})
+                args |= Q(**{'description__icontains': word})
+            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(
+                end_date__lt=timezone.now())
         else:
             result = Offer.objects.all().exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
         return order_offers(result, self.request.user)
@@ -214,51 +241,71 @@ class OfferListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
-        if self.request.GET.get('title'):
-            context['title_query'] = self.request.GET.get('title')
+        if self.request.GET.get('keyword'):
+            context['keyword_query'] = self.request.GET.get('keyword')
         return context
 
 
 def deleteOffer(request, sID):
-    
     offer = Offer.objects.get(uuid=sID)
-    
+
     if request.user != offer.owner:
         return HttpResponse('You are not allowed to delete this offer')
-    
-    #If confirmation from user is posted, record for service is deleted.
+
+    # If confirmation from user is posted, record for service is deleted.
     if request.method == 'POST':
         offer.delete()
         return redirect('home')
-    return render(request, 'offers/delete.html', {'obj':offer})
+    return render(request, 'offers/delete.html', {'obj': offer})
 
 
 def updateOffer(request, sID):
-
     # Information for requested service is retreived from database, and added to Form
     offer = Offer.objects.get(uuid=sID)
-    form = OfferForm(instance=offer)    
 
     if request.user != offer.owner:
         return HttpResponse('You are not allowed to update this offer')
 
     # When user posts information from Form, relevant fields are matched with object, and service is saved.
     if request.method == 'POST':
+        try:
+            form = OfferForm(request.POST)
 
-        offer.title = request.POST.get('title')
-        offer.location = request.POST.get('location-json')
-        offer.tags = request.POST.get('tags-json')
-        offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d %H:%M')
-        offer.duration = int(request.POST.get('duration'))
-        offer.end_date = request.POST.get('end_date')
-        offer.participant_limit = request.POST.get('participant_limit')
-        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M') 
-        offer.type = request.POST.get('type')
-        if request.FILES.get('photo') is not None:
-            offer.picture = request.FILES.get('photo')
-        offer.save()
-        return redirect('home')
-        
-    context = {'form':form, 'offer':offer}
+            tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
+            wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
+            claims = []
+
+            if 'entities' in wb_get_entities_response:
+                for entity_id in wb_get_entities_response['entities']:
+                    for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
+                                        'P1424', 'P1441']:
+                            for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                                claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                    claims.append(entity_id)
+
+            offer.title = request.POST.get('title')
+            offer.description = request.POST.get('description')
+            offer.location = request.POST.get('location-json')
+            offer.tags = request.POST.get('tags-json')
+            offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M')
+            offer.duration = int(request.POST.get('duration'))
+            offer.end_date = request.POST.get('end_date')
+            offer.participant_limit = request.POST.get('participant_limit')
+            offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%dT%H:%M')
+            offer.type = request.POST.get('type')
+            offer.claims = json.dumps(claims, separators=(',', ':'))
+            if request.FILES.get('photo') is not None:
+                offer.picture = request.FILES.get('photo')
+            offer.save()
+            return redirect('offers.detail', pk=offer.pk)
+        except:
+            form = OfferForm(instance=offer)
+            context = {'form': form, 'offer': offer, 'error': True}
+            return render(request, 'offers/update_offer.html', context)
+
+    else:
+        form = OfferForm(instance=offer)
+
+    context = {'form': form, 'offer': offer}
     return render(request, 'offers/update_offer.html', context)
-

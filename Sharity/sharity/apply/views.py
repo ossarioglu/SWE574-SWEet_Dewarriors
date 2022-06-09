@@ -2,6 +2,7 @@ import uuid
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from apply.models import Application
+from feedback.models import Feedback
 from notification.models import Notification
 
 from offers.models import Offer
@@ -54,20 +55,26 @@ def requestOffer(request, sID):
                 # After notification is created, user is sent back to services information page
                 if newnote:
                     application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-                    context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+                    allapplications = Application.objects.filter(serviceID=sID)
+                    feedback = Feedback.objects.filter(serviceID=sID)
+                    context = {'object':Offer.objects.get(uuid=sID), "applications":application,'allapplications':allapplications, 'feedback':feedback}
                     return render(request, 'offers/offer_detail.html', context)
             else:
                 return HttpResponse("A problem occured. Please try again later")
         else:
             application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-            context = {'object':Offer.objects.get(uuid=sID), "applications":application}
+            allapplications = Application.objects.filter(serviceID=sID)
+            feedback = Feedback.objects.filter(serviceID=sID)
+            context = {'object':Offer.objects.get(uuid=sID), "applications":application,'allapplications':allapplications, 'feedback':feedback}
             return render(request, 'offers/offer_detail.html', context)
     
     # If user doesn't have enough credit, this state is sent to front-end as a message variable during render
     else:
         textMessage = "Not Enough Credit"
         application = Application.objects.filter(serviceID=sID).filter(requesterID=request.user)
-        context = {'object':Offer.objects.get(uuid=sID), "applications":application, "textMessage":textMessage}
+        allapplications = Application.objects.filter(serviceID=sID)
+        feedback = Feedback.objects.filter(serviceID=sID)
+        context = {'object':Offer.objects.get(uuid=sID), "applications":application, "textMessage":textMessage,'allapplications':allapplications, 'feedback':feedback}
         return render(request, 'offers/offer_detail.html', context)
 
 # This is for cancelling user's applications.
@@ -104,8 +111,10 @@ def deleteRequest(request, rID):
     request.user.profile.save()
 
     application = Application.objects.filter(serviceID=offer).filter(requesterID=request.user)
+    allapplications = Application.objects.filter(serviceID=offer)
+    feedback = Feedback.objects.filter(serviceID=offer)
 
-    context = {'object':offer, "applications":application, "textMessage":''}
+    context = {'object':offer, "applications":application, "textMessage":'','allapplications':allapplications, 'feedback':feedback}
 
     #    return redirect('home')
     return render(request, 'offers/offer_detail.html', context)

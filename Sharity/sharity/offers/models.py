@@ -30,6 +30,7 @@ class Offer(models.Model):
     )
 
     title = models.CharField(verbose_name=_('Title'), max_length=500)
+    description = models.TextField(null=True)
     latitude = models.CharField(verbose_name=_('Latitude'), max_length=500, null=True)
     longitude = models.CharField(verbose_name=_('Longitude'), max_length=500, null=True)
     location = models.TextField()
@@ -53,7 +54,6 @@ class Offer(models.Model):
 
     def save(self, *args, **kwargs):
         """Override end_date attribute"""
-        action.send(self.owner, verb='created an offer', action_object=self)
         self.end_date = self.start_date + timedelta(hours=self.duration)
         super().save(*args, **kwargs)
 

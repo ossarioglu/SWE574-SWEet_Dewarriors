@@ -62,11 +62,10 @@
                                     </div>
                                 {% endif %}
                                 <div>
-                                    {% if note.status == 'Read' %}
-                                        <a class="btn btn-outline-primary" href="{% url 'changeNote' note.noteID %}" role="button">Status : Read</a>  
-                                    {% else %}
-                                        <a class="btn btn-outline-success" href="{% url 'changeNote' note.noteID %}" role="button">Status : UnRead</a>  
-                                    {% endif %} 
+
+
+                                        <a class="btn btn-outline-danger" href="{% url 'changeNote' note.noteID %}" role="button">Delete</a>
+
                                 </div>
                                 
                             </div>

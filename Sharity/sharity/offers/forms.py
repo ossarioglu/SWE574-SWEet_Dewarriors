@@ -7,6 +7,10 @@ class OfferCreateForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
     }))
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'rows': '3',
+    }))
     location = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'id': 'location',
@@ -14,13 +18,11 @@ class OfferCreateForm(forms.ModelForm):
     }))
     start_date = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'id': 'datepicker',
-        "type" : "datetime-local"
+        'type': 'datetime-local',
     }))
     amendment_deadline = forms.DateTimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'id': 'datepicker',
-        "type": "datetime-local"
+        'type': "datetime-local"
     }))
     duration = forms.IntegerField(widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -41,13 +43,14 @@ class OfferCreateForm(forms.ModelForm):
         'value': '[]',
     }))
     type = forms.ChoiceField(choices=Offer.Type.choices, widget=forms.Select(attrs={
-        'class': 'form-control',
+        'class': 'form-select',
     }))
 
     class Meta:
         model = Offer
         fields = (
             'title',
+            'description',
             'location',
             'start_date',
             'amendment_deadline',
@@ -72,10 +75,11 @@ class OfferSearchForm(forms.ModelForm):
         'placeholder': 'Search by owner name'
     }))
     distance = forms.IntegerField()
+    keyword = forms.CharField(max_length=250, required=False)
+
     class Meta:
         model = Offer
         fields = [
-            'title',
             'location',
             'start_date',
             'duration',
@@ -83,14 +87,14 @@ class OfferSearchForm(forms.ModelForm):
             'type',
         ]
 
-    field_order = ['title', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
-    
+    field_order = ['keyword', 'start_date', 'duration', 'tags', 'type', 'owner', 'location', 'distance']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs.update({
-            'id': 'search-title',
-            'class': 'search-form-title',
-            'placeholder': 'Search by offer title'
+        self.fields['keyword'].widget.attrs.update({
+            'id': 'search-keyword',
+            'class': 'search-form-keyword',
+            'placeholder': 'Search by keyword'
         })
         self.fields['location'].widget = forms.TextInput(attrs={
             'id': 'search-location',
@@ -116,7 +120,7 @@ class OfferSearchForm(forms.ModelForm):
             'id': 'search-type',
             'class': 'search-form-type',
         })
-        
+
         new_choices = list(self.fields['type'].choices)
         new_choices.remove(('', '---------'))
         new_choices.insert(0, ('', 'All'))
@@ -133,14 +137,15 @@ class OfferSearchForm(forms.ModelForm):
             self.fields[key].required = False
 
     def clean(self):
-        if (self.data.get('location-json') != '' and self.data.get('map-json') != '') or (self.data.get('location') != '' and self.data.get('map-json') != ''):
-            raise forms.ValidationError('Only one location can be inputted.')
+        # if (self.data.get('location-json') != '' and self.data.get('map-json') != '') or (
+        #         self.data.get('location') != '' and self.data.get('map-json') != ''):
+        #     raise forms.ValidationError('Only one location can be inputted.')
 
         cleaned_data = self.cleaned_data
         if self.data.get('location-json') != '':
             cleaned_data['location-json'] = self.data.get('location-json')
-        elif self.data.get('map-json') != '':
-            cleaned_data['location-json'] = self.data.get('map-json')
+        # elif self.data.get('map-json') != '':
+        #     cleaned_data['location-json'] = self.data.get('map-json')
         else:
             cleaned_data['location-json'] = ''
 
@@ -148,8 +153,7 @@ class OfferSearchForm(forms.ModelForm):
 
 
 class OfferForm(forms.ModelForm):
-
-    # Information is shown for all fields other than 'providerID' 
+    # Information is shown for all fields other than 'providerID'
     class Meta:
         model = Offer
         fields = '__all__'

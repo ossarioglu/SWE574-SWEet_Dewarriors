@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Notification
+# from django.db.models import Q
 
 
 # This is for listing notifications
@@ -16,11 +17,14 @@ def changeNote(request, nID):
     myNotes = request.user.receiverID.filter()
     myNote = Notification.objects.get(noteID=nID)
     
-    if myNote.status == "Read":
-        myNote.status = "Unread"
-    else:
-        myNote.status = "Read"
-    myNote.save()
+    if myNote.status == "Unread":
+       myNote.status = "Read"
+    myNote.delete()
 
     context = {'myNotes':myNotes }
     return render(request, 'notification/notifications.html', context)
+
+# def deleteNote(request, nID):
+#     myNote = Notification.objects.get(noteID=nID)
+#
+#     myNote.delete()

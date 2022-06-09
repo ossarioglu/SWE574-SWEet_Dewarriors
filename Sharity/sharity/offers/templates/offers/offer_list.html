@@ -18,7 +18,7 @@
                 </div>
                 <input type='submit' id="id_filter_button" class='btn btn-success' value='Filter'/>
                 <input type="hidden" value="" name="location-json" id="location-json">
-                <input type="hidden" value="" name="map-json" id="map-json">
+                {% comment %} <input type="hidden" value="" name="map-json" id="map-json"> {% endcomment %}
                 <input type="hidden" value="[]" name="tags-json" id="tags-json">
                 <button class='btn btn-success'><a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a>
                 </button>
@@ -53,10 +53,10 @@
             </div>
 
             <div>
-                {% if title_query %}
+                {% if keyword_query %}
                     <div class="applied-filters">
                         <h5 class="applied-filters-header"><u> Applied filters </u></h5>
-                        <b> Title: </b> {{ title_query }} <span> <svg id="id-remove-filter-title" class="remove-filter"
+                        <b> Keyword: </b> {{ keyword_query }} <span> <svg id="id-remove-filter-keyword" class="remove-filter"
                                                                       xmlns="http://www.w3.org/2000/svg"
                                                                       viewBox="0 0 512 512">
                         <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM175 208.1L222.1 255.1L175 303C165.7 312.4 165.7 327.6 175 336.1C184.4 346.3 199.6 346.3 208.1 336.1L255.1 289.9L303 336.1C312.4 346.3 327.6 346.3 336.1 336.1C346.3 327.6 346.3 312.4 336.1 303L289.9 255.1L336.1 208.1C346.3 199.6 346.3 184.4 336.1 175C327.6 165.7 312.4 165.7 303 175L255.1 222.1L208.1 175C199.6 165.7 184.4 165.7 175 175C165.7 184.4 165.7 199.6 175 208.1V208.1z"/></svg><br></span>
@@ -64,7 +64,7 @@
                 {% endif %}
             </div>
 
-            {% if title_query %}
+            {% if keyword_query %}
                 <h2>Found Offers</h2>
             {% else %}
                 <h2>All Offers</h2>
@@ -77,7 +77,8 @@
                         <div class="card">
                             {% if result.photo %} <img src="{{result.photo.url}}" class="card-img-top" alt="..."> {% endif %}
                             <div class="card-body">
-                                <h5 class="card-title"> {{ result.title }} </h5>
+                                <h5 id="id-card-title-{{result.pk}}" class="card-title"> {{ result.title }} </h5>
+                                {% if result.description %} <p class="card-text"><b> Description: </b> {{ result.description|truncatewords_html:6 }} </p> {% endif %}
                                 <p class="card-text"><b> Start date: </b> {{ result.start_date }} </p>
                                 <p class="card-text"><b> Duration: </b> {{ result.duration }} </p>
                                 <p class="card-text"><b> Type: </b> {{ result.get_type }} </p>
@@ -96,8 +97,8 @@
                                                                                   data-value="This badge belongs to users who have offered 10 or more events in a month">Master Event Organizer</span> {% endif %}
                                 </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
-                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to
-                                    Offer</a>
+                                <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
+                                <a id="id_send_message_from_explore_{{result.pk}}" href="{% url 'usermessages.create' %}" class="btn btn-primary">Message to {{result.owner}}</a>
                             </div>
                         </div>
                     </div>
@@ -107,9 +108,63 @@
         </div>
     </div>
 
+    <!-- The Modal -->
+    <div id="id-message-modal-from-explore" class="send-message-modal">
+        <!-- Modal content -->
+        <div class="send-message-modal-content">
+            <span class="close" style="cursor: pointer;">&times;</span>
+            <p id="id-send-message-form-from-explore"> </p>
+        </div>
+    </div>
+
 {% endblock content %}
 
 {% block js %}
+<script type="text/javascript">
+    // Get the modal
+    var modal = document.getElementById("id-message-modal-from-explore");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    // send_btn.onclick = function(e)
+    $(document).on("click", "[id*=id_send_message_from_explore]", function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var pk = $(this).attr("id").split("_").pop();
+
+        var to = $(this).html().split(" ").map(item => item.trim()).pop() + ";";
+        var subject = "About Your Offer - " + $("#id-card-title-" + pk).html();
+
+        modal.style.display = "block";
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            success: function(data) {
+                $("#id-send-message-form-from-explore").html(data);
+                $("#id-form-to").val(to);
+                $("#id-form-subject").val(subject);
+                $("#id-form-body").focus();
+            }
+        });
+    });
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            $("#id-send-message-form-from-explore").html("");
+        }
+    }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         $(".rounded-pill").hover(function () {
@@ -131,7 +186,10 @@
             const geocoder = new google.maps.Geocoder();
 
             function getLocation() {
-              loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
+              loadMap({coords:{
+                longitude:29.1041687, 
+                latitude:41.0246477
+              }})
             }
 
             function loadMap(position) {
@@ -163,8 +221,8 @@
                 geocoder.geocode(
                     {'latLng': latlng},
                     function (results, status) {
-                        $('#map-json').val(JSON.stringify(results[0]));
-                        //$('#location').val(results[0].formatted_address);
+                        $('#location-json').val(JSON.stringify(results[0]));
+                        $('#search-location').val(results[0].formatted_address);
                         //console.log(results)
                     }
                 );
@@ -175,7 +233,7 @@
             $(document).on("click", ".remove-filter", function (e) {
                 if ($(this).attr("id") === "id-remove-filter-location") {
                     $("#location-json").val("");
-                    $("#map-json").val("");
+                    // $("#map-json").val("");
                     clearMarker();
                 } else if ($(this).attr("id") === "id-remove-filter-tags") {
                     $("#tags-json").val("");
@@ -193,11 +251,8 @@
                     }
                 });
             });
-        })
-    </script>
 
-    <script>
-        $(document).ready(function () {
+        //$(document).ready(function () {
             $('#search-distance').tooltip({
                 'trigger': 'hover',
                 'title': 'Distance represents kilometer distance from your selected location to the offer, if no location is selected, your profile location is taken.'
@@ -292,6 +347,18 @@
                                 $('#location').css('background-size', '5%');
                                 $('#search-location').val(response.data.response.results[resultIndex].formatted_address);
                                 $('#location-wrapper').css('display', 'none');
+                                var lat = response.data.response.results[resultIndex]['geometry']['location']['lat'];
+                                var lng = response.data.response.results[resultIndex]['geometry']['location']['lng'];
+                                var mapProp = {
+                                    center: new google.maps.LatLng(lat, lng),
+                                    zoom: 12,
+                                };
+                                var location = new google.maps.LatLng(lat, lng);
+                                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                                placeMarker(location, map)
+                                google.maps.event.addListener(map, 'click', function (event) {
+                                    placeMarker(event.latLng, map);
+                                });
                             });
                             request = null;
                         })
@@ -366,12 +433,33 @@
                     tagsContainer.hide();
                 }
             });
+        //});
         });
     </script>
 {% endblock js %}
 
 {% block styles %}
     <style>
+        .send-message-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .send-message-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            margin-top: 3%;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
         .small-dist {
             font-size: 12px;
         }
