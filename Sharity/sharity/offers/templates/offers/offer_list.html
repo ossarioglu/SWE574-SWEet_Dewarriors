@@ -18,7 +18,7 @@
                 </div>
                 <input type='submit' id="id_filter_button" class='btn btn-success' value='Filter'/>
                 <input type="hidden" value="" name="location-json" id="location-json">
-                <input type="hidden" value="" name="map-json" id="map-json">
+                {% comment %} <input type="hidden" value="" name="map-json" id="map-json"> {% endcomment %}
                 <input type="hidden" value="[]" name="tags-json" id="tags-json">
                 <button class='btn btn-success'><a class="clear-button" href="{% url 'offer.list' %}"> Clear All </a>
                 </button>
@@ -98,7 +98,7 @@
                                 </p>
                                 <a href="{% url 'offers.detail' pk=result.pk %}" class="btn btn-primary">Go to Offer</a>
                                 <a href="{% url 'offers.apply' sID=result.uuid %}" class="btn btn-primary">Apply to Offer</a>
-                                <a id="id_send_message_from_explore_{{result.pk}}" href="{% url 'usermessages.create' %}" class="btn btn-primary">Send a Message to {{result.owner}}</a>
+                                <a id="id_send_message_from_explore_{{result.pk}}" href="{% url 'usermessages.create' %}" class="btn btn-primary">Message to {{result.owner}}</a>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,10 @@
             const geocoder = new google.maps.Geocoder();
 
             function getLocation() {
-              loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
+              loadMap({coords:{
+                longitude:29.1041687, 
+                latitude:41.0246477
+              }})
             }
 
             function loadMap(position) {
@@ -218,8 +221,8 @@
                 geocoder.geocode(
                     {'latLng': latlng},
                     function (results, status) {
-                        $('#map-json').val(JSON.stringify(results[0]));
-                        //$('#location').val(results[0].formatted_address);
+                        $('#location-json').val(JSON.stringify(results[0]));
+                        $('#search-location').val(results[0].formatted_address);
                         //console.log(results)
                     }
                 );
@@ -230,7 +233,7 @@
             $(document).on("click", ".remove-filter", function (e) {
                 if ($(this).attr("id") === "id-remove-filter-location") {
                     $("#location-json").val("");
-                    $("#map-json").val("");
+                    // $("#map-json").val("");
                     clearMarker();
                 } else if ($(this).attr("id") === "id-remove-filter-tags") {
                     $("#tags-json").val("");
@@ -248,11 +251,8 @@
                     }
                 });
             });
-        })
-    </script>
 
-    <script>
-        $(document).ready(function () {
+        //$(document).ready(function () {
             $('#search-distance').tooltip({
                 'trigger': 'hover',
                 'title': 'Distance represents kilometer distance from your selected location to the offer, if no location is selected, your profile location is taken.'
@@ -347,6 +347,18 @@
                                 $('#location').css('background-size', '5%');
                                 $('#search-location').val(response.data.response.results[resultIndex].formatted_address);
                                 $('#location-wrapper').css('display', 'none');
+                                var lat = response.data.response.results[resultIndex]['geometry']['location']['lat'];
+                                var lng = response.data.response.results[resultIndex]['geometry']['location']['lng'];
+                                var mapProp = {
+                                    center: new google.maps.LatLng(lat, lng),
+                                    zoom: 12,
+                                };
+                                var location = new google.maps.LatLng(lat, lng);
+                                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                                placeMarker(location, map)
+                                google.maps.event.addListener(map, 'click', function (event) {
+                                    placeMarker(event.latLng, map);
+                                });
                             });
                             request = null;
                         })
@@ -421,6 +433,7 @@
                     tagsContainer.hide();
                 }
             });
+        //});
         });
     </script>
 {% endblock js %}

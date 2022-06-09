@@ -137,15 +137,15 @@ class OfferSearchForm(forms.ModelForm):
             self.fields[key].required = False
 
     def clean(self):
-        if (self.data.get('location-json') != '' and self.data.get('map-json') != '') or (
-                self.data.get('location') != '' and self.data.get('map-json') != ''):
-            raise forms.ValidationError('Only one location can be inputted.')
+        # if (self.data.get('location-json') != '' and self.data.get('map-json') != '') or (
+        #         self.data.get('location') != '' and self.data.get('map-json') != ''):
+        #     raise forms.ValidationError('Only one location can be inputted.')
 
         cleaned_data = self.cleaned_data
         if self.data.get('location-json') != '':
             cleaned_data['location-json'] = self.data.get('location-json')
-        elif self.data.get('map-json') != '':
-            cleaned_data['location-json'] = self.data.get('map-json')
+        # elif self.data.get('map-json') != '':
+        #     cleaned_data['location-json'] = self.data.get('map-json')
         else:
             cleaned_data['location-json'] = ''
 
