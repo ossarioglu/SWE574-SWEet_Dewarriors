@@ -124,7 +124,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             filter_flag = False
             filter_words = {
                 'keyword': '__icontains',
-                'location': '__icontains',
+                # 'location': '__icontains',
                 'start_date': '__gte',
                 'duration': '__lte',
                 'tags': '__icontains',
@@ -150,9 +150,10 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                             keyword_args |= Q(**{'title' + filter_words[key]: word})
                             keyword_args |= Q(**{'description' + filter_words[key]: word})
                     elif key == 'location':
-                        context[key + '_query'] = value
-                        for loc in [i.strip() for i in value.split(' ') if i.strip() != '']:
-                            location_args |= Q(**{key + filter_words[key]: loc})
+                        pass
+                    #     context[key + '_query'] = value
+                    #     for loc in [i.strip() for i in value.split(' ') if i.strip() != '']:
+                    #         location_args |= Q(**{key + filter_words[key]: loc})
                     else:
                         if key == 'type':
                             context[key + '_query'] = 'Service' if value == 1 else 'Event'
