@@ -15,6 +15,7 @@ from tags.services import TagService
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
 from decouple import config
+from actstream import action
 from django.shortcuts import render
 from functools import reduce
 import operator
@@ -22,7 +23,7 @@ import operator
 from badges.signals import offer_detail, timeline
 from badges.models import *
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
@@ -59,10 +60,11 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
                     claims.append(entity_id)
 
             form.instance.claims = json.dumps(claims, separators=(',', ':'))
+            form.instance.end_date = form.instance.start_date + timedelta(hours=form.instance.duration)
+            action.send(form.instance.owner, verb='created an offer', action_object=form.instance)
 
             return super().form_valid(form)
         except AttributeError:
-            print("This is an attribute erroooooooor!!!")
             return super(OfferCreateView, self).form_invalid(form)
 
     @method_decorator(csrf_protect)
