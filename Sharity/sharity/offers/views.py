@@ -163,7 +163,6 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 arguments = tag_args & keyword_args & location_args
             else:
                 arguments = (tag_args & keyword_args) | location_args
-            print(arguments)
 
             qs = Offer.objects.filter(*(arguments,), **filters).exclude(owner=self.request.user).exclude(
                 end_date__lt=timezone.now())
@@ -221,10 +220,11 @@ class OfferListView(LoginRequiredMixin, ListView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        if self.request.GET.get('title'):
+        if self.request.GET.get('keyword'):
             args = Q()
-            for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
-                args |= Q(**{'title__icontains': keyword})
+            for word in [i.strip() for i in self.request.GET.get('keyword').split(' ') if i.strip() != '']:
+                args |= Q(**{'title__icontains': word})
+                args |= Q(**{'description__icontains': word})
             result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(
                 end_date__lt=timezone.now())
         else:
@@ -235,8 +235,8 @@ class OfferListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         form = OfferSearchForm()
         context['form'] = form
-        if self.request.GET.get('title'):
-            context['title_query'] = self.request.GET.get('title')
+        if self.request.GET.get('keyword'):
+            context['keyword_query'] = self.request.GET.get('keyword')
         return context
 
 
