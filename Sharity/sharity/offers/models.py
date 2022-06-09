@@ -57,7 +57,7 @@ class Offer(models.Model):
         if self.created_at is None:
             action.send(self.owner, verb='created an offer', action_object=self)
         else:
-            action.send(self.owner, verb='updated the offer' + self.title, action_object=self)
+            action.send(self.owner, verb='updated the offer ' + self.title, action_object=self)
         self.end_date = self.start_date + timedelta(hours=self.duration)
         super().save(*args, **kwargs)
 
