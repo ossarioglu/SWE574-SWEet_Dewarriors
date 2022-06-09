@@ -116,18 +116,35 @@
                                             -service cannot be canceled if update deadline has passed
                                     /-->
                                     {% for a in applications %}
+
                                         {% if request.user == a.requesterID %}
-                                            <h7> You've applied this service </h7>
-                                            {% if object.amendment_deadline|timesince >= "1 min"  %}
-                                                <p class="text-danger">Edit timehorizon is over</p>
-                                                <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
+                                            {% if a.status == "Inprocess" %}
+                                                <h7> You've applied this service </h7>
+                                                {% if object.start_date|timesince >= "1 min"  %}
+                                                    <p class="text-danger">Service is over</p>
+                                                    <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
+                                                {% else %}
+                                                    {% if object.amendment_deadline|timesince >= "1 min"  %}
+                                                        <p class="text-danger">Edit timehorizon is over</p>
+                                                        <a class="btn btn-danger btn-sm disabled" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
+                                                        {% else %}
+                                                        <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
+                                                    {% endif %}
+                                                {% endif %} 
+                                            <!-- If user didn't apply for the service yet,
+                                                -if service has started, Apply button is disabled
+                                                -User can apply otherwise
+                                            /-->
                                             {% else %}
-                                                <a class="btn btn-danger btn-sm" href="{% url 'offers.apply.cancel' a.requestID %}" role="button">Cancel Application</a>
-                                            {% endif %}
-                                        <!-- If user didn't apply for the service yet,
-                                            -if service has started, Apply button is disabled
-                                            -User can apply otherwise
-                                        /-->
+                                                {% if a.status == "Rejected" %}
+                                                    <h7 class="text-danger"> Your application is rejected </h7>
+                                                {% else %}
+                                                    <h7 class="text-success"> Your application is accepted </h7>
+                                                    {% if feedback.count > 0 %}
+                                                        <p class="text-danger">Service is over</p>
+                                                    {% endif %} 
+                                                {% endif %}
+                                            {% endif %} 
                                         {% else %}
                                             {% if object.start_date|timesince >= "1 min"  %}
                                                 <p class="text-danger">Service is over</p>
@@ -165,33 +182,33 @@
                 {% endif %}
 
                 {% if request.user == object.owner %}
-                            
-                    <hr>
-                    <h4 class="text-success"> <u> Feedback regarding this offering </u> </h4>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">From</th>
-                            <th scope="col">To</th>
-                            <th scope="col">Message</th>
-                            <th scope="col">Rating</th>
-                        </tr>
-                        </thead>
-                        <tbody>               
-                    {% for feed in feedback %}
-                          <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td><a class="text-decoration-none" href="{% url 'profile' feed.giverID %}">@{{ feed.giverID  }}</a></td>
-                            <td><a class="text-decoration-none" href="{% url 'profile' feed.takerID %}">@{{ feed.takerID  }}</a></td>
-                            <td>{{ feed.comment  }} </td>
-                            <td>{{ feed.rating  }} </td>
-                          </tr>
-                    {% endfor %}
+                    {% if feedback.count > 0 %}        
+                        <hr>
+                        <h4 class="text-success"> <u> Feedback regarding this offering </u> </h4>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">From</th>
+                                <th scope="col">To</th>
+                                <th scope="col">Message</th>
+                                <th scope="col">Rating</th>
+                            </tr>
+                            </thead>
+                            <tbody>               
+                        {% for feed in feedback %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td><a class="text-decoration-none" href="{% url 'profile' feed.giverID %}">@{{ feed.giverID  }}</a></td>
+                                <td><a class="text-decoration-none" href="{% url 'profile' feed.takerID %}">@{{ feed.takerID  }}</a></td>
+                                <td>{{ feed.comment  }} </td>
+                                <td>{{ feed.rating  }} </td>
+                            </tr>
+                        {% endfor %}
 
-                        </tbody>
-                      </table>
-
+                            </tbody>
+                        </table>
+                    {% endif %}
 
                 {% endif %}
 
