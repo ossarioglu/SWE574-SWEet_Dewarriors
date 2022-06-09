@@ -7240,7 +7240,7 @@
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Tags</label>
-                        <input type="text" class="form-control" id="tags" name="tags" value="{{ offer.get_tag_labels }}">
+                        <input type="text" class="form-control" id="tags" name="tags" value="{{ offer.get_tag_labels|join:', ' }}">
                         {% if form.errors %}
                             <div class="invalid-feedback">
                                 {{ form.tags.errors.0|escape }}
