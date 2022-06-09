@@ -17,6 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
+            var formSubmittedAndInvalid = false;
             $(document).on('change', '.input-file', function () {
                 let filesCount = $(this)[0].files.length;
                 let textbox = $(this).prev();
@@ -132,11 +133,228 @@
                 }
             });
 
+            $("#title").blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let titleValue = $("#title").val();
+                    if (titleValue !== '' && titleValue.length <= 500) {
+                        $("#title ~ .invalid-feedback").hide();
+                    } else if (titleValue === '') {
+                        $("#title ~ .invalid-feedback").text('Please enter a title.');
+                        $("#title ~ .invalid-feedback").show();
+                    } else if (titleValue.length > 500) {
+                        $("#title ~ .invalid-feedback").text('Title length must be less than 500 characters.');
+                        $("#title ~ .invalid-feedback").show();
+                    }
+                }
+            });
+
+            $('input[name="start_date"]').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let startDateValue = $('input[name="start_date"]').val();
+                    let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                    let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                    if (
+                        startDateValue !== ''
+                        &&
+                        !isNaN(amendmentAndStartDateDifference)
+                        &&
+                        amendmentAndStartDateDifference >= 1
+                    ) {
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    } else if (startDateValue === '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                    } else if (startDateValue !== '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    } else {
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+
+                    }
+                }
+            });
+
+            $("#duration").blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let durationValue = $("#duration").val();
+
+                    if (durationValue !== '' && parseInt(durationValue) >= 1) {
+                        $("#duration ~ .invalid-feedback").hide();
+                    }
+                }
+            });
+
+            $('input[name="amendment_deadline"]').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let startDateValue = $('input[name="start_date"]').val();
+                    let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                    let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                    if (
+                        amendmentDeadlineValue !== ''
+                        &&
+                        !isNaN(amendmentAndStartDateDifference)
+                        &&
+                        amendmentAndStartDateDifference >= 1
+                    ) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                        $('input[name="start_date"] ~ .invalid-feedback').hide();
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    } else if (amendmentDeadlineValue === '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    } else if (amendmentDeadlineValue !== '' && isNaN(amendmentAndStartDateDifference)) {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    } else {
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                        $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                        $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                        $('input[name="start_date"] ~ .invalid-feedback').show();
+                    }
+                }
+            });
+
+            $('#participant_limit').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let participantLimitValue = $('#participant_limit').val();
+
+                    if (participantLimitValue !== '' && parseInt(participantLimitValue) >= 1) {
+                        $('#participant_limit ~ .invalid-feedback').hide();
+                    }
+                }
+            });
+
+            $('#description').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let descriptionValue = $('#description').val();
+
+                    if (descriptionValue !== '') {
+                        $('#description ~ .invalid-feedback').hide();
+                    }
+                }
+            });
+
+            $('#type').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let typeValue = $('#type').val();
+
+                    if (typeValue !== '' && parseInt(typeValue) > 0) {
+                        $('#type ~ .invalid-feedback').hide();
+                    }
+                }
+            });
+
             $('#submit-button').click(function (event) {
                 event.preventDefault();
-                $('#location').val($('#location-json').val());
-                $('#tags').val($('#tags-json').val());
-                $('#service-form').submit();
+                $('.invalid-feedback').hide();
+                let titleValue = $("#title").val();
+                let descriptionValue = $("#description").val();
+                let startDateValue = $('input[name="start_date"]').val();
+                let durationValue = $("#duration").val();
+                let amendmentDeadlineValue = $('input[name="amendment_deadline"]').val();
+                let locationVal = $('#location').val();
+                let tagsVal =  $('#tags').val();
+                let locationJsonVal = $('#location-json').val();
+                let tagsJsonVal = $('#tags-json').val();
+                let participantLimitValue = $('#participant_limit').val();
+                let typeValue = $('#type').val();
+                let hasValidationErrors = false;
+                let amendmentAndStartDateDifference = ((new Date(startDateValue)).getTime() - (new Date(amendmentDeadlineValue).getTime())) / (1000 * 3600 * 24);
+
+                if (titleValue === '') {
+                    $("#title ~ .invalid-feedback").text('Please enter a title.');
+                    $("#title ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else if (titleValue.length > 500) {
+                    $("#title ~ .invalid-feedback").text('Title length must be less than 500 characters.');
+                    $("#title ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#title ~ .invalid-feedback").hide();
+                }
+
+                if (descriptionValue === '') {
+                    $("#description ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#description ~ .invalid-feedback").hide();
+                }
+
+                if (startDateValue === '') {
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Please select an start date.');
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else if (!isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference < 1) {
+                    $('input[name="start_date"] ~ .invalid-feedback').text('Start date should be at least 24 hours later from the amendment deadline');
+                    $('input[name="start_date"] ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('input[name="start_date"] ~ .invalid-feedback').hide();
+                }
+
+                if (durationValue === '' || parseInt(durationValue) < 1) {
+                    $("#duration ~ .invalid-feedback").show();
+                    hasValidationErrors = true
+                } else {
+                    $("#duration ~ .invalid-feedback").hide();
+                }
+
+                if (amendmentDeadlineValue === '') {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Please select an amendment deadline.');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    hasValidationErrors  = true
+                } else if (!isNaN(amendmentAndStartDateDifference) && amendmentAndStartDateDifference < 1) {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').text('Amendment deadline should be at least 24 hours before from the start date.');
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').show();
+                    hasValidationErrors  = true
+                } else {
+                    $('input[name="amendment_deadline"] ~ .invalid-feedback').hide();
+                }
+
+                if (locationVal === '' || locationJsonVal === '') {
+                    $('#location ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#location ~ .invalid-feedback').hide();
+                }
+
+                if (tagsVal === '' || tagsJsonVal === '[]') {
+                    $('#tags ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#tags ~ .invalid-feedback').hide();
+                }
+
+                if (participantLimitValue === '' || parseInt(participantLimitValue) < 1) {
+                    $('#participant_limit ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#participant_limit ~ .invalid-feedback').hide();
+                }
+
+                if (typeValue === '' || parseInt(typeValue) === 0) {
+                    $('#type ~ .invalid-feedback').show();
+                    hasValidationErrors = true
+                } else {
+                    $('#type ~ .invalid-feedback').hide();
+                }
+
+                if (! hasValidationErrors) {
+                    $('#location').val($('#location-json').val());
+                    $('#tags').val($('#tags-json').val());
+                    $('#service-form').submit();
+                } else {
+                    formSubmittedAndInvalid = true;
+                }
             });
 
             $(document).mouseup(function (e) {
@@ -175,7 +393,7 @@
         #Create_OfferEvent_Page {
             position: absolute;
             width: 1920px;
-            height: 1080px;
+            min-height: 1080px;
             background-color: rgba(255, 255, 255, 1);
             overflow: hidden;
             --web-view-name: Create Offer/Event Page;
@@ -7187,6 +7405,11 @@
 <div id="Create_OfferEvent_Page">
 
     <div class="row" style="width: 50%; display: block; margin: 12% auto;">
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                An illegal post request!
+            </div>
+        {% endif %}
         <h1>Edit Offer</h1>
         <form method="post" id="service-form" enctype="multipart/form-data">
             {% csrf_token %}
@@ -7195,82 +7418,70 @@
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Title</label>
                         <input type="text" class="form-control" id="title" name="title" value="{{ offer.title }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.title.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a title.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Location</label>
                         <input type="text" class="form-control" id="location" name="location" value="{{ offer.get_formatted_address }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.location.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select a location.
+                        </div>
                         <input type="hidden" value="{{ offer.location }}" name="location-json" id="location-json">
+                        <ol class="list-group list-group-numbered" id="location-wrapper" style="
+						display: none;
+						position: relative;
+						background-color: rgb(255, 255, 255);
+						margin-top: 0;
+						"></ol>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Start Date</label>
-                        <input type="text" class="form-control" id="start_date" name="start_date" value="{{ offer.start_date|date:'Y-m-d H:i' }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.start_date.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <input type="datetime-local" class="form-control" id="start_date" name="start_date" value="{{ offer.start_date|date:'Y-m-d' }}T{{ offer.start_date|date:'H:i' }}">
+                        <div class="invalid-feedback">
+                            Please select a start date.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Duration</label>
                         <input type="text" class="form-control" id="duration" name="duration" value="{{ offer.duration }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.duration.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a duration.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Amendment Deadline</label>
-                        <input type="text" class="form-control" id="amendment_deadline" name="amendment_deadline" value="{{ form.amendment_deadline.value|date:'Y-m-d H:i' }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.amendment_deadline.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <input type="datetime-local" class="form-control" id="amendment_deadline" name="amendment_deadline" value="{{ offer.amendment_deadline|date:'Y-m-d' }}T{{ offer.amendment_deadline|date:'H:i' }}">
+                        <div class="invalid-feedback">
+                            Please select an amendment deadline.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Tags</label>
                         <input type="text" class="form-control" id="tags" name="tags" value="{{ offer.get_tag_labels|join:', ' }}, ">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.tags.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select at least one tag.
+                        </div>
                         <input type="hidden" value="{{ offer.tags }}" name="tags-json" id="tags-json">
                         <ol class="list-group list-group-numbered" id="tags-wrapper" style="
 						display: none;
 						position: relative;
-						background-color: rgb(255, 255, 255);
-						padding-left: calc(var(--bs-gutter-x) / 2);
-						margin-bottom: 1rem;"></ol>
+						background-color: rgb(255, 255, 255);"></ol>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Participant Limit</label>
                         <input type="text" class="form-control" id="participant_limit" name="participant_limit" value="{{ offer.participant_limit }}">
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.participant_limit.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please enter a participant limit.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="4"> {{ offer.description }} </textarea> 
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.description.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <textarea class="form-control" id="description" name="description" rows="4">{{ offer.description }}</textarea>
+                        <div class="invalid-feedback">
+                            Please enter a description.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Type</label>
@@ -7278,31 +7489,16 @@
                             <option value="1">Service</option>
                             <option value="2">Event</option>
                         </select>
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.type.errors.0|escape }}
-                            </div>
-                        {% endif %}
+                        <div class="invalid-feedback">
+                            Please select an offer type.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="mont-font fw-600 font-xsss">Photo</label>
                         <input type="file" class="form-control-file" id="photo" name="photo"  aria-describedby="inputGroupPrepend" required value="{{form.photo.value}}" >
-                        {% if form.errors %}
-                            <div class="invalid-feedback">
-                                {{ form.photo.errors.0|escape }}
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <ol class="list-group list-group-numbered" id="location-wrapper" style="
-						display: none;
-						position: relative;
-						background-color: rgb(255, 255, 255);
-						margin-top: -1rem;
-						padding-left: calc(var(--bs-gutter-x) / 2);
-						"></ol>
-
                     <div id="googleMap" style="width:100%;height:400px;"></div>
                 </div>
 

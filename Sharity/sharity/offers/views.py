@@ -262,36 +262,41 @@ def updateOffer(request, sID):
 
     # When user posts information from Form, relevant fields are matched with object, and service is saved.
     if request.method == 'POST':
-        form = OfferForm(request.POST)
+        try:
+            form = OfferForm(request.POST)
 
-        tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
-        wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
-        claims = []
+            tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
+            wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
+            claims = []
 
-        if 'entities' in wb_get_entities_response:
-            for entity_id in wb_get_entities_response['entities']:
-                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
-                                    'P1424', 'P1441']:
-                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
-                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
-                claims.append(entity_id)
+            if 'entities' in wb_get_entities_response:
+                for entity_id in wb_get_entities_response['entities']:
+                    for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
+                                        'P1424', 'P1441']:
+                            for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                                claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                    claims.append(entity_id)
 
-        offer.title = request.POST.get('title')
-        offer.description = request.POST.get('description')
-        offer.location = request.POST.get('location-json')
-        offer.tags = request.POST.get('tags-json')
-        offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d %H:%M')
-        offer.duration = int(request.POST.get('duration'))
-        offer.end_date = request.POST.get('end_date')
-        offer.participant_limit = request.POST.get('participant_limit')
-        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M')
-        offer.type = request.POST.get('type')
-        offer.claims = json.dumps(claims, separators=(',', ':'))
-        if request.FILES.get('photo') is not None:
-            offer.picture = request.FILES.get('photo')
-        offer.save()
-        return redirect('home')
+            offer.title = request.POST.get('title')
+            offer.description = request.POST.get('description')
+            offer.location = request.POST.get('location-json')
+            offer.tags = request.POST.get('tags-json')
+            offer.start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%dT%H:%M')
+            offer.duration = int(request.POST.get('duration'))
+            offer.end_date = request.POST.get('end_date')
+            offer.participant_limit = request.POST.get('participant_limit')
+            offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%dT%H:%M')
+            offer.type = request.POST.get('type')
+            offer.claims = json.dumps(claims, separators=(',', ':'))
+            if request.FILES.get('photo') is not None:
+                offer.picture = request.FILES.get('photo')
+            offer.save()
+            return redirect('offers.detail', pk=offer.pk)
+        except:
+            form = OfferForm(instance=offer)
+            context = {'form': form, 'offer': offer, 'error': True}
+            return render(request, 'offers/update_offer.html', context)
 
     else:
         form = OfferForm(instance=offer)
