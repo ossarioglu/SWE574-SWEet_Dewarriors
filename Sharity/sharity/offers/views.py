@@ -94,7 +94,7 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         context['applications'] = application
         context['allapplications'] = allapplications
         context['feedback'] = feedback
-
+        print(offer.location)
         return context
 
 

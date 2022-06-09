@@ -7,7 +7,59 @@
         <title>Welcoming/Landing Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKfrDnj_uke36gzh7N9aWel_FF3e_U9V0"></script>
 
+    <script>
+        var marker;
+        var map;
+        const geocoder = new google.maps.Geocoder();
+
+        function placeMarker(location, map) {
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+            marker.setPosition(location);
+            var latlng = new google.maps.LatLng(location.lat(), location.lng());
+            geocoder.geocode(
+                {'latLng': latlng},
+                function (results, status) {
+                    $('#location-json').val(JSON.stringify(results[0]));
+                    $('#location').val(results[0].formatted_address);
+                    $('#location ~ .invalid-feedback').hide();
+                }
+            );
+        }
+
+        function loadMap(position) {
+            var mapProp = {
+                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                zoom: 12,
+            };
+            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+            marker.setPosition(location);
+        }
+
+        function getLocation() {
+                 var currentLocation ={{ offer.location|safe }}
+                     console.log(currentLocation.geometry.location.lat)
+                     console.log(currentLocation.geometry.location.lng)
+                loadMap({coords: {longitude: currentLocation.geometry.location.lng, latitude: currentLocation.geometry.location.lat}})
+        }
+
+        $(document).ready(function () {
+            getLocation()
+        })
+    </script>
         <title>{{ object.title }}   </title>
     </head>
     <body>
@@ -40,6 +92,7 @@
                             {% if object.photo %} <img src="{{object.photo.url }}" width="200" height="200"> {% endif %}
                         </div>
                         <div>
+                        <div>
                             <h3> {{ object.title }}</h3>
                             <h7>by</h7>
                             <h5> <a class="text-decoration-none" href="{% url 'profile' object.owner %}">@{{ object.owner }}</a>  
@@ -56,6 +109,10 @@
                             <h5> {{ object.created_at|date:"F d, Y" }} </h5>
                             <h7 class="text-danger">Description</h7>
                             <h5> {{ object.description}} </h5>
+                        </div>
+                        <div>
+                                  <div id="googleMap" style="width:100%;height:400px;"></div>
+                        </div>
                         </div>
                         <div>
 

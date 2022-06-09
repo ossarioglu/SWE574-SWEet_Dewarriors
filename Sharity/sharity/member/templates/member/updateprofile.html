@@ -12,6 +12,72 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+       <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
+
+<script>
+
+        var marker;
+        var map;
+        const geocoder = new google.maps.Geocoder();
+
+        function placeMarker(location, map) {
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+            marker.setPosition(location);
+            var latlng = new google.maps.LatLng(location.lat(), location.lng());
+            geocoder.geocode(
+                {'latLng': latlng},
+                function (results, status) {
+                    $('#location-json').val(JSON.stringify(results[0]));
+                    $('#location').val(results[0].formatted_address);
+                    $('#location ~ .invalid-feedback').hide();
+                }
+            );
+        }
+
+        function loadMap(position) {
+            var mapProp = {
+                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+                zoom: 12,
+            };
+            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(event.latLng, map);
+            });
+        }
+
+        function getLocation() {
+
+            console.log("update")
+            var currentLocation =
+            {{ user.profile.userLocation|safe }}
+            var location = new google.maps.LatLng(currentLocation.geometry.location.lat, currentLocation.geometry.location.lng);
+
+            loadMap({
+                coords: {
+                    longitude: currentLocation.geometry.location.lng,
+                    latitude: currentLocation.geometry.location.lat
+                }
+            })
+            if (marker == null) {
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+            marker.setPosition(location);
+        }
+
+        $(document).ready(function () {
+            getLocation()
+        })
+
+    </script>
     <script type="text/javascript">
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -62,6 +128,16 @@
                                 $('#location').css('background-size', '5%');
                                 $('#location').val(response.data.response.results[resultIndex].formatted_address);
                                 $('#location-wrapper').css('display', 'none');
+                                var place = response.data.response.results[resultIndex].geometry
+
+                                map.setCenter(place.location)
+                                  if (marker == null) {
+                                    marker = new google.maps.Marker({
+                                        position: place.location,
+                                        map: map
+                                    });
+                                  }
+                                 marker.setPosition(place.location);
                             });
                             request = null;
                         })
@@ -108,7 +184,13 @@
 
                             $('.tags').click(function () {
                                 let resultIndex = $(this).attr('id').split('-')[1]
-                                let existingValue = JSON.parse($('#skills-tags-json').val());
+
+                                let existingValue = $('#skills-tags-json').val()
+                                if(existingValue!=undefined && existingValue != "" ){
+                                    existingValue = JSON.parse(existingValue)
+                                }else{
+                                    existingValue = []
+                                }
                                 existingValue.push(response.data.response.search[resultIndex]);
                                 $('#skills-tags-json').val(JSON.stringify(existingValue));
                                 var stringValue = '';
@@ -275,7 +357,7 @@
                                     {% if user.profile.get_skills_labels|length > 0 %}{{ user.profile.get_skills_labels|join:', '}}{% endif %}"
                                     aria-describedby="inputGroupPrepend" required>
                             <input type="hidden"
-                                value="{% if not user.profile.userSkills %}[]{% else %}{{ user.profile.userSkills }}{% endif %}"
+                                value="{% if not user.profile.userSkills %}{% else %}{{ user.profile.userSkills }}{% endif %}"
                                 name="skills-tags-json" id="skills-tags-json">
                             <ol class="list-group list-group-numbered" id="tags-wrapper-skills" style="
                                 display: none;
@@ -392,53 +474,6 @@
         <div></div>
 
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ googleapis }}"></script>
 
-<script>
-
-    $(document).ready(function () {
-
-        var marker;
-        const geocoder = new google.maps.Geocoder();
-
-        function getLocation() {
-           loadMap({coords:{longitude:29.1041687,latitude:41.0246477}})
-        }
-
-        function loadMap(position) {
-            var mapProp = {
-                center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
-                zoom: 12,
-            };
-            var location = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-            google.maps.event.addListener(map, 'click', function (event) {
-                placeMarker(event.latLng, map);
-            });
-        }
-
-
-            function placeMarker(location, map) {
-                if (marker == null) {
-                    marker = new google.maps.Marker({
-                        position: location,
-                        map: map
-                    });
-                }
-                marker.setPosition(location);
-                var latlng = new google.maps.LatLng(location.lat(), location.lng());
-                geocoder.geocode(
-                    {'latLng': latlng},
-                    function (results, status) {
-                        $('#location-json').val(JSON.stringify(results[0]));
-                        $('#location').val(results[0].formatted_address);
-                        console.log(results)
-                    }
-                );
-            }
-
-            getLocation()
-        })
-    </script>
 </body>
 </html>
