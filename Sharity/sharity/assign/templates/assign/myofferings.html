@@ -92,35 +92,64 @@
 
                     {% for myApp in applications %}
                         {% if myApp.status != "Rejected" %}
-                        {% for finished in receivedoffers %}
-                            {% if myApp.serviceID != finished.requestID.serviceID %}
+                            {% if receivedoffers.count == 0 %}
                             <span>
-                            <div class="applications-container">
-                                <div>
-                                    <img src="{{myApp.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                                <div class="applications-container">
+                                    <div>
+                                        <img src="{{myApp.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                                    </div>
+                                    <div>
+                                        <h5> <span class="align-middle">{{ myApp.serviceID.title }} </span>
+                                        </h5>
+                                        <br>
+                                        <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.serviceID.owner %}">@{{ myApp.serviceID.owner }}</a> </span>
+                                        </h6>
+                                        <h6> <span class="align-middle">  {{ myApp.serviceID.duration }} hours {{ myApp.serviceID.get_type }} </span>
+                                        </h6>
+                                    </div>
+                                    <div>
+                                        <h5> <span class="align-middle">on {{ myApp.serviceID.start_date }}</span>
+                                        </h5>
+                                    </div>
+                                    <div>
+                                        <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.serviceID.uuid %}" >Go to Offer</a>
+                                        <div class="text-primary"> Status: {{ myApp.status }} </div> 
+                                    </div>
                                 </div>
-                                <div>
-                                    <h5> <span class="align-middle">{{ myApp.serviceID.title }} </span>
-                                    </h5>
-                                    <br>
-                                    <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.serviceID.owner %}">@{{ myApp.serviceID.owner }}</a> </span>
-                                    </h6>
-                                    <h6> <span class="align-middle">  {{ myApp.serviceID.duration }} hours {{ myApp.serviceID.get_type }} </span>
-                                    </h6>
-                                </div>
-                                <div>
-                                    <h5> <span class="align-middle">on {{ myApp.serviceID.start_date }}</span>
-                                    </h5>
-                                </div>
-                                <div>
-                                    <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.serviceID.uuid %}" >Go to Offer</a>
-                                    <div class="text-primary"> Status: {{ myApp.status }} </div> 
-                                </div>
-                            </div>
                             </span>
                             <br>
+                            
+                            {% else %}
+                                {% for finished in receivedoffers %}
+                                    {% if myApp.serviceID != finished.requestID.serviceID %}
+                                    <span>
+                                    <div class="applications-container">
+                                        <div>
+                                            <img src="{{myApp.serviceID.photo.url}}" class="rounded-circle position-relative" width="100" height="100"> 
+                                        </div>
+                                        <div>
+                                            <h5> <span class="align-middle">{{ myApp.serviceID.title }} </span>
+                                            </h5>
+                                            <br>
+                                            <h6> <span class="align-middle"> from: <a class="text-decoration-none" href="{% url 'profile' myApp.serviceID.owner %}">@{{ myApp.serviceID.owner }}</a> </span>
+                                            </h6>
+                                            <h6> <span class="align-middle">  {{ myApp.serviceID.duration }} hours {{ myApp.serviceID.get_type }} </span>
+                                            </h6>
+                                        </div>
+                                        <div>
+                                            <h5> <span class="align-middle">on {{ myApp.serviceID.start_date }}</span>
+                                            </h5>
+                                        </div>
+                                        <div>
+                                            <a class="btn btn-warning btn-sm align-middle" href="{% url 'offers.detail' pk=myApp.serviceID.uuid %}" >Go to Offer</a>
+                                            <div class="text-primary"> Status: {{ myApp.status }} </div> 
+                                        </div>
+                                    </div>
+                                    </span>
+                                    <br>
+                                    {% endif %}
+                                {% endfor %}
                             {% endif %}
-                        {% endfor %}
                         {% endif %}
                     {% endfor %}
                 
