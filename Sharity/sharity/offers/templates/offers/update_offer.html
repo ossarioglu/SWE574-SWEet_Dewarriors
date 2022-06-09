@@ -253,6 +253,17 @@
                 }
             });
 
+            $('#location').blur(function () {
+                if (formSubmittedAndInvalid) {
+                    let locationVal = $('#location').val();
+                    let locationJsonVal = $('#location-json').val();
+
+                    if (locationVal !== '' && locationJsonVal !== '') {
+                        $('#location ~ .invalid-feedback').hide();
+                    }
+                }
+            });
+
             $('#submit-button').click(function (event) {
                 event.preventDefault();
                 $('.invalid-feedback').hide();
