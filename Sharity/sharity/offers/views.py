@@ -24,7 +24,6 @@ from badges.models import *
 from django.utils import timezone
 from datetime import datetime
 
-
 from member.models import Profile
 from .utils import distance, get_lat, get_long, order_offers
 
@@ -53,7 +52,8 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
             if 'entities' in wb_get_entities_response:
                 for entity_id in wb_get_entities_response['entities']:
                     for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
-                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495', 'P1424', 'P1441']:
+                        if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61',
+                                        'P495', 'P1424', 'P1441']:
                             for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
                                 claims.append(claim['mainsnak']['datavalue']['value']['id'])
                     claims.append(entity_id)
@@ -69,6 +69,7 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
+
 # @method_decorator(never_cache, name='dispatch')
 # @method_decorator(csrf_exempt, name='dispatch')
 class OfferDetailView(LoginRequiredMixin, DetailView):
@@ -78,7 +79,7 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         offer = self.get_object()
         offer_detail.send(sender=self.__class__, owner_pk=[offer.owner.pk])
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_object(self):
         offer = Offer.objects.get(uuid=self.kwargs.get('pk'))
         return offer
@@ -94,7 +95,6 @@ class OfferDetailView(LoginRequiredMixin, DetailView):
         context['allapplications'] = allapplications
         context['feedback'] = feedback
 
-        
         return context
 
 
@@ -111,7 +111,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
     def form_invalid(self, form):
         if self.request.is_ajax():
             return JsonResponse(form.errors, status=400)
-    
+
     def form_valid(self, form):
         if self.request.is_ajax():
             context = {}
@@ -135,7 +135,6 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             # get search parameter -> location
             ljson = form.cleaned_data.pop('location-json')
 
-
             for key, value in form.cleaned_data.items():
                 if value != '' and value != '[]' and value is not None:
                     filter_flag = True
@@ -156,7 +155,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                         if key == 'type':
                             context[key + '_query'] = 'Service' if value == 1 else 'Event'
                         else:
-                            context[key + '_query'] = value  
+                            context[key + '_query'] = value
                         filters[key + filter_words[key]] = value
 
             # if only location
@@ -166,7 +165,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 arguments = (tag_args & keyword_args) | location_args
             print(arguments)
 
-            qs = Offer.objects.filter(*(arguments, ), **filters).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
+            qs = Offer.objects.filter(*(arguments,), **filters).exclude(owner=self.request.user).exclude(
+                end_date__lt=timezone.now())
 
             ### handle location-json and distance filters last ###
             # if location-json and distance queries are present
@@ -174,7 +174,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 filter_flag = True
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
-                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                qs = [i for i in qs if
+                      distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                 context['distance_query'] = d
                 if 'location_query' not in context.keys():
                     context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
@@ -185,7 +186,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 profile = Profile.objects.get(user=self.request.user)
                 try:
                     profile_loc = (profile.get_latitude(), profile.get_longitude())
-                    qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
+                    qs = [i for i in qs if
+                          distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= d]
                     context['distance_query'] = d
                 except json.JSONDecodeError:
                     form.add_error('__all__', 'Profile has no location.')
@@ -195,7 +197,8 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
                 filter_flag = True
                 # get desired location
                 profile_loc = (get_lat(ljson), get_long(ljson))
-                qs = [i for i in qs if distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
+                qs = [i for i in qs if
+                      distance(profile_loc[0], i.get_latitude(), profile_loc[1], i.get_longitude()) <= 300]
                 if 'location_query' not in context.keys():
                     context['location_query'] = json.loads(str(ljson).replace("\\'", '"')).get('formatted_address')
 
@@ -206,6 +209,7 @@ class AjaxHandlerView(LoginRequiredMixin, FormMixin, ListView):
             timeline.send(sender=self.__class__, owner_pk=owners)
 
             return render(self.request, 'offers/ajax_offer_results.html', context)
+
 
 class OfferListView(LoginRequiredMixin, ListView):
     model = Offer
@@ -221,7 +225,8 @@ class OfferListView(LoginRequiredMixin, ListView):
             args = Q()
             for keyword in [i.strip() for i in self.request.GET.get('title').split(' ') if i.strip() != '']:
                 args |= Q(**{'title__icontains': keyword})
-            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
+            result = Offer.objects.filter(*(args,)).exclude(owner=self.request.user).exclude(
+                end_date__lt=timezone.now())
         else:
             result = Offer.objects.all().exclude(owner=self.request.user).exclude(end_date__lt=timezone.now())
         return order_offers(result, self.request.user)
@@ -236,21 +241,19 @@ class OfferListView(LoginRequiredMixin, ListView):
 
 
 def deleteOffer(request, sID):
-    
     offer = Offer.objects.get(uuid=sID)
-    
+
     if request.user != offer.owner:
         return HttpResponse('You are not allowed to delete this offer')
-    
-    #If confirmation from user is posted, record for service is deleted.
+
+    # If confirmation from user is posted, record for service is deleted.
     if request.method == 'POST':
         offer.delete()
         return redirect('home')
-    return render(request, 'offers/delete.html', {'obj':offer})
+    return render(request, 'offers/delete.html', {'obj': offer})
 
 
 def updateOffer(request, sID):
-
     # Information for requested service is retreived from database, and added to Form
     offer = Offer.objects.get(uuid=sID)
 
@@ -259,7 +262,21 @@ def updateOffer(request, sID):
 
     # When user posts information from Form, relevant fields are matched with object, and service is saved.
     if request.method == 'POST':
-        form = OfferForm(request.POST)    
+        form = OfferForm(request.POST)
+
+        tags_json = json.loads(request.POST.get('tags-json').replace("\\'", '"'))
+        wb_get_entities_response = TagService.find_by_ids(tuple([tag['id'] for tag in tags_json]))
+        claims = []
+
+        if 'entities' in wb_get_entities_response:
+            for entity_id in wb_get_entities_response['entities']:
+                for claim_id in wb_get_entities_response['entities'][entity_id]['claims']:
+                    if claim_id in ['P31', 'P279', 'P361', 'P366', 'P5008', 'P5125', 'P1343', 'P3095', 'P61', 'P495',
+                                    'P1424', 'P1441']:
+                        for claim in wb_get_entities_response['entities'][entity_id]['claims'][claim_id]:
+                            claims.append(claim['mainsnak']['datavalue']['value']['id'])
+                claims.append(entity_id)
+
         offer.title = request.POST.get('title')
         offer.description = request.POST.get('description')
         offer.location = request.POST.get('location-json')
@@ -268,16 +285,16 @@ def updateOffer(request, sID):
         offer.duration = int(request.POST.get('duration'))
         offer.end_date = request.POST.get('end_date')
         offer.participant_limit = request.POST.get('participant_limit')
-        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M') 
+        offer.amendment_deadline = datetime.strptime(request.POST.get('amendment_deadline'), '%Y-%m-%d %H:%M')
         offer.type = request.POST.get('type')
+        offer.claims = json.dumps(claims, separators=(',', ':'))
         if request.FILES.get('photo') is not None:
             offer.picture = request.FILES.get('photo')
         offer.save()
         return redirect('home')
 
     else:
-        form = OfferForm(instance=offer)    
+        form = OfferForm(instance=offer)
 
-    context = {'form':form, 'offer':offer}
+    context = {'form': form, 'offer': offer}
     return render(request, 'offers/update_offer.html', context)
-
